@@ -1,11 +1,6 @@
 local M = {}
 
 function M:initiateCommonListeners(commons, shootGroup)
-    local function fire(event)
-        commons.cannon:fire(commons.vehicle.image, shootGroup)
-        return true
-    end
-
     local function controlVehicleMovement(event)
         commons.vehicle:controlMovement()
         return true

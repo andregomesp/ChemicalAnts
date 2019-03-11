@@ -1,27 +1,19 @@
-Cannon = {availableShoots = {}, coolDown = nil, firingButtons = {}, associatedVehicle}
+Cannon = {availableShoots = {}, coolDown = nil, firingButtons = {}, associatedVehicle = nil, shootGroup = nil, ballParametersList = nil}
 function Cannon:new(o, associatedVehicle, shootGroup)
     o = o or {}
     setmetatable(o, self)
     self.__index = self
     self.associatedVehicle = associatedVehicle
     self.shootGroup = shootGroup
+    self.ballParametersList = require("src.scenes.ballParameters")
     return o    
 end
 
-local function handlePress(event)
-    print("pew")
-    return true
-end
-
-local function handleRelease(event)
-    self:fire()
-    return true
-end
-
-function Cannon:fire()
+function Cannon:fire(event)
+    print(event.target.id)
     local ballFactory = require("src.domain.ball")
-    local ballImage = display.newImageRect(self.shootGroup, "assets/images/commons/balls/ball_red.png", 25, 25)
-    local firedBall = ballFactory:new(nil, "fuck", ballImage)
+    local ballImage = display.newImageRect(self.shootGroup, "assets/images/commons/balls/" .. self.ballParametersList:getImage(event.target.id), 25, 25)
+    local firedBall = ballFactory:new(nil, "anElement", ballImage)
     physics.addBody(firedBall.image, "dynamic", { isSensor=true })
     firedBall.image.isBullet = true
     firedBall.image.myName = "shootBall"
@@ -32,10 +24,11 @@ function Cannon:fire()
     return true
 end
 
-function Cannon:loadFiringButtons(elementsAvailable, ballGroup)
+function Cannon:loadFiringButtons(elementsAvailable, ballGroup, fireButtonGroup)
     local widget = require("widget")
     local counter = 0
-    print(#elementsAvailable)
+    local thisContext = self
+    print(self)
     for key, value in pairs(elementsAvailable) do
         local elementIcon = display.newImageRect(ballGroup, "assets/images/commons/balls/ball_red.png", 30, 30)
         elementIcon.x = 60 + (100 * counter)
@@ -53,10 +46,10 @@ function Cannon:loadFiringButtons(elementsAvailable, ballGroup)
                 fillColor = { default={0.396,0.447,0.529,1}, over={1,0.1,0.7,1} },
                 strokeColor = { default={1,0.4,0,1}, over={0.8,0.8,1,1} },
                 strokeWidth = 2,
-                onPress = handlePress,
-                onRelease = handleRelease
+                onRelease = function(event) return self:fire(event) end
             }
         )
+        fireButtonGroup:insert(button)
         elementIcon:toFront()
         table.insert(self.firingButtons, button)
         counter = counter + 1

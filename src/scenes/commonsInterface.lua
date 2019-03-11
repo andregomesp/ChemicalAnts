@@ -2,6 +2,7 @@ local M = {}
 local mainBackGroup = display.newGroup()
 local objectBackGroup = display.newGroup()
 local shootGroup = display.newGroup()
+local fireButtonGroup = display.newGroup()
 local ballGroup = display.newGroup()
 local commonsGroup = display.newGroup()
 local uiGroup = display.newGroup()
@@ -42,9 +43,9 @@ local function initiateBackground()
     M.background = backgroundFactory:new(nil, backgroundImage, objectBackGroup, mainBackGroup)
 end
 
-local function initiateCannon(ballGroup)
-    M.cannon = cannonFactory:new(nil)
-    M.cannon:loadFiringButtons(M.params.availableBallTypes, ballGroup)
+local function initiateCannon(ballGroup, fireButtonGroup, shootGroup)
+    M.cannon = cannonFactory:new(nil, M.vehicle, shootGroup)
+    M.cannon:loadFiringButtons(M.params.availableBallTypes, ballGroup, fireButtonGroup)
 end
 
 local function initiateVehicle()
@@ -61,7 +62,7 @@ function M.initiateCommons(stageNumber)
     getStageParameters(stageNumber)
     initiateBackground()
     initiateVehicle()
-    initiateCannon(ballGroup)
+    initiateCannon(ballGroup, fireButtonGroup, shootGroup)
     eventFactory:initiateCommonListeners(M, shootGroup)
 end
 
