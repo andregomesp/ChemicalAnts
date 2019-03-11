@@ -10,10 +10,6 @@ local parameters = {
 }
 
 function M.getImage(element)
-    print("oi")
-    local pretty = require("libraries.penlight.pretty")
-    pretty.dump(element)
-    print(parameters[element])
     return parameters[element].image
 end
 

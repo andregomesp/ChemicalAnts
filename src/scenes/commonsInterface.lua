@@ -5,6 +5,7 @@ local shootGroup = display.newGroup()
 local fireButtonGroup = display.newGroup()
 local ballGroup = display.newGroup()
 local commonsGroup = display.newGroup()
+local coolDownSquareGroup = display.newGroup()
 local uiGroup = display.newGroup()
 
 M.background = nil

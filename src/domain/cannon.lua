@@ -1,4 +1,4 @@
-Cannon = {availableShoots = {}, coolDown = nil, firingButtons = {}, associatedVehicle = nil, shootGroup = nil, ballParametersList = nil}
+Cannon = {availableShoots = {}, coolDown = nil, firingButtons = {}, associatedVehicle = nil, shootGroup = nil, ballParametersList = nil, onCoolDown = {}}
 function Cannon:new(o, associatedVehicle, shootGroup)
     o = o or {}
     setmetatable(o, self)
@@ -9,32 +9,49 @@ function Cannon:new(o, associatedVehicle, shootGroup)
     return o    
 end
 
-function Cannon:fire(event)
-    print(event.target.id)
-    local ballFactory = require("src.domain.ball")
-    local ballColor = self.ballParametersList.getImage(event.target.id)
-    local ballImage = display.newImageRect(self.shootGroup, "assets/images/commons/balls/" .. ballColor, 25, 25)
-    local firedBall = ballFactory:new(nil, event.target.id, ballImage)
-    physics.addBody(firedBall.image, "dynamic", { isSensor=true })
-    firedBall.image.isBullet = true
-    firedBall.image.myName = "shootBall"
-    firedBall.image.x = self.associatedVehicle.image.x
-    firedBall.image.y = self.associatedVehicle.image.y
-    firedBall.image:toFront()
-    firedBall.image:setLinearVelocity(0, -360)
+function Cannon:closeCoolDown(event, bulletId)
+    self.onCoolDown[bulletId] = nil
     return true
+end
+
+function Cannon:drawCoolDownSquare(buttonId)
+    local coolDownSquare = display.newRoundedRect(20 + (100 * buttonId), 550, 80, 80, 6)
+    coolDownSquare.anchorX, coolDownSquare.anchorY = 0, 1
+    coolDownSquare:setFillColor(0.1,0.1,0.1,0.3)
+    transition.to(coolDownSquare, {time=2000, height = 0})
+end
+
+function Cannon:fire(event)
+    if self.onCoolDown[event.target.id.element] == nil then
+        self:initiateCoolDown(event.target.id.element, event.target.id.buttonId)
+        local ballFactory = require("src.domain.ball")
+        local ballColor = self.ballParametersList.getImage(event.target.id.element)
+        local ballImage = display.newImageRect(self.shootGroup, "assets/images/commons/balls/" .. ballColor, 25, 25)
+        local firedBall = ballFactory:new(nil, event.target.id.element, ballImage)
+        physics.addBody(firedBall.image, "dynamic", { isSensor=true })
+        firedBall.image.isBullet = true
+        firedBall.image.myName = "shootBall"
+        firedBall.image.x = self.associatedVehicle.image.x
+        firedBall.image.y = self.associatedVehicle.image.y
+        firedBall.image:toFront()
+        firedBall.image:setLinearVelocity(0, -360)
+    end
+    return true
+end
+
+function Cannon:initiateCoolDown(bulletId, buttonId)
+    self.onCoolDown[bulletId] = true
+    print(self.onCoolDown[bulletId])
+    self:drawCoolDownSquare(buttonId)
+    timer.performWithDelay(2000, function(event) return self:closeCoolDown(event, bulletId) end)
 end
 
 function Cannon:loadFiringButtons(elementsAvailable, ballGroup, fireButtonGroup)
     local widget = require("widget")
     local counter = 0
     local thisContext = self
-    print(self)
     for key, value in pairs(elementsAvailable) do
-        print(value)
-        print("ola")
         local ballColor = self.ballParametersList.getImage(value)
-        print(ballColor)
         local elementIcon = display.newImageRect(ballGroup, "assets/images/commons/balls/" .. ballColor, 30, 30)
         elementIcon.x = 60 + (100 * counter)
         elementIcon.y = 510
@@ -45,7 +62,7 @@ function Cannon:loadFiringButtons(elementsAvailable, ballGroup, fireButtonGroup)
                 top = 470,
                 height = 80,
                 width = 80,
-                id = value,
+                id = {buttonId= counter, element= value},
                 shape = "roundedRect",
                 cornerRadius = 6,
                 fillColor = { default={0.396,0.447,0.529,1}, over={1,0.1,0.7,1} },
@@ -59,11 +76,6 @@ function Cannon:loadFiringButtons(elementsAvailable, ballGroup, fireButtonGroup)
         table.insert(self.firingButtons, button)
         counter = counter + 1
     end
-end
-
-function Cannon:coolDown()
-
-
 end
 
 return Cannon
