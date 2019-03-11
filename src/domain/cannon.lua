@@ -14,7 +14,7 @@ function Cannon:fire(event)
     local ballFactory = require("src.domain.ball")
     local ballColor = self.ballParametersList.getImage(event.target.id)
     local ballImage = display.newImageRect(self.shootGroup, "assets/images/commons/balls/" .. ballColor, 25, 25)
-    local firedBall = ballFactory:new(nil, "anElement", ballImage)
+    local firedBall = ballFactory:new(nil, event.target.id, ballImage)
     physics.addBody(firedBall.image, "dynamic", { isSensor=true })
     firedBall.image.isBullet = true
     firedBall.image.myName = "shootBall"
