@@ -12,7 +12,8 @@ end
 function Cannon:fire(event)
     print(event.target.id)
     local ballFactory = require("src.domain.ball")
-    local ballImage = display.newImageRect(self.shootGroup, "assets/images/commons/balls/" .. self.ballParametersList:getImage(event.target.id), 25, 25)
+    local ballColor = self.ballParametersList.getImage(event.target.id)
+    local ballImage = display.newImageRect(self.shootGroup, "assets/images/commons/balls/" .. ballColor, 25, 25)
     local firedBall = ballFactory:new(nil, "anElement", ballImage)
     physics.addBody(firedBall.image, "dynamic", { isSensor=true })
     firedBall.image.isBullet = true
@@ -30,7 +31,11 @@ function Cannon:loadFiringButtons(elementsAvailable, ballGroup, fireButtonGroup)
     local thisContext = self
     print(self)
     for key, value in pairs(elementsAvailable) do
-        local elementIcon = display.newImageRect(ballGroup, "assets/images/commons/balls/ball_red.png", 30, 30)
+        print(value)
+        print("ola")
+        local ballColor = self.ballParametersList.getImage(value)
+        print(ballColor)
+        local elementIcon = display.newImageRect(ballGroup, "assets/images/commons/balls/" .. ballColor, 30, 30)
         elementIcon.x = 60 + (100 * counter)
         elementIcon.y = 510
        
