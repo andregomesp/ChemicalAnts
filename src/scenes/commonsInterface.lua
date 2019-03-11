@@ -45,7 +45,7 @@ local function initiateBackground()
 end
 
 local function initiateCannon(ballGroup, fireButtonGroup, shootGroup)
-    M.cannon = cannonFactory:new(nil, M.vehicle, shootGroup)
+    M.cannon = cannonFactory:new(nil, M.vehicle, shootGroup, coolDownSquareGroup)
     M.cannon:loadFiringButtons(M.params.availableBallTypes, ballGroup, fireButtonGroup)
 end
 

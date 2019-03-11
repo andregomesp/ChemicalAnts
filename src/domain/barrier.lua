@@ -8,4 +8,10 @@ function Barrier:new(o, balls, type)
     self.type = type
 end
 
+function Barrier:drawBarrier()
+end
+
+function Barrier:destroyBarrier()
+end
+
 return Barrier

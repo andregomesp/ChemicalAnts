@@ -1,10 +1,11 @@
-Cannon = {availableShoots = {}, coolDown = nil, firingButtons = {}, associatedVehicle = nil, shootGroup = nil, ballParametersList = nil, onCoolDown = {}}
-function Cannon:new(o, associatedVehicle, shootGroup)
+Cannon = {availableShoots = {}, coolDown = nil, firingButtons = {}, associatedVehicle = nil, shootGroup = nil, ballParametersList = nil, onCoolDown = {}, coolDownSquareGroup = nil}
+function Cannon:new(o, associatedVehicle, shootGroup, coolDownSquareGroup)
     o = o or {}
     setmetatable(o, self)
     self.__index = self
     self.associatedVehicle = associatedVehicle
     self.shootGroup = shootGroup
+    self.coolDownSquareGroup = coolDownSquareGroup
     self.ballParametersList = require("src.scenes.ballParameters")
     return o    
 end
@@ -41,7 +42,6 @@ end
 
 function Cannon:initiateCoolDown(bulletId, buttonId)
     self.onCoolDown[bulletId] = true
-    print(self.onCoolDown[bulletId])
     self:drawCoolDownSquare(buttonId)
     timer.performWithDelay(2000, function(event) return self:closeCoolDown(event, bulletId) end)
 end
