@@ -1,20 +1,20 @@
--- stage 1 has both Na, Cl and NaCl as barriers
+-- stage 1 has both Na and Cl as barriers
 
 --
 local M = {}
 
 local patterns = {
-    [0] = {types = "sodium", pattern = {patternType = "line", size = "quarter"}},
-    [1] = {types = "sodium", pattern = {patternType = "line", size = "half"}},
-    [2] = {types = "sodium", pattern = {patternType = "column", size = "quarter"}},
-    [3] = {types = "chlorine", pattern = {patternType = "line", size = "quarter"}},
-    [4] = {types = "chlorine", pattern = {patternType = "line", size = "half"}},
-    [5] = {types = "sodium", pattern = {patternType = "stair-left", size = "half"}},
+    [0] = {type = "sodium", pattern = {patternType = "line", numberOfPieces = 3}},
+    [1] = {type = "sodium", pattern = {patternType = "line", numberOfPieces = 4}},
+    [2] = {type = "sodium", pattern = {patternType = "column", numberOfPieces = 4}},
+    [3] = {type = "chlorine", pattern = {patternType = "line", numberOfPieces = 2}},
+    [4] = {type = "chlorine", pattern = {patternType = "line", numberOfPieces = 5}},
+    [5] = {type = "sodium", pattern = {patternType = "stair-left", numberOfPieces = 4}},
 }
 
 function M:getPattern(number)
-    local patternType = patterns[number]
-    local specification = require("src.barrierPatterns.patternSpecification")
+    return patterns[number]
+
 end
 
 return M

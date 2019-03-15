@@ -1,10 +1,10 @@
-Barrier = {balls = {}}
+Barrier = {pieces = {}, type = {}}
 
-function Barrier:new(o, balls, type)
+function Barrier:new(o, pieces, type)
     o = o or {}
     setmetatable(o, self)
     self.__index = self
-    self.balls = balls
+    self.pieces = pieces
     self.type = type
 end
 
