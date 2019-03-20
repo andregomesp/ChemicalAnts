@@ -6,6 +6,13 @@ function M:initiateCommonListeners(commons, shootGroup)
         return true
     end
 
+    local function collisionCar(event)
+        if event.other.class == "barrier" then
+            print("bateu na barreira")
+        end
+        return true
+    end
+
     local function moveVehicle(event)
         commons.vehicle:move(event)
         return true
@@ -16,8 +23,8 @@ function M:initiateCommonListeners(commons, shootGroup)
         return true
     end
 
-
     commons.background.image:addEventListener("touch", moveVehicle)
+    commons.vehicle.image:addEventListener("collision", collisionCar)
     Runtime:addEventListener( "enterFrame", controlVehicleMovement )
     Runtime:addEventListener( "enterFrame", moveBackground )
 end

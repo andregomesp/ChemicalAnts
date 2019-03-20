@@ -35,6 +35,7 @@ function Cannon:fire(event)
         firedBall.image.x = self.associatedVehicle.image.x
         firedBall.image.y = self.associatedVehicle.image.y
         firedBall.image:toFront()
+        firedBall.image:addEventListener("collision", function (event) return self:shootColision(event) end)
         firedBall.image:setLinearVelocity(0, -360)
     end
     return true
@@ -76,6 +77,12 @@ function Cannon:loadFiringButtons(elementsAvailable, ballGroup, fireButtonGroup)
         table.insert(self.firingButtons, button)
         counter = counter + 1
     end
+end
+
+function Cannon:shootColision(event)
+    local reactions = require("src.reactions.reactions")
+    reactions:initiateReaction(event)
+    return true
 end
 
 return Cannon

@@ -1,10 +1,10 @@
 local M = {}
 local mainBackGroup = display.newGroup()
 local objectBackGroup = display.newGroup()
+local barrierGroup = display.newGroup()
 local shootGroup = display.newGroup()
 local fireButtonGroup = display.newGroup()
 local ballGroup = display.newGroup()
-local barrierGroup = display.newGroup()
 local commonsGroup = display.newGroup()
 local coolDownSquareGroup = display.newGroup()
 local uiGroup = display.newGroup()
@@ -61,11 +61,10 @@ local function initiateVehicle()
 end
 
 -- Temporary: delete as soon as test is ok
-local function intiateABarrier(stageNumber, barrierGroup, vehicle)
+local function initiateABarrier(stageNumber, barrierGroup)
     local barrierFactory = require("src.domain.barrier")
     local barrier = barrierFactory:new()
-    local cv, cy =  vehicle.image:getLinearVelocity()
-    barrier:drawBarrier(stageNumber, 0, barrierGroup, 30, 20, 25, cy)
+    barrier:drawBarrier(stageNumber, 0, barrierGroup, 30, 20, 25, -40, barrier)
 
 end
 
@@ -75,7 +74,7 @@ function M.initiateCommons(stageNumber)
     initiateVehicle()
     initiateCannon(ballGroup, fireButtonGroup, shootGroup)
     eventFactory:initiateCommonListeners(M, shootGroup)
-    initiateABarrier(stageNumber, barrierGroup, M.vehicle)
+    initiateABarrier(stageNumber, barrierGroup)
 
 end
 
