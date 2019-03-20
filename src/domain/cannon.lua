@@ -32,6 +32,7 @@ function Cannon:fire(event)
         physics.addBody(firedBall.image, "dynamic", { isSensor=true })
         firedBall.image.isBullet = true
         firedBall.image.myName = "shootBall"
+        firedBall.image.element = firedBall.element
         firedBall.image.x = self.associatedVehicle.image.x
         firedBall.image.y = self.associatedVehicle.image.y
         firedBall.image:toFront()
@@ -81,7 +82,7 @@ end
 
 function Cannon:shootColision(event)
     local reactions = require("src.reactions.reactions")
-    reactions:initiateReaction(event)
+    reactions.initiateReaction(event)
     return true
 end
 

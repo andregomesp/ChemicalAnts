@@ -38,6 +38,7 @@ function M:drawPattern(stage, patternNumber, barrierGroup, xAnchor, yAnchor, pie
         local image = display.newImageRect(barrierGroup, "assets/images/commons/barriers/" .. pattern["type"] .. "-" .. piece .. ".png", pieceSize, pieceSize)
         image.class = "barrier"
         image.barrier = barrier
+        image.element = pattern["type"]
         image.x = positions[i+1]["xPos"]
         image.y = positions[i+1]["yPos"]
         physics.addBody(image, "dynamic", {isSensor = true})
