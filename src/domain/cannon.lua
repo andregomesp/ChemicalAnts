@@ -1,11 +1,12 @@
-Cannon = {availableShoots = {}, coolDown = nil, firingButtons = {}, associatedVehicle = nil, shootGroup = nil, ballParametersList = nil, onCoolDown = {}, coolDownSquareGroup = nil}
-function Cannon:new(o, associatedVehicle, shootGroup, coolDownSquareGroup)
+Cannon = {availableShoots = {}, coolDown = nil, firingButtons = {}, associatedVehicle = nil, shootGroup = nil, ballParametersList = nil, onCoolDown = {}, coolDownSquareGroup = nil, effectsGroup = nil}
+function Cannon:new(o, associatedVehicle, shootGroup, coolDownSquareGroup, effectsGroup)
     o = o or {}
     setmetatable(o, self)
     self.__index = self
     self.associatedVehicle = associatedVehicle
     self.shootGroup = shootGroup
     self.coolDownSquareGroup = coolDownSquareGroup
+    self.effectsGroup = effectsGroup
     self.ballParametersList = require("src.scenes.ballParameters")
     return o    
 end
@@ -51,7 +52,6 @@ end
 function Cannon:loadFiringButtons(elementsAvailable, ballGroup, fireButtonGroup)
     local widget = require("widget")
     local counter = 0
-    local thisContext = self
     for key, value in pairs(elementsAvailable) do
         local ballColor = self.ballParametersList.getImage(value)
         local elementIcon = display.newImageRect(ballGroup, "assets/images/commons/balls/" .. ballColor, 30, 30)
@@ -82,7 +82,7 @@ end
 
 function Cannon:shootColision(event)
     local reactions = require("src.reactions.reactions")
-    reactions.initiateReaction(event)
+    reactions.initiateReaction(event, self.effectsGroup)
     return true
 end
 

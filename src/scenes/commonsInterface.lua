@@ -8,6 +8,7 @@ local ballGroup = display.newGroup()
 local commonsGroup = display.newGroup()
 local coolDownSquareGroup = display.newGroup()
 local uiGroup = display.newGroup()
+local effectsGroup = display.newGroup()
 
 M.background = nil
 M.cannon = nil
@@ -45,8 +46,8 @@ local function initiateBackground()
     M.background = backgroundFactory:new(nil, backgroundImage, objectBackGroup, mainBackGroup)
 end
 
-local function initiateCannon(ballGroup, fireButtonGroup, shootGroup)
-    M.cannon = cannonFactory:new(nil, M.vehicle, shootGroup, coolDownSquareGroup)
+local function initiateCannon(ballGroup, fireButtonGroup, shootGroup, effectsGroup)
+    M.cannon = cannonFactory:new(nil, M.vehicle, shootGroup, coolDownSquareGroup, effectsGroup)
     M.cannon:loadFiringButtons(M.params.availableBallTypes, ballGroup, fireButtonGroup)
 end
 
@@ -72,7 +73,7 @@ function M.initiateCommons(stageNumber)
     getStageParameters(stageNumber)
     initiateBackground()
     initiateVehicle()
-    initiateCannon(ballGroup, fireButtonGroup, shootGroup)
+    initiateCannon(ballGroup, fireButtonGroup, shootGroup, effectsGroup)
     eventFactory:initiateCommonListeners(M, shootGroup)
     initiateABarrier(stageNumber, barrierGroup)
 
