@@ -52,6 +52,7 @@ end
 function Cannon:loadFiringButtons(elementsAvailable, ballGroup, fireButtonGroup)
     local widget = require("widget")
     local counter = 0
+    -- todo: Elements available needs fixing, It is currently passing the whole list and not the stage parameters
     for key, value in pairs(elementsAvailable) do
         local ballColor = self.ballParametersList.getImage(value)
         local elementIcon = display.newImageRect(ballGroup, "assets/images/commons/balls/" .. ballColor, 30, 30)

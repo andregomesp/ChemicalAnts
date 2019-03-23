@@ -10,9 +10,10 @@ local function analyseReaction(element1, element2)
 end
 
 local function spriteHandler(event, sprite)
-    print(event.phase)
-    if event.phase == "ended" then
-        print("erasing")
+    if event.phase == "next" or event.phase == "began" then
+        sprite.width = 100
+        sprite.height = 100
+    elseif event.phase == "ended" then
         display.remove(sprite)
         sprite = nil
     end    

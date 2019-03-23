@@ -13,20 +13,23 @@ function M:initiateCommonListeners(commons, shootGroup)
         return true
     end
 
-    local function moveVehicle(event)
-        commons.vehicle:move(event)
+    local function handleBackground(event)
+        moveGroup = commons.background:checkBackgroundNeedsRebuild()
+        if moveGroup ~= false then
+            commons.background:moveBackgroundGroup(moveGroup)
+        end
         return true
     end
 
-    local function moveBackground(event)
-        commons.background:moveBackground()
+    local function moveVehicle(event)
+        commons.vehicle:move(event)
         return true
     end
 
     commons.background.image:addEventListener("touch", moveVehicle)
     commons.vehicle.image:addEventListener("collision", collisionCar)
     Runtime:addEventListener( "enterFrame", controlVehicleMovement )
-    Runtime:addEventListener( "enterFrame", moveBackground )
+    Runtime:addEventListener( "enterFrame", function (event) return handleBackground(event) end )
 end
 
 return M

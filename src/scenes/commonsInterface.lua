@@ -1,6 +1,7 @@
 local M = {}
 local mainBackGroup = display.newGroup()
 local objectBackGroup = display.newGroup()
+local objectSecondaryBackGroup = display.newGroup()
 local barrierGroup = display.newGroup()
 local shootGroup = display.newGroup()
 local fireButtonGroup = display.newGroup()
@@ -17,6 +18,7 @@ M.hpBarImage = nil
 M.params = nil
 M.stageParameters = nil
 M.vehicle = nil
+M.carVelocity = 180
 
 local backgroundFactory = require("src.domain.background")
 local cannonFactory = require("src.domain.cannon")
@@ -34,16 +36,9 @@ local function initiateBackground()
     backgroundImage.x = display.contentCenterX
     backgroundImage.y = display.contentCenterY
     physics.addBody(backgroundImage, "dynamic", { isSensor=true })
+    M.background = backgroundFactory:new(nil, backgroundImage, objectBackGroup, objectSecondaryBackGroup, mainBackGroup)
+    M.background:buildBackground(M.carVelocity)
 
-    local i = 0
-    while i < 5 do
-        local roadTile = display.newImageRect(objectBackGroup, "assets/images/backgrounds/smallDirtyRoadTile.png", 160, 200)
-        roadTile.x = 160
-        roadTile.y = -(200 * i) + 600
-        i = i + 1
-    end
-    physics.addBody(objectBackGroup, "dynamic", {isSensor = true})
-    M.background = backgroundFactory:new(nil, backgroundImage, objectBackGroup, mainBackGroup)
 end
 
 local function initiateCannon(ballGroup, fireButtonGroup, shootGroup, effectsGroup)
@@ -52,7 +47,7 @@ local function initiateCannon(ballGroup, fireButtonGroup, shootGroup, effectsGro
 end
 
 local function initiateVehicle()
-    local vehicleImage = display.newImageRect(commonsGroup, "assets/images/commons/tanktemporary.png", 55, 55)
+    local vehicleImage = display.newImageRect(commonsGroup, "assets/images/commons/tanktemporary.png", 45, 45)
     vehicleImage.x = 160
     vehicleImage.y = 400
     vehicleImage.myName = vehicleImage
@@ -62,10 +57,11 @@ local function initiateVehicle()
 end
 
 -- Temporary: delete as soon as test is ok
+-- Todo: build real way of calling the barriers
 local function initiateABarrier(stageNumber, barrierGroup)
     local barrierFactory = require("src.domain.barrier")
     local barrier = barrierFactory:new()
-    barrier:drawBarrier(stageNumber, 0, barrierGroup, 30, 20, 25, -40, barrier)
+    barrier:drawBarrier(stageNumber, 0, barrierGroup, 60, 20, 25, M.carVelocity, barrier)
 
 end
 

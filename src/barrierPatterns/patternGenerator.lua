@@ -42,8 +42,7 @@ function M:drawPattern(stage, patternNumber, barrierGroup, xAnchor, yAnchor, pie
         image.x = positions[i+1]["xPos"]
         image.y = positions[i+1]["yPos"]
         physics.addBody(image, "dynamic", {isSensor = true})
-        print(carVelocity)
-        image:setLinearVelocity(0, carVelocity * -1)
+        image:setLinearVelocity(0, carVelocity)
         table.insert(imageTable, image)
         i = i + 1
     end
