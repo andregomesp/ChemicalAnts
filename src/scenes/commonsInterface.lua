@@ -58,7 +58,9 @@ end
 
 -- Temporary: delete as soon as test is ok
 -- Todo: build real way of calling the barriers
-local function initiateABarrier(stageNumber, barrierGroup)
+local function initiateBarriers(stageNumber, barrierGroup)
+    local patternFilePath = "src.domain.barrierPatterns.stage" .. tostring(stageNumber)
+    local patterns = patternFilePath:getPatterns()
     local barrierFactory = require("src.domain.barrier")
     local barrier = barrierFactory:new()
     barrier:drawBarrier(stageNumber, 0, barrierGroup, 60, 20, 25, M.carVelocity, barrier)
@@ -71,7 +73,7 @@ function M.initiateCommons(stageNumber)
     initiateVehicle()
     initiateCannon(ballGroup, fireButtonGroup, shootGroup, effectsGroup)
     eventFactory:initiateCommonListeners(M, shootGroup)
-    initiateABarrier(stageNumber, barrierGroup)
+    initiateBarriers(stageNumber, barrierGroup)
 
 end
 
