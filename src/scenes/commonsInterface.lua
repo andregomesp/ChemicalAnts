@@ -62,8 +62,11 @@ local function initiateBarriers(stageNumber, barrierGroup)
     local patternFilePath = "src.domain.barrierPatterns.stage" .. tostring(stageNumber)
     local patterns = patternFilePath:getPatterns()
     local barrierFactory = require("src.domain.barrier")
-    local barrier = barrierFactory:new()
-    barrier:drawBarrier(stageNumber, 0, barrierGroup, 60, 20, 25, M.carVelocity, barrier)
+    local i = 1
+    while i <= #patterns do
+        local barrier = barrierFactory:new()
+        barrier:drawBarrier(stageNumber, 0, barrierGroup, 60, 20, 25, M.carVelocity, barrier)
+    end
 
 end
 
