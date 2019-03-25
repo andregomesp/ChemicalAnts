@@ -58,7 +58,7 @@ function Cannon:loadFiringButtons(elementsAvailable, ballGroup, fireButtonGroup)
         local elementIcon = display.newImageRect(ballGroup, "assets/images/commons/balls/" .. ballColor, 30, 30)
         elementIcon.x = 60 + (100 * counter)
         elementIcon.y = 510
-       
+        
         local button = widget.newButton(
             {
                 left = 20 + (100 * counter),
@@ -83,7 +83,7 @@ end
 
 function Cannon:shootColision(event)
     local reactions = require("src.reactions.reactions")
-    reactions.initiateReaction(event, self.effectsGroup)
+    reactions.initiateReaction(event, self.effectsGroup, self.associatedVehicle.carVelocity)
     return true
 end
 

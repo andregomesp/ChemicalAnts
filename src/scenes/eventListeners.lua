@@ -7,9 +7,11 @@ function M:initiateCommonListeners(commons, shootGroup)
     end
 
     local function collisionCar(event)
-        if event.other.class == "barrier" then
-            print("bateu na barreira")
-        end
+        if event.other.myName == "barrier" then
+            commons.vehicle:takeDamage(10)
+        elseif event.other.myName == "explosion" then
+            commons.vehicle:takeDamage(15)
+        end 
         return true
     end
 

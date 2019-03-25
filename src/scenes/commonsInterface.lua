@@ -18,7 +18,7 @@ M.hpBarImage = nil
 M.params = nil
 M.stageParameters = nil
 M.vehicle = nil
-M.carVelocity = 180
+M.carVelocity = 140
 
 local backgroundFactory = require("src.domain.background")
 local cannonFactory = require("src.domain.cannon")
@@ -50,24 +50,30 @@ local function initiateVehicle()
     local vehicleImage = display.newImageRect(commonsGroup, "assets/images/commons/tanktemporary.png", 45, 45)
     vehicleImage.x = 160
     vehicleImage.y = 400
-    vehicleImage.myName = vehicleImage
-    physics.addBody(vehicleImage, "dynamic")
+    vehicleImage.myName = "vehicle"
+    physics.addBody(vehicleImage, "dynamic", {isSensor = true})
     vehicleImage:toFront()
-    M.vehicle = vehicleFactory:new(nil, vehicleImage)
+    M.vehicle = vehicleFactory:new(nil, vehicleImage, M.carVelocity)
 end
 
 -- Temporary: delete as soon as test is ok
 -- Todo: build real way of calling the barriers
 local function initiateBarriers(stageNumber, barrierGroup)
-    local patternFilePath = "src.domain.barrierPatterns.stage" .. tostring(stageNumber)
-    local patterns = patternFilePath:getPatterns()
+    local patternFilePath = "src.barrierPatterns.stage" .. tostring(stageNumber)
+    local patternList = require(patternFilePath)
+    local patterns = patternList:getPatterns()
     local barrierFactory = require("src.domain.barrier")
     local i = 1
     while i <= #patterns do
-        local barrier = barrierFactory:new()
-        barrier:drawBarrier(stageNumber, 0, barrierGroup, 60, 20, 25, M.carVelocity, barrier)
+        local pattern = patterns[i]
+        local time = patterns[i]["time"]
+        local newBarrier = function()
+            local barrier = barrierFactory:new()
+            barrier:drawBarrier(barrierGroup, pattern, M.carVelocity, barrier)
+        end
+        timer.performWithDelay(time, newBarrier)
+        i = i + 1
     end
-
 end
 
 function M.initiateCommons(stageNumber)

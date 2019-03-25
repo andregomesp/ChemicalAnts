@@ -7,9 +7,10 @@ function Barrier:new(o)
     return o
 end
 
-function Barrier:drawBarrier(stage, patternNumber, barrierGroup, xAnchor, yAnchor, pieceSize, carVelocity, barrier)
-    local barrierGenerator = require("src.barrierPatterns.patternGenerator")
-    local barrier = barrierGenerator:drawPattern(stage, patternNumber, barrierGroup, xAnchor, yAnchor, pieceSize, carVelocity, barrier)
+function Barrier:drawBarrier(barrierGroup, pattern, carVelocity, barrier)
+    local pieceSize = 25
+    local patternGenerator = require("src.barrierPatterns.patternGenerator")
+    local barrier = patternGenerator:drawPattern(barrierGroup, pattern, pieceSize, carVelocity, barrier)
     self.pieces = barrier["pieces"]
     self.type = barrier["type"]
 end

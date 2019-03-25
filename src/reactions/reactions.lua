@@ -22,7 +22,17 @@ end
 local function corrosion()
 end
 
-local function explosion(event, effectsGroup)
+
+local function explosionCollision(event)
+    print(event.other.myName)
+    if event.other.myName == "barrier" then
+        display.remove(event.other)
+        event.other = nil
+    end
+    return true
+end
+
+local function explosion(event, effectsGroup, carVelocity)
     local sheetOptions = {
         numFrames = 10,
         width = 32,
@@ -41,22 +51,23 @@ local function explosion(event, effectsGroup)
     local explosionAnimation = display.newSprite(effectsGroup, explosion_sheet, sequence_explosion)
     explosionAnimation.x = event.other.x
     explosionAnimation.y = event.other.y
+    explosionAnimation.myName = "explosion"
     explosionAnimation:play()
-    physics.addBody(explosionAnimation, "dynamic")
-    explosionAnimation:setLinearVelocity(0, 45)
+    physics.addBody(explosionAnimation, "dynamic", {isSensor = true})
+    explosionAnimation:setLinearVelocity(0, carVelocity - 12)
     display.remove(event.other)
+    explosionAnimation:addEventListener("collision", function(event) return explosionCollision(event) end)
     local spriteListener = function(event) return spriteHandler(event, explosionAnimation) end 
-    explosionAnimation:addEventListener("sprite", spriteListener) 
+    explosionAnimation:addEventListener("sprite", spriteListener)
+    return true 
 end
 
-
-
-function M.initiateReaction(event, effectsGroup)
+function M.initiateReaction(event, effectsGroup, carVelocity)
     reaction = analyseReaction(event.target.element, event.other.element)
     if reaction ~= nil then 
         if reaction == "explosion" then
             display.remove(event.target)
-            local explosion = function() return explosion(event, effectsGroup) end
+            local explosion = function() return explosion(event, effectsGroup, carVelocity) end
             timer.performWithDelay(40, explosion)
         end
     end

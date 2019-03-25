@@ -36,7 +36,7 @@ function Background:buildBackground(carVelocity)
     physics.addBody(self.objectSecondaryBackGroup, "dynamic", {isSensor = true})
     self.objectBackGroup:setLinearVelocity(0, carVelocity)
     self.objectSecondaryBackGroup:setLinearVelocity(0, carVelocity)
-    self.objectBackGroup:addEventListener("collision", function() return print("bateu") end)
+    -- self.objectBackGroup:addEventListener("collision", function() return print("bateu") end)
     -- self.objectSecondaryBackGroup:addEventListener("collision", )
 end
 

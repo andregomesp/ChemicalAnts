@@ -1,6 +1,6 @@
 local Vehicle = {hp = 100}
 
-function Vehicle:new(o, vehicleImage)
+function Vehicle:new(o, vehicleImage, carVelocity)
     o = o or {}
     setmetatable(o, self)
     self.__index = self
@@ -9,6 +9,7 @@ function Vehicle:new(o, vehicleImage)
     self.image = nil
     self.xMoveDirection = nil
     self.image = vehicleImage
+    self.carVelocity = carVelocity
     return o    
 end
 
@@ -105,7 +106,12 @@ end
 function Vehicle:boost()
 end
 
-function Vehicle:takeDamage()
+function Vehicle:takeDamage(ammount)
+    if (self.hp - ammount < 0) then
+        self.hp = 0
+    else
+        self.hp = self.hp - ammount
+    end
 end
 
 function Vehicle:destroy()
