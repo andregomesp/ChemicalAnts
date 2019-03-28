@@ -1,4 +1,4 @@
-Ball = {element = nil, image = nil}
+local Ball = {element = nil, image = nil}
 
 function Ball:new(o, element, ballImage)
     o = o or {}
@@ -6,7 +6,8 @@ function Ball:new(o, element, ballImage)
     self.__index = self
     self.element = element
     self.image = ballImage
-    return o    
+    return o
 end
 
 return Ball
+

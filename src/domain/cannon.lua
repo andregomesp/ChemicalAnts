@@ -1,4 +1,4 @@
-Cannon = {availableShoots = {}, coolDown = nil, firingButtons = {}, associatedVehicle = nil, shootGroup = nil, ballParametersList = nil, onCoolDown = {}, coolDownSquareGroup = nil, effectsGroup = nil}
+local Cannon = {availableShoots = {}, coolDown = nil, firingButtons = {}, associatedVehicle = nil, shootGroup = nil, ballParametersList = nil, onCoolDown = {}, coolDownSquareGroup = nil, effectsGroup = nil}
 function Cannon:new(o, associatedVehicle, shootGroup, coolDownSquareGroup, effectsGroup)
     o = o or {}
     setmetatable(o, self)
@@ -8,7 +8,7 @@ function Cannon:new(o, associatedVehicle, shootGroup, coolDownSquareGroup, effec
     self.coolDownSquareGroup = coolDownSquareGroup
     self.effectsGroup = effectsGroup
     self.ballParametersList = require("src.scenes.ballParameters")
-    return o    
+    return o
 end
 
 function Cannon:closeCoolDown(event, bulletId)
@@ -58,7 +58,6 @@ function Cannon:loadFiringButtons(elementsAvailable, ballGroup, fireButtonGroup)
         local elementIcon = display.newImageRect(ballGroup, "assets/images/commons/balls/" .. ballColor, 30, 30)
         elementIcon.x = 60 + (100 * counter)
         elementIcon.y = 510
-        
         local button = widget.newButton(
             {
                 left = 20 + (100 * counter),

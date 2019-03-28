@@ -5,7 +5,7 @@ local parameters = {
         image = "ball_blue.png"
     },
     oxygen = {
-        image = "ball_red.png" 
+        image = "ball_red.png"
     }
 }
 

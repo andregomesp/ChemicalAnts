@@ -1,6 +1,8 @@
 local M = {}
 
 function M:initiateCommonListeners(commons, shootGroup)
+
+
     local function controlVehicleMovement(event)
         commons.vehicle:controlMovement()
         return true
@@ -11,6 +13,8 @@ function M:initiateCommonListeners(commons, shootGroup)
             commons.vehicle:takeDamage(10)
         elseif event.other.myName == "explosion" then
             commons.vehicle:takeDamage(15)
+        elseif event.other.myName == "objectBackGroup" then
+            commons.vehicle:bounceOffWall()
         end 
         return true
     end
@@ -27,7 +31,8 @@ function M:initiateCommonListeners(commons, shootGroup)
         commons.vehicle:move(event)
         return true
     end
-
+    commons.background.objectBackGroup:addEventListener("touch", moveVehicle)
+    commons.background.objectSecondaryBackGroup:addEventListener("touch", moveVehicle)
     commons.background.image:addEventListener("touch", moveVehicle)
     commons.vehicle.image:addEventListener("collision", collisionCar)
     Runtime:addEventListener( "enterFrame", controlVehicleMovement )
