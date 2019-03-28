@@ -21,48 +21,63 @@ function Vehicle:bounceOffWall()
 end
 
 function Vehicle:makeMovement(event)
-    print(event.target.myName)
+    local willMove = true
     if event.target.myName == "objectBackGroup" then
-        if event.target.x <= self.image.x then
-            self.xDest = event.target.x + event.target.width / 2.1 + (self.image.width / 2) + 1
-        else
-            self.xDest = event.target.x - (self.image.width / 2) - 1
+        if event.target.x < self.image.x then
+            local leftBoundary = event.target.x + event.target.width / 2 + (self.image.width / 2)
+            print(leftBoundary)
+            print(self.image.x)
+            if leftBoundary < self.image.x then
+                self.xDest = leftBoundary
+            else
+                willMove = false
+            end         
+        elseif event.target.x > self.image.x then
+            local rightBoundary = event.target.x - event.target.width / 2 - (self.image.width / 2)
+            if rightBoundary > self.image.x then
+                self.xDest = rightBoundary
+            else 
+                willMove = false
+            end
         end
     else
         self.xDest = event.x
     end
-    local objectXOffset = event.x - self.image.x
-    local directionMultiplier = 0
-    local vehicleAngularVelocity = 0
-    if event.x > self.image.x then
-        vehicleAngularVelocity = 35
-        self.xMoveDirection = "right"
-        directionMultiplier = 1
 
-    elseif event.x < self.image.x then
-        vehicleAngularVelocity = -35
-        self.xMoveDirection = "left"
-        directionMultiplier = -1
-    end
-    local vehicleXVelocity = (15 * (objectXOffset/40)) + 55 * directionMultiplier
-    local vehicleYVelocity = 0
+    if willMove == true then
+        local objectXOffset = event.x - self.image.x
+        local directionMultiplier = 0
+        local vehicleAngularVelocity = 0
+        if event.x > self.image.x then
+            vehicleAngularVelocity = 35
+            self.xMoveDirection = "right"
+            directionMultiplier = 1
 
-    if self.xMoveDirection == "right" then
-        if self.image.rotation <= 15 and self.image.rotation >= 0 then
-            self.image.angularVelocity = vehicleAngularVelocity
-        elseif self.image.rotation >= -15 and self.image.rotation < 0 then
-            self.image.angularVelocity = vehicleAngularVelocity
+        elseif event.x < self.image.x then
+            vehicleAngularVelocity = -35
+            self.xMoveDirection = "left"
+            directionMultiplier = -1
         end
-    elseif self.xMoveDirection == "left" then
-        if self.image.rotation >= -15 and self.image.rotation <= 0 then
-            self.image.angularVelocity = vehicleAngularVelocity
-        elseif self.image.rotation <= 15 and self.image.rotation > 0 then
-            self.image.angularVelocity = vehicleAngularVelocity
-        end
-    end
+        local vehicleXVelocity = (15 * (objectXOffset/40)) + 55 * directionMultiplier
+        local vehicleYVelocity = 0
 
-    if event.x ~= self.image.x then
-        self.image:setLinearVelocity(vehicleXVelocity, vehicleYVelocity)
+        if self.xMoveDirection == "right" then
+            if self.image.rotation <= 15 and self.image.rotation >= 0 then
+                self.image.angularVelocity = vehicleAngularVelocity
+            elseif self.image.rotation >= -15 and self.image.rotation < 0 then
+                self.image.angularVelocity = vehicleAngularVelocity
+            end
+        elseif self.xMoveDirection == "left" then
+            if self.image.rotation >= -15 and self.image.rotation <= 0 then
+                self.image.angularVelocity = vehicleAngularVelocity
+            elseif self.image.rotation <= 15 and self.image.rotation > 0 then
+                self.image.angularVelocity = vehicleAngularVelocity
+            end
+        end
+
+        if event.x ~= self.image.x and willMove == true then
+            self.image:setLinearVelocity(vehicleXVelocity, vehicleYVelocity)
+        end
     end
 end
 
