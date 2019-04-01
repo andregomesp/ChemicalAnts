@@ -14,7 +14,6 @@ local effectsGroup = display.newGroup()
 M.background = nil
 M.cannon = nil
 M.hpBar = nil
-M.hpBarImage = nil
 M.params = nil
 M.stageParameters = nil
 M.vehicle = nil
@@ -27,7 +26,7 @@ local stageParameters = require("src.scenes.sceneParameters")
 local vehicleFactory = require("src.domain.vehicle")
 
 local function getStageParameters(stageNumber)
-    params = require("src.scenes.sceneParameters")
+    local params = require("src.scenes.sceneParameters")
     M.params = params.getParameters(stageNumber)
 end
 

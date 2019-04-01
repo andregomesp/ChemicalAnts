@@ -13,13 +13,6 @@ function Vehicle:new(o, vehicleImage, carVelocity)
     return o
 end
 
-function Vehicle:bounceOffWall()
-    -- self.image:setLinearVelocity(0, 0)
-    -- self.image.angularVelocity = 0
-    -- self.image.rotation = 0
-    return true
-end
-
 function Vehicle:makeMovement(event)
     local willMove = true
     if event.target.myName == "objectBackGroup" then
