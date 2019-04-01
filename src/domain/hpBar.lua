@@ -15,3 +15,4 @@ function hpBar:drawBar(uiGroup)
 end
 
 function hpBar:subtractHp()
+end
