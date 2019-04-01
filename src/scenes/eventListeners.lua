@@ -14,7 +14,7 @@ function M:initiateCommonListeners(commons, shootGroup)
         elseif event.other.myName == "explosion" then
             commons.vehicle:takeDamage(15)
         elseif event.other.myName == "objectBackGroup" then
-            commons.vehicle:bounceOffWall()
+            -- commons.vehicle:bounceOffWall()
         end 
         return true
     end
