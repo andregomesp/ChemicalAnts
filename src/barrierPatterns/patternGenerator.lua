@@ -21,9 +21,6 @@ local function getWallPiecesPosition(form, pieceSize, measures, numberOfPieces, 
         local position = {xPos = x, yPos = y}
         table.insert(positions, position)
         i = i + 1
-        if (i % measures["x"] == 0) then
-            row = row + 1
-        end
     end
     return positions    
 end
@@ -54,9 +51,12 @@ function M:drawPattern(barrierGroup, pattern, pieceSize, carVelocity, barrier)
             elseif (i == numberOfPieces) then
                 piece = "right-border"
             end
-        elseif (form == "box") then
+        elseif (form == "rectangle") then
             local positionDefinition = i % measures["x"]
             local previousDefinition = ((i - 1) % measures["x"])
+            if (i % measures["x"] == 0) then
+                row = row + 1
+            end
             if (((measures["x"] * row) - (measures["x"] - 1)) == i) then
             end
         end
@@ -70,9 +70,7 @@ function M:drawPattern(barrierGroup, pattern, pieceSize, carVelocity, barrier)
         image:setLinearVelocity(0, carVelocity - 5)
         table.insert(imageTable, image)
         i = i + 1
-        if (i % measures["x"] == 0) then
-            row = row + 1
-        end
+        
     end
     return {pieces = imageTable, type = type}
 end
