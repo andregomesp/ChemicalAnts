@@ -142,7 +142,7 @@ function Vehicle:adjustInvulnerability()
     timer.performWithDelay(self.invulnerableTime, function() return self:turnOffInvulnerability() end)
 end
 
-function Vehicle:takeDamage(ammount, hpBar)
+function Vehicle:takeDamage(ammount, hpBar, effectsGroup)
     if self.invulnerable == false then
         local physicalHit = require("src.reactions.physicalHit")
         physicalHit:drawHit(effectsGroup, self)
