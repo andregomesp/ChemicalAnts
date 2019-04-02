@@ -32,8 +32,8 @@ end
 function HpBar:subtractHpAnimation(ammountSubtracted)
     self.barImage:setFillColor(0.858, 0.2, 0.082)
     local imageCurrentHeightPerCentToSubtract = (ammountSubtracted / 100) * self.boxImage.height
-    transition.to(self.barImage, {time=300, height=self.barImage.height - imageCurrentHeightPerCentToSubtract,
-    onComplete = function() return self:restoreBarColor() end})
+    transition.to(self.barImage, {time=200, height=self.barImage.height - imageCurrentHeightPerCentToSubtract,
+    transition = "easing.outQuart", onComplete = function() return self:restoreBarColor() end})
 
 end
 

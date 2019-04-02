@@ -144,6 +144,8 @@ end
 
 function Vehicle:takeDamage(ammount, hpBar)
     if self.invulnerable == false then
+        local physicalHit = require("src.reactions.physicalHit")
+        physicalHit:drawHit(effectsGroup, self)
         self:adjustInvulnerability()
         local ammountSubtracted = ammount
         if (self.hp - ammount < 0) then
@@ -156,7 +158,7 @@ function Vehicle:takeDamage(ammount, hpBar)
     end
 end
 
-function Vehicle:destroy()
+function Vehicle:destroyCar()
 end
 
 return Vehicle
