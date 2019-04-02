@@ -1,6 +1,6 @@
 local M = {}
 
-function M:initiateCommonListeners(commons, shootGroup)
+function M:initiateCommonListeners(commons, shootGroup, effectsGroup)
 
 
     local function controlVehicleMovement(event)
@@ -9,10 +9,11 @@ function M:initiateCommonListeners(commons, shootGroup)
     end
 
     local function collisionCar(event)
+        print(effectsGroup)
         if event.other.myName == "barrier" then
-            commons.vehicle:takeDamage(10, commons.hpBar, commons.effectsGroup)
+            commons.vehicle:takeDamage(10, commons.hpBar, effectsGroup)
         elseif event.other.myName == "explosion" then
-            commons.vehicle:takeDamage(15, commons.hpBar, commons.effectsGroup)
+            commons.vehicle:takeDamage(15, commons.hpBar, effectsGroup)
         elseif event.other.myName == "objectBackGroup" then
             -- commons.vehicle:bounceOffWall()
         end 
@@ -20,9 +21,9 @@ function M:initiateCommonListeners(commons, shootGroup)
     end
 
     local function handleBackground(event)
-        moveGroup = commons.background:checkBackgroundNeedsRebuild()
-        if moveGroup ~= false then
-            commons.background:moveBackgroundGroup(moveGroup)
+        needToMoveGroup = commons.background:checkBackgroundNeedsRebuild()
+        if needToMoveGroup ~= false then
+            commons.background:moveBackgroundGroup(needToMoveGroup)
         end
         return true
     end

@@ -85,7 +85,7 @@ function M.initiateCommons(stageNumber)
     initiateBackground()
     initiateVehicle()
     initiateCannon(ballGroup, fireButtonGroup, shootGroup, effectsGroup)
-    eventFactory:initiateCommonListeners(M, shootGroup)
+    eventFactory:initiateCommonListeners(M, shootGroup, effectsGroup)
     initiateBarriers(stageNumber, barrierGroup)
     initiateUiElements(uiGroup)
 
