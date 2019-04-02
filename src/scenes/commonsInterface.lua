@@ -24,6 +24,7 @@ local cannonFactory = require("src.domain.cannon")
 local eventFactory = require("src.scenes.eventListeners")
 local stageParameters = require("src.scenes.sceneParameters")
 local vehicleFactory = require("src.domain.vehicle")
+local hpBarFactory = require("src.domain.hpBar")
 
 local function getStageParameters(stageNumber)
     local params = require("src.scenes.sceneParameters")
@@ -31,7 +32,8 @@ local function getStageParameters(stageNumber)
 end
 
 local function initiateBackground()
-    local backgroundImage = display.newImageRect(mainBackGroup, "assets/images/backgrounds/" .. M.params.background, display.pixelHeight, display.pixelWidth)
+    local backgroundImage = display.newImageRect(mainBackGroup, "assets/images/backgrounds/" .. M.params.background, 
+    display.pixelHeight, display.pixelWidth)
     backgroundImage.x = display.contentCenterX
     backgroundImage.y = display.contentCenterY
     physics.addBody(backgroundImage, "dynamic", { isSensor=true })
@@ -55,8 +57,11 @@ local function initiateVehicle()
     M.vehicle = vehicleFactory:new(nil, vehicleImage, M.carVelocity)
 end
 
--- Temporary: delete as soon as test is ok
--- Todo: build real way of calling the barriers
+local function initiateUiElements(uiGroup)
+    M.hpBar = hpBarFactory:new()
+    M.hpBar:drawBar(uiGroup)
+end
+
 local function initiateBarriers(stageNumber, barrierGroup)
     local patternFilePath = "src.barrierPatterns.stage" .. tostring(stageNumber)
     local patternList = require(patternFilePath)
@@ -82,6 +87,7 @@ function M.initiateCommons(stageNumber)
     initiateCannon(ballGroup, fireButtonGroup, shootGroup, effectsGroup)
     eventFactory:initiateCommonListeners(M, shootGroup)
     initiateBarriers(stageNumber, barrierGroup)
+    initiateUiElements(uiGroup)
 
 end
 

@@ -5,7 +5,7 @@ local reactionsList = {
 }
 
 local function analyseReaction(element1, element2)
-    reaction = reactionsList[element1][element2]
+    local reaction = reactionsList[element1][element2]
     return reaction
 end
 
@@ -16,7 +16,7 @@ local function spriteHandler(event, sprite)
     elseif event.phase == "ended" then
         display.remove(sprite)
         sprite = nil
-    end    
+    end
 end
 
 local function corrosion()
@@ -24,7 +24,6 @@ end
 
 
 local function explosionCollision(event)
-    print(event.other.myName)
     if event.other.myName == "barrier" then
         display.remove(event.other)
         event.other = nil
@@ -39,7 +38,8 @@ local function explosion(event, effectsGroup, carVelocity)
         height = 32
     }
 
-    local explosion_sheet = graphics.newImageSheet("assets/images/commons/reactions/explosions/explosion_sheet.png", sheetOptions)
+    local explosion_sheet = graphics.newImageSheet("assets/images/commons/reactions/explosions/explosion_sheet.png", 
+    sheetOptions)
     local sequence_explosion = {
         name = "explosionAnimation",
         start = 1,
@@ -57,14 +57,14 @@ local function explosion(event, effectsGroup, carVelocity)
     explosionAnimation:setLinearVelocity(0, carVelocity - 12)
     display.remove(event.other)
     explosionAnimation:addEventListener("collision", function(event) return explosionCollision(event) end)
-    local spriteListener = function(event) return spriteHandler(event, explosionAnimation) end 
+    local spriteListener = function(event) return spriteHandler(event, explosionAnimation) end
     explosionAnimation:addEventListener("sprite", spriteListener)
-    return true 
+    return true
 end
 
 function M.initiateReaction(event, effectsGroup, carVelocity)
-    reaction = analyseReaction(event.target.element, event.other.element)
-    if reaction ~= nil then 
+    local reaction = analyseReaction(event.target.element, event.other.element)
+    if reaction ~= nil then
         if reaction == "explosion" then
             display.remove(event.target)
             local explosion = function() return explosion(event, effectsGroup, carVelocity) end

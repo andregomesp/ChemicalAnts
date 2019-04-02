@@ -1,25 +1,40 @@
-local hpBar = {boxImage = nil, boxBackgroundImage = nil, barImage = nil}
+local HpBar = {boxImage = nil, boxBackgroundImage = nil, barImage = nil}
 
-function hpBar:new(o)
+function HpBar:new(o)
     o = o or {}
     setmetatable(o, self)
     self.__index = self
     return o
 end
 
-function hpBar:drawBar(uiGroup)
-    local hpBar = display.newRoundedRect(uiGroup, display.viewableContentWidth - 30, 60, 20, 60)
-    local boxBackgroundImage = display.newRoundedRect(uiGroup, display.viewableContentWidth - 30, 60, 20, 60)
-    local boxImage = display.newRoundedRect(uiGroup, display.viewableContentWidth - 30, 60, 20, 60)
-    self.image = hpBar
-    hpBar:setFillColor(0.22, 0.76, 0.16)
-    boxBackgroundImage:setFillColor(13.33, 0.91, 0.94, 0.8)
-    boxBackgroundImage.fill.effect = "filter.frostedGlass"
-    object.fill.effect.scale = 80
-    boxImage:setFillColor(1, 1, 1, 1)
-    boxImage.strokeWidth = 3
-    boxImage:setStrokeColor(1, 1, 1)
+function HpBar:restoreBarColor()
+    self.barImage:setFillColor(0.22, 0.76, 0.16)
 end
 
-function hpBar:subtractHp()
+function HpBar:drawBar(uiGroup)
+    local barX = display.viewableContentWidth - 30
+    local boxImage = display.newRoundedRect(uiGroup, barX, 60, 20, 90, 5)
+    local boxBackgroundImage = display.newRoundedRect(uiGroup, barX, 60, 20, 90, 5)
+    local hpBarImage = display.newRoundedRect(uiGroup, barX - 10, 105, 20, 90, 5)
+    self.barImage = hpBarImage
+    self.boxBackgroundImage = boxBackgroundImage
+    self.boxImage = boxImage
+    hpBarImage.anchorX, hpBarImage.anchorY = 0, 1
+    boxBackgroundImage:setFillColor(0.133, 0.91, 0.94)
+    boxBackgroundImage.fill.effect = "filter.frostedGlass"
+    boxBackgroundImage.fill.effect.scale = 100
+    hpBarImage:setFillColor(0.22, 0.76, 0.16)
+    boxImage:setFillColor(1, 1, 1, 0)
+    boxImage.strokeWidth = 3
+    boxImage:setStrokeColor(0, 0, 0)
 end
+
+function HpBar:subtractHpAnimation(ammountSubtracted)
+    self.barImage:setFillColor(0.858, 0.2, 0.082)
+    local imageCurrentHeightPerCentToSubtract = (ammountSubtracted / 100) * self.boxImage.height
+    transition.to(self.barImage, {time=300, height=self.barImage.height - imageCurrentHeightPerCentToSubtract,
+    onComplete = function() return self:restoreBarColor() end})
+
+end
+
+return HpBar

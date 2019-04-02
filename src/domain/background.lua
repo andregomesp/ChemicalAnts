@@ -20,8 +20,10 @@ function Background:buildBackground(carVelocity)
     self.objectSecondaryBackGroup.myName = "objectBackGroup"
     local i = 0
     while i < 16 do
-        local leftWall = display.newImageRect(self.objectBackGroup, "assets/images/commons/scenario/trees.png", 120, 120)
-        local rightWall = display.newImageRect(self.objectSecondaryBackGroup, "assets/images/commons/scenario/trees.png", 120, 120)
+        local leftWall = display.newImageRect(self.objectBackGroup,
+        "assets/images/commons/scenario/trees.png", 120, 120)
+        local rightWall = display.newImageRect(self.objectSecondaryBackGroup,
+        "assets/images/commons/scenario/trees.png", 120, 120)
         leftWall.y = 50 * i
         rightWall.y = 50 * i
         i = i + 1

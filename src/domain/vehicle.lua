@@ -1,4 +1,4 @@
-local Vehicle = {hp = 100}
+local Vehicle = {hp = 100, invulnerable = false, invulnerableTime = 1500}
 
 function Vehicle:new(o, vehicleImage, carVelocity)
     o = o or {}
@@ -18,18 +18,16 @@ function Vehicle:makeMovement(event)
     if event.target.myName == "objectBackGroup" then
         if event.target.x < self.image.x then
             local leftBoundary = event.target.x + event.target.width / 2 + (self.image.width / 2)
-            print(leftBoundary)
-            print(self.image.x)
             if leftBoundary < self.image.x then
                 self.xDest = leftBoundary
             else
                 willMove = false
-            end         
+            end
         elseif event.target.x > self.image.x then
             local rightBoundary = event.target.x - event.target.width / 2 - (self.image.width / 2)
             if rightBoundary > self.image.x then
                 self.xDest = rightBoundary
-            else 
+            else
                 willMove = false
             end
         end
@@ -80,7 +78,8 @@ function Vehicle:move(event)
 end
 
 function Vehicle:controlMovement()
-    if (self.xMoveDirection == "right" and self.xDest <= self.image.x) or (self.xMoveDirection == "left" and self.xDest >= self.image.x) then
+    if (self.xMoveDirection == "right" and self.xDest <= self.image.x) or
+     (self.xMoveDirection == "left" and self.xDest >= self.image.x) then
         self.xMoveDirection = nil
         self.image:setLinearVelocity(0, 0)
         if self.image.rotation > 0 then
@@ -115,16 +114,16 @@ function Vehicle:controlMovement()
         end
     else
         if self.image.angularVelocity < 0 and (self.image.rotation <= 0) then
-            anglePerTick = self.image.angularVelocity/display.fps
+            local anglePerTick = self.image.angularVelocity/display.fps
             if (self.image.rotation + anglePerTick) < 0 then
                 self.image.rotation = 0
-                self.image.angularVelocity = 0    
+                self.image.angularVelocity = 0
             end
         elseif self.image.angularVelocity > 0 and (self.image.rotation >= 0) then
-            anglePerTick = self.image.angularVelocity/display.fps
+            local anglePerTick = self.image.angularVelocity/display.fps
             if (self.image.rotation + anglePerTick) > 0 then
                 self.image.rotation = 0
-                self.image.angularVelocity = 0    
+                self.image.angularVelocity = 0
             end
         end
     end
@@ -134,11 +133,26 @@ end
 function Vehicle:boost()
 end
 
-function Vehicle:takeDamage(ammount)
-    if (self.hp - ammount < 0) then
-        self.hp = 0
-    else
-        self.hp = self.hp - ammount
+function Vehicle:turnOffInvulnerability()
+    self.invulnerable = false
+end
+
+function Vehicle:adjustInvulnerability()
+    self.invulnerable = true
+    timer.performWithDelay(self.invulnerableTime, function() return self:turnOffInvulnerability() end)
+end
+
+function Vehicle:takeDamage(ammount, hpBar)
+    if self.invulnerable == false then
+        self:adjustInvulnerability()
+        local ammountSubtracted = ammount
+        if (self.hp - ammount < 0) then
+            ammountSubtracted = self.hp
+            self.hp = 0
+        else
+            self.hp = self.hp - ammount
+        end
+        hpBar:subtractHpAnimation(ammountSubtracted, self)
     end
 end
 
