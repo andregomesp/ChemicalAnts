@@ -145,7 +145,6 @@ end
 function Vehicle:takeDamage(ammount, hpBar, effectsGroup)
     if self.invulnerable == false then
         local physicalHit = require("src.reactions.physicalHit")
-        print(effectsGroup)
         physicalHit:initiateHitSequence(effectsGroup, self)
         transition.blink(self.image, {time = 200, onCancel = function() self.image.alpha = 1.0 end})
         timer.performWithDelay(self.invulnerableTime - 100, function() transition.cancel(self.image) end)

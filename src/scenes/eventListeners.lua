@@ -9,7 +9,6 @@ function M:initiateCommonListeners(commons, shootGroup, effectsGroup)
     end
 
     local function collisionCar(event)
-        print(effectsGroup)
         if event.other.myName == "barrier" then
             commons.vehicle:takeDamage(10, commons.hpBar, effectsGroup)
             display.remove(event.other)

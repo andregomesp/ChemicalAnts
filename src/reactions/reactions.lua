@@ -1,7 +1,7 @@
 local M = {}
 local reactionsList = {
     ["hydrogen"] = {sodium = "explosion"},
-    ["oxygen"] = {}
+    ["oxygen"] = {sodium = "corrosion"}
 }
 
 local function analyseReaction(element1, element2)
@@ -19,7 +19,8 @@ local function spriteHandler(event, sprite)
     end
 end
 
-local function corrosion()
+local function corrosion(event, effectsGroup, carVelocity)
+
 end
 
 
@@ -69,6 +70,9 @@ function M.initiateReaction(event, effectsGroup, carVelocity)
             display.remove(event.target)
             local explosion = function() return explosion(event, effectsGroup, carVelocity) end
             timer.performWithDelay(40, explosion)
+        elseif reaction == "corrosion" then
+            local corrosion = function() return corrosion(event, effectsGroup, carVelocity) end
+            timer.performWithDelay(40, corrosion)
         end
     end
     return true
