@@ -11,8 +11,10 @@ function M:initiateCommonListeners(commons, shootGroup, effectsGroup)
     local function collisionCar(event)
         if event.other.myName == "barrier" then
             commons.vehicle:takeDamage(10, commons.hpBar, effectsGroup)
-            display.remove(event.other)
+            print(event.other)
             event.other = nil
+            display.remove(event.other)
+            print(event.other)
         elseif event.other.myName == "explosion" then
             commons.vehicle:takeDamage(15, commons.hpBar, effectsGroup)
         elseif event.other.myName == "objectBackGroup" then

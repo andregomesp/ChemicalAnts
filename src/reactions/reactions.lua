@@ -52,6 +52,9 @@ local function explosion(event, effectsGroup, carVelocity)
     local explosionAnimation = display.newSprite(effectsGroup, explosion_sheet, sequence_explosion)
     explosionAnimation.x = event.other.x
     explosionAnimation.y = event.other.y
+    -- Weird condition that happens when car crashes into barrier, removing it and its x = 0
+    if explosionAnimation.x == 0 and explosionAnimation.y == 0 then
+    end    
     explosionAnimation.myName = "explosion"
     explosionAnimation:play()
     physics.addBody(explosionAnimation, "dynamic", {isSensor = true})

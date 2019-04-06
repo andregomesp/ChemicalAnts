@@ -17,6 +17,9 @@ M.hpBar = nil
 M.params = nil
 M.stageParameters = nil
 M.vehicle = nil
+M.countdownTimer = nil
+M.totalTime = nil
+M.meters = 0
 M.carVelocity = 140
 
 local backgroundFactory = require("src.domain.background")
@@ -57,9 +60,22 @@ local function initiateVehicle()
     M.vehicle = vehicleFactory:new(nil, vehicleImage, M.carVelocity)
 end
 
-local function initiateUiElements(uiGroup)
+local function updateTime(event, countdownText)
+    M.countdownTimer = M.countdownTimer - 1
+    countdownText.text = M.countdownTimer
+end
+
+local function initiateUiElements(uiGroup, countdownTimer)
     M.hpBar = hpBarFactory:new()
     M.hpBar:drawBar(uiGroup)
+    M.countdownTimer = countdownTimer
+    M.totalTime = countdownTimer * 1
+    local backCircle = display.newRoundedRect(uiGroup, display.contentCenterX - 20, 15, 60, 20, 10)
+     backCircle:setFillColor(0, 0, 0, 0.3)
+    local countdownText = display.newText({parent = uiGroup, text = M.countdownTimer, x = display.contentCenterX, y = 15,
+    font = "DejaVuSansMono", width = 70})
+    local updateTimes = function() return updateTime(event, countdownText) end
+    timer.performWithDelay(1000, updateTimes, M.totalTime)
 end
 
 local function initiateBarriers(stageNumber, barrierGroup)
@@ -80,14 +96,14 @@ local function initiateBarriers(stageNumber, barrierGroup)
     end
 end
 
-function M.initiateCommons(stageNumber)
+function M.initiateCommons(stageNumber, availableBallTypes, countdownTimer)
     getStageParameters(stageNumber)
     initiateBackground()
     initiateVehicle()
     initiateCannon(ballGroup, fireButtonGroup, shootGroup, effectsGroup)
     eventFactory:initiateCommonListeners(M, shootGroup, effectsGroup)
     initiateBarriers(stageNumber, barrierGroup)
-    initiateUiElements(uiGroup)
+    initiateUiElements(uiGroup, countdownTimer)
 
 end
 
