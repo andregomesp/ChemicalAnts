@@ -30,22 +30,21 @@ local function dissolution(event, effectsGroup, carVelocity)
             display.remove(event.target)
             event.target = nil
         end
-        event.other.pieceGroup
-        -- for k, v in pairs(event.other.barrier.pieces) do
-        --     if v ~= nil then
-        --         v.fill.effect = "filter.bloom"
-        --         v.fill.effect.levels.white = 1.0
-        --         v.fill.effect.levels.black = 0.0
-        --         v.fill.effect.levels.gamma = 1
-        --         v.fill.effect.add.alpha = 0.8
-        --     end
-        -- end
+        for k, v in pairs(event.other.barrier.pieces) do
+            if v.fill ~= nil then
+                v.fill.effect = "filter.bloom"
+                v.fill.effect.levels.white = 1.0
+                v.fill.effect.levels.black = 0.0
+                v.fill.effect.levels.gamma = 1
+                v.fill.effect.add.alpha = 0.8
+            end
+        end
     end
-    -- for k, v in pairs(event.other.barrier.pieces) do
-    --     if v ~= nil then
-    --         transition.to(v, {time = 1000, transition=easing.inOutCubic, x = event.other.x})
-    --     end
-    -- end
+    for k, v in pairs(event.other.barrier.pieces) do
+        if v.fill ~= nil then
+            transition.to(v, {time = 1000, transition=easing.inOutCubic, x = event.other.x, y = event.other.y})
+        end
+    end
 end
 
 

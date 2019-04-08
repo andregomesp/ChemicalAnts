@@ -60,9 +60,8 @@ function M:drawPattern(pieceGroup, pattern, pieceSize, carVelocity, barrier, pat
         local image = display.newImageRect(pieceGroup,
         "assets/images/commons/barriers/" .. type .. "-" .. piece .. ".png", pieceSize, pieceSize)
         image.myName = "barrier"
-        image.pieceGroup = pieceGroup
+        image.barrier = barrier
         image.element = type
-        image.patternIndex = patternIndex
         image.x = positions[i]["xPos"]
         image.y = positions[i]["yPos"]
         physics.addBody(image, "dynamic", {isSensor = true})
