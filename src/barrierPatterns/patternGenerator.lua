@@ -24,7 +24,7 @@ local function getWallPiecesPosition(form, pieceSize, measures, numberOfPieces, 
     return positions
 end
 
-function M:drawPattern(pieceGroup, pattern, pieceSize, carVelocity, barrier, patternIndex)
+function M:drawPattern(barrierGroup, pattern, pieceSize, carVelocity, barrier)
     local imageTable = {}
     local xAnchor = pattern["xAnchor"]
     local type = pattern["type"]
@@ -57,7 +57,7 @@ function M:drawPattern(pieceGroup, pattern, pieceSize, carVelocity, barrier, pat
                 piece = "left-border"
             end
         end
-        local image = display.newImageRect(pieceGroup,
+        local image = display.newImageRect(barrierGroup,
         "assets/images/commons/barriers/" .. type .. "-" .. piece .. ".png", pieceSize, pieceSize)
         image.myName = "barrier"
         image.barrier = barrier

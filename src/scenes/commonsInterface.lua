@@ -60,9 +60,11 @@ local function initiateVehicle()
     M.vehicle = vehicleFactory:new(nil, vehicleImage, M.carVelocity)
 end
 
-local function updateTime(event, countdownText)
+local function updateMeasures(event, countdownText)
     M.countdownTimer = M.countdownTimer - 1
     countdownText.text = M.countdownTimer
+    print(M.meters)
+    M.meters = M.meters + M.vehicle.carVelocity
 end
 
 local function initiateUiElements(uiGroup, countdownTimer)
@@ -74,8 +76,8 @@ local function initiateUiElements(uiGroup, countdownTimer)
      backCircle:setFillColor(0, 0, 0, 0.3)
     local countdownText = display.newText({parent = uiGroup, text = M.countdownTimer, x = display.contentCenterX, y = 15,
     font = "DejaVuSansMono", width = 70})
-    local updateTimes = function() return updateTime(event, countdownText) end
-    timer.performWithDelay(1000, updateTimes, M.totalTime)
+    local updateMeasures = function() return updateMeasures(event, countdownText) end
+    timer.performWithDelay(1000, updateMeasures, M.totalTime)
 end
 
 local function initiateBarriers(stageNumber, barrierGroup)
