@@ -1,7 +1,7 @@
 local M = {}
 
 local parameters = {
-    hydrogen = {
+    water = {
         image = "ball_blue.png"
     },
     oxygen = {

@@ -3,7 +3,7 @@ local M = {}
 local parameters = {
     [1] = {
         background = "grassBackgroundTemporary.jpg", 
-        availableBallTypes = {"oxygen", "hydrogen"}
+        availableBallTypes = {"oxygen", "water"}
     }
 }
 

@@ -85,11 +85,14 @@ local function initiateBarriers(stageNumber, barrierGroup)
     local barrierFactory = require("src.domain.barrier")
     local i = 1
     while i <= #patterns do
+        local pieceGroup = display.newGroup()
+        table.insert(barrierGroup, pieceGroup)
         local pattern = patterns[i]
         local time = patterns[i]["time"]
+        local patternIndex = i * 1
         local newBarrier = function()
             local barrier = barrierFactory:new()
-            barrier:drawBarrier(barrierGroup, pattern, M.carVelocity, barrier)
+            barrier:drawBarrier(pieceGroup, pattern, M.carVelocity, barrier, patternIndex)
         end
         timer.performWithDelay(time, newBarrier)
         i = i + 1

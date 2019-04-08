@@ -31,6 +31,7 @@ function Cannon:fire(event)
         local ballImage = display.newImageRect(self.shootGroup, "assets/images/commons/balls/" .. ballColor, 25, 25)
         local firedBall = ballFactory:new(nil, event.target.id.element, ballImage)
         physics.addBody(firedBall.image, "dynamic", { isSensor=true })
+        firedBall.image.canColide = true
         firedBall.image.isBullet = true
         firedBall.image.myName = "shootBall"
         firedBall.image.element = firedBall.element
@@ -81,8 +82,13 @@ function Cannon:loadFiringButtons(elementsAvailable, ballGroup, fireButtonGroup)
 end
 
 function Cannon:shootColision(event)
-    local reactions = require("src.reactions.reactions")
-    reactions.initiateReaction(event, self.effectsGroup, self.associatedVehicle.carVelocity)
+    if event.target.canColide == true then
+        if (event.other.myName) == "barrier" then
+            event.target.canColide = false
+            local reactions = require("src.reactions.reactions")
+            reactions.initiateReaction(event, self.effectsGroup, self.associatedVehicle.carVelocity)
+        end
+    end
     return true
 end
 

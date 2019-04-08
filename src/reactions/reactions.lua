@@ -1,7 +1,7 @@
 local M = {}
 local reactionsList = {
-    ["hydrogen"] = {sodium = "explosion"},
-    ["oxygen"] = {sodium = "corrosion"}
+    ["water"] = {sodium = "explosion"},
+    ["oxygen"] = {sodium = "dissolution"}
 }
 
 local function analyseReaction(element1, element2)
@@ -20,7 +20,32 @@ local function spriteHandler(event, sprite)
 end
 
 local function corrosion(event, effectsGroup, carVelocity)
+    if event.other.myName == "barrier" then
+    end
+end
 
+local function dissolution(event, effectsGroup, carVelocity)
+    if event.other.myName == "barrier" then
+        if event.target.myName == "shootBall" then
+            display.remove(event.target)
+            event.target = nil
+        end
+        event.other.pieceGroup
+        -- for k, v in pairs(event.other.barrier.pieces) do
+        --     if v ~= nil then
+        --         v.fill.effect = "filter.bloom"
+        --         v.fill.effect.levels.white = 1.0
+        --         v.fill.effect.levels.black = 0.0
+        --         v.fill.effect.levels.gamma = 1
+        --         v.fill.effect.add.alpha = 0.8
+        --     end
+        -- end
+    end
+    -- for k, v in pairs(event.other.barrier.pieces) do
+    --     if v ~= nil then
+    --         transition.to(v, {time = 1000, transition=easing.inOutCubic, x = event.other.x})
+    --     end
+    -- end
 end
 
 
@@ -52,9 +77,6 @@ local function explosion(event, effectsGroup, carVelocity)
     local explosionAnimation = display.newSprite(effectsGroup, explosion_sheet, sequence_explosion)
     explosionAnimation.x = event.other.x
     explosionAnimation.y = event.other.y
-    -- Weird condition that happens when car crashes into barrier, removing it and its x = 0
-    if explosionAnimation.x == 0 and explosionAnimation.y == 0 then
-    end    
     explosionAnimation.myName = "explosion"
     explosionAnimation:play()
     physics.addBody(explosionAnimation, "dynamic", {isSensor = true})
@@ -72,10 +94,13 @@ function M.initiateReaction(event, effectsGroup, carVelocity)
         if reaction == "explosion" then
             display.remove(event.target)
             local explosion = function() return explosion(event, effectsGroup, carVelocity) end
-            timer.performWithDelay(40, explosion)
+            timer.performWithDelay(20, explosion)
         elseif reaction == "corrosion" then
             local corrosion = function() return corrosion(event, effectsGroup, carVelocity) end
-            timer.performWithDelay(40, corrosion)
+            timer.performWithDelay(20, corrosion)
+        elseif reaction == "dissolution" then
+            local dissolution = function() return dissolution(event, effectsGroup, carVelocity) end
+            timer.performWithDelay(20, dissolution)
         end
     end
     return true

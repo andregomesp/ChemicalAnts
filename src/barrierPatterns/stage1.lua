@@ -12,7 +12,7 @@ local patterns = {
     -- [5] = {type = "sodium", pattern = {form = "stair-left", numberOfPieces = 4}},
     [1] = {type = "sodium", time = 1500, xAnchor = 65, pattern = {form = "line", dimensions = 1, numberOfPieces = 4}},
     [2] = {type = "sodium", time = 2000, xAnchor = 65, pattern = {
-        form = "rectangle", dimensions = 2, numberOfPieces = {x= 3, y= 8}}
+        form = "rectangle", dimensions = 2, numberOfPieces = {x= 3, y= 7}}
     },
     -- [2] = {type = "sodium", time = 2000, xAnchor = 65, pattern = {form = "line", dimensions = 1, numberOfPieces = 4}},
     [3] = {type = "sodium", time = 5600, xAnchor = 65, pattern = {form = "line", dimensions = 1, numberOfPieces = 2}},

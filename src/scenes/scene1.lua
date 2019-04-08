@@ -8,7 +8,7 @@ local pretty = require("libraries.penlight.pretty")
 physics.start()
 physics.setGravity(0, 0)
 
-local availableBallTypes = {"oxygen", "hydrogen"}
+local availableBallTypes = {"oxygen", "water"}
 local stageNumber = 1
 local countDownTimer = 300
 
