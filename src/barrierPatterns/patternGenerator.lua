@@ -62,6 +62,7 @@ function M:drawPattern(barrierGroup, pattern, pieceSize, carVelocity, barrier)
         image.myName = "barrier"
         image.barrier = barrier
         image.element = type
+        image.isCorroding = false
         image.x = positions[i]["xPos"]
         image.y = positions[i]["yPos"]
         physics.addBody(image, "dynamic", {isSensor = true})
