@@ -19,25 +19,39 @@ local function spriteHandler(event, sprite)
     end
 end
 
+local function eraseCorroded(event)
+    print("oi")
+    display.remove(event.other)
+    event.other = nil
+end
+
 local function corrosionCollision(event)
     if event.other.myName == "barrier" and event.other.isCorroding == false then
         event.other.isCorroding = true
-        print("circle hit barrier")
         local directionX, directionY
         local effect = "filter.linearWipe"
+        -- todo: consider if leave the animation as it currently is or do a more accurate acid animation
+        -- local distanceX, distanceY = 0, 0
+        print(event.other.y - event.target.y)
         if event.other.x > event.target.x then
             directionX = -1
+            -- distanceX = (event.other.x - event.target.x)/event.other.width
             if event.other.y > event.target.y then
                 directionY = -1
+                -- distanceY = (event.other.y - event.target.y)/event.target.height
             else
                 directionY = 1
+                -- distanceY = (event.target.y - event.other.y)/event.target.height
             end
         elseif event.other.x < event.target.x then
             directionX = 1
+            -- distanceX = (event.target.x - event.other.x)/event.other.width
             if event.other.y > event.target.y then
                 directionY = -1
+                -- distanceY = (event.other.y - event.target.y)/event.target.height
             else
                 directionY = 1
+                -- distanceY = (event.target.y - event.other.y)/event.target.height
             end
         else
         -- x = 1, from right to left
@@ -46,27 +60,30 @@ local function corrosionCollision(event)
             directionX, directionY = 0, 1
         end
         event.other.fill.effect = effect
-        event.other.fill.effect.smoothness = 0.5
+        event.other.fill.effect.smoothness = 0.3
         event.other.fill.effect.direction = { directionX, directionY }
         event.other.fill.effect.progress = 1
-        transition.to(event.other.fill.effect, {time = 1500, progress = 0})    
+        local eraseCorrodedFunction = function() return eraseCorroded(event) end
+        transition.to(event.other.fill.effect, {time = 1500, progress = 0,
+         onComplete = eraseCorrodedFunction})
     end
     return true
 end
 
-local function lol()
-    print("lol")
-end
-
 local function corrosion(event, effectsGroup, carVelocity)
     if event.other.myName == "barrier" then
+        display.remove(event.target)
+        event.target = nil
         local acidArea = display.newCircle(effectsGroup, event.other.x, event.other.y, 5)
+        local acidAreaHitBox = display.newCircle(effectsGroup, event.other.x, event.other.y, 55)
         physics.addBody(acidArea, "dynamic", {isSensor = true})
-        acidArea:addEventListener("collision", function(event) return corrosionCollision(event) end)
+        physics.addBody(acidAreaHitBox, "dynamic", {isSensor = true})
+        acidAreaHitBox:addEventListener("collision", function(event) return corrosionCollision(event) end)
         acidArea.alpha = 0.2
-        acidArea.isTransitioning = false
+        acidAreaHitBox.alpha = 0
         acidArea:setLinearVelocity(0, carVelocity)
-        transition.to(acidArea.path, {time = 600, radius = 55, onStart= function() return lol() end})
+        acidAreaHitBox:setLinearVelocity(0, carVelocity)
+        transition.to(acidArea.path, {time = 600, radius = 55})
     end
 end
 
