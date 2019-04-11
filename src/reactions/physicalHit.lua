@@ -9,6 +9,7 @@ local function spriteHandler(event, sprite)
         display.remove(sprite)
         sprite = nil
     end
+    return true
 end
 
 local function drawHit(effectsGroup, vehicle)

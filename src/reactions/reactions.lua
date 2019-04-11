@@ -17,10 +17,10 @@ local function spriteHandler(event, sprite)
         display.remove(sprite)
         sprite = nil
     end
+    return true
 end
 
 local function eraseCorroded(event)
-    print("oi")
     display.remove(event.other)
     event.other = nil
 end
@@ -32,7 +32,6 @@ local function corrosionCollision(event)
         local effect = "filter.linearWipe"
         -- todo: consider if leave the animation as it currently is or do a more accurate acid animation
         -- local distanceX, distanceY = 0, 0
-        print(event.other.y - event.target.y)
         if event.other.x > event.target.x then
             directionX = -1
             -- distanceX = (event.other.x - event.target.x)/event.other.width
@@ -85,6 +84,7 @@ local function corrosion(event, effectsGroup, carVelocity)
         acidAreaHitBox:setLinearVelocity(0, carVelocity)
         transition.to(acidArea.path, {time = 600, radius = 55})
     end
+    return true
 end
 
 local function dissolution(event, effectsGroup, carVelocity)
@@ -106,6 +106,7 @@ local function dissolution(event, effectsGroup, carVelocity)
             transition.to(v, {time = 1000, transition=easing.inOutCubic, x = event.other.x, y = event.other.y})
         end
     end
+    return true
 end
 
 

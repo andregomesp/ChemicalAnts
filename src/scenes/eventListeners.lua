@@ -1,6 +1,6 @@
 local M = {}
 
-function M:initiateCommonListeners(commons, shootGroup, effectsGroup)
+function M:initiateCommonListeners(commons, shootGroup, effectsGroup, barrierGroup)
 
 
     local function controlVehicleMovement(event)
@@ -30,11 +30,17 @@ function M:initiateCommonListeners(commons, shootGroup, effectsGroup)
     end
 
     local function moveVehicle(event)
-        commons.vehicle:move(event)
+            if (event.phase == "ended" and event.yStart - event.y > 10) then
+                commons.vehicle:boost(event, commons.background, barrierGroup)
+            else
+                commons.vehicle:move(event)
+            end
         return true
     end
-    commons.background.objectBackGroup:addEventListener("touch", moveVehicle)
+
+
     commons.background.objectSecondaryBackGroup:addEventListener("touch", moveVehicle)
+    commons.background.objectBackGroup:addEventListener("touch", moveVehicle)
     commons.background.image:addEventListener("touch", moveVehicle)
     commons.vehicle.image:addEventListener("collision", collisionCar)
     Runtime:addEventListener( "enterFrame", controlVehicleMovement )

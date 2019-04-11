@@ -10,6 +10,8 @@ function Vehicle:new(o, vehicleImage, carVelocity)
     self.xMoveDirection = nil
     self.image = vehicleImage
     self.carVelocity = carVelocity
+    self.boostStatus = 1
+    self.boostingOnCoolDown = false
     return o
 end
 
@@ -72,8 +74,35 @@ function Vehicle:makeMovement(event)
     end
 end
 
-function Vehicle:move(event)
-    self:makeMovement(event)
+function Vehicle:boost(event, backgroundObject, barrierGroup)
+    if self.carVelocity <= 315 then
+        print("boosting")
+        self.carVelocity = self.carVelocity + 35
+        self.boostStatus = self.boostStatus + 1
+        backgroundObject.objectBackGroup:setLinearVelocity(0, self.carVelocity)
+        backgroundObject.objectSecondaryBackGroup:setLinearVelocity(0, self.carVelocity)
+        for k, v in pairs(barrierGroup) do
+            if v ~= nil then
+                print(k.myName)
+                -- v:setLinearVelocity(0, self.carVelocity)
+            end
+        end
+        local ceaseBoost = function() return self:ceaseBoost(backgroundObject, barrierGroup) end
+        timer.performWithDelay(1500, ceaseBoost)
+    end
+    return true
+end
+
+function Vehicle:ceaseBoost(backgroundObject, barrierGroup)
+    self.carVelocity = self.carVelocity - 35
+    self.boostStatus = self.boostStatus - 1
+    backgroundObject.objectBackGroup:setLinearVelocity(0, self.carVelocity)
+    backgroundObject.objectSecondaryBackGroup:setLinearVelocity(0, self.carVelocity)
+    for k, v in pairs(barrierGroup) do
+        if v ~= nil then
+            -- v:setLinearVelocity(0, self.carVelocity)
+        end
+    end
     return true
 end
 
@@ -130,8 +159,11 @@ function Vehicle:controlMovement()
     return true
 end
 
-function Vehicle:boost()
+function Vehicle:move(event)
+    self:makeMovement(event)
+    return true
 end
+
 
 function Vehicle:turnOffInvulnerability()
     self.invulnerable = false

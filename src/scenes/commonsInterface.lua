@@ -58,12 +58,12 @@ local function initiateVehicle()
     physics.addBody(vehicleImage, "dynamic", {isSensor = true})
     vehicleImage:toFront()
     M.vehicle = vehicleFactory:new(nil, vehicleImage, M.carVelocity)
+    M.carVelocity = M.vehicle.carVelocity
 end
 
 local function updateMeasures(event, countdownText)
     M.countdownTimer = M.countdownTimer - 1
     countdownText.text = M.countdownTimer
-    print(M.meters)
     M.meters = M.meters + M.vehicle.carVelocity
 end
 
@@ -104,7 +104,7 @@ function M.initiateCommons(stageNumber, availableBallTypes, countdownTimer)
     initiateBackground()
     initiateVehicle()
     initiateCannon(ballGroup, fireButtonGroup, shootGroup, effectsGroup)
-    eventFactory:initiateCommonListeners(M, shootGroup, effectsGroup)
+    eventFactory:initiateCommonListeners(M, shootGroup, effectsGroup, barrierGroup)
     initiateBarriers(stageNumber, barrierGroup)
     initiateUiElements(uiGroup, countdownTimer)
 
