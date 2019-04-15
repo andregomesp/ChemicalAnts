@@ -63,7 +63,7 @@ local function corrosionCollision(event)
         event.other.fill.effect.direction = { directionX, directionY }
         event.other.fill.effect.progress = 1
         local eraseCorrodedFunction = function() return eraseCorroded(event) end
-        transition.to(event.other.fill.effect, {time = 1500, progress = 0,
+        transition.to(event.other.fill.effect, {time = 600, progress = 0,
          onComplete = eraseCorrodedFunction})
     end
     return true
@@ -78,7 +78,7 @@ local function corrosion(event, effectsGroup, carVelocity)
         physics.addBody(acidArea, "dynamic", {isSensor = true})
         physics.addBody(acidAreaHitBox, "dynamic", {isSensor = true})
         acidAreaHitBox:addEventListener("collision", function(event) return corrosionCollision(event) end)
-        acidArea.alpha = 0.2
+        acidArea.alpha = 0
         acidAreaHitBox.alpha = 0
         acidArea:setLinearVelocity(0, carVelocity)
         acidAreaHitBox:setLinearVelocity(0, carVelocity)

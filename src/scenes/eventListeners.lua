@@ -30,9 +30,9 @@ function M:initiateCommonListeners(commons, shootGroup, effectsGroup, barrierGro
     end
 
     local function moveVehicle(event)
-            if (event.phase == "ended" and event.yStart - event.y > 10) then
+            if (event.phase == "ended" and event.yStart - event.y > 30) then
                 commons.vehicle:boost(event, commons.background, barrierGroup)
-            else
+            elseif (event.phase == "ended") then 
                 commons.vehicle:move(event)
             end
         return true

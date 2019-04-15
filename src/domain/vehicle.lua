@@ -81,10 +81,10 @@ function Vehicle:boost(event, backgroundObject, barrierGroup)
         self.boostStatus = self.boostStatus + 1
         backgroundObject.objectBackGroup:setLinearVelocity(0, self.carVelocity)
         backgroundObject.objectSecondaryBackGroup:setLinearVelocity(0, self.carVelocity)
-        for k, v in pairs(barrierGroup) do
+        for k, v in ipairs(barrierGroup) do
             if v ~= nil then
                 print(k.myName)
-                -- v:setLinearVelocity(0, self.carVelocity)
+                v:setLinearVelocity(0, self.carVelocity)
             end
         end
         local ceaseBoost = function() return self:ceaseBoost(backgroundObject, barrierGroup) end
@@ -98,9 +98,9 @@ function Vehicle:ceaseBoost(backgroundObject, barrierGroup)
     self.boostStatus = self.boostStatus - 1
     backgroundObject.objectBackGroup:setLinearVelocity(0, self.carVelocity)
     backgroundObject.objectSecondaryBackGroup:setLinearVelocity(0, self.carVelocity)
-    for k, v in pairs(barrierGroup) do
+    for k, v in ipairs(barrierGroup) do
         if v ~= nil then
-            -- v:setLinearVelocity(0, self.carVelocity)
+            v:setLinearVelocity(0, self.carVelocity)
         end
     end
     return true

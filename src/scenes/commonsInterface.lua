@@ -6,9 +6,11 @@ local barrierGroup = display.newGroup()
 local shootGroup = display.newGroup()
 local fireButtonGroup = display.newGroup()
 local ballGroup = display.newGroup()
-local commonsGroup = display.newGroup()
 local coolDownSquareGroup = display.newGroup()
+local backgroundUiGroup = display.newGroup()
+local commonsGroup = display.newGroup()
 local uiGroup = display.newGroup()
+
 local effectsGroup = display.newGroup()
 
 M.background = nil
@@ -32,6 +34,19 @@ local hpBarFactory = require("src.domain.hpBar")
 local function getStageParameters(stageNumber)
     local params = require("src.scenes.sceneParameters")
     M.params = params.getParameters(stageNumber)
+end
+
+local function drawCannonUI()
+    local height = 150
+    local miniHeight = 50
+    local yPos = display.viewableContentHeight - height
+    local cannonUI = display.newImageRect(backgroundUiGroup, "assets/images/commons/ui/cannon_ui_texture.png", display.viewableContentWidth,
+        height)
+    cannonUI.x = 0
+    cannonUI.y = yPos
+    cannonUI:setFillColor(0.458, 0.686, 0.717)
+    local miniStatusBar = display.newRect(backgroundUiGroup, 0, yPos, display.viewableContentWidth,
+     miniHeight)
 end
 
 local function initiateBackground()
@@ -68,6 +83,7 @@ local function updateMeasures(event, countdownText)
 end
 
 local function initiateUiElements(uiGroup, countdownTimer)
+    -- drawCannonUI()
     M.hpBar = hpBarFactory:new()
     M.hpBar:drawBar(uiGroup)
     M.countdownTimer = countdownTimer
@@ -102,12 +118,11 @@ end
 function M.initiateCommons(stageNumber, availableBallTypes, countdownTimer)
     getStageParameters(stageNumber)
     initiateBackground()
+    initiateUiElements(uiGroup, countdownTimer)
     initiateVehicle()
     initiateCannon(ballGroup, fireButtonGroup, shootGroup, effectsGroup)
-    eventFactory:initiateCommonListeners(M, shootGroup, effectsGroup, barrierGroup)
     initiateBarriers(stageNumber, barrierGroup)
-    initiateUiElements(uiGroup, countdownTimer)
-
+    eventFactory:initiateCommonListeners(M, shootGroup, effectsGroup, barrierGroup)
 end
 
 return M
