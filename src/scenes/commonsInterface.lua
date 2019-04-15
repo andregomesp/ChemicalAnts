@@ -3,11 +3,11 @@ local mainBackGroup = display.newGroup()
 local objectBackGroup = display.newGroup()
 local objectSecondaryBackGroup = display.newGroup()
 local barrierGroup = display.newGroup()
+local backgroundUiGroup = display.newGroup()
 local shootGroup = display.newGroup()
 local fireButtonGroup = display.newGroup()
 local ballGroup = display.newGroup()
 local coolDownSquareGroup = display.newGroup()
-local backgroundUiGroup = display.newGroup()
 local commonsGroup = display.newGroup()
 local uiGroup = display.newGroup()
 
@@ -37,16 +37,30 @@ local function getStageParameters(stageNumber)
 end
 
 local function drawCannonUI()
-    local height = 150
-    local miniHeight = 50
+    local height = 110
+    local miniHeight = 30
     local yPos = display.viewableContentHeight - height
+    local miniYPos = display.viewableContentHeight - height - miniHeight
     local cannonUI = display.newImageRect(backgroundUiGroup, "assets/images/commons/ui/cannon_ui_texture.png", display.viewableContentWidth,
         height)
     cannonUI.x = 0
     cannonUI.y = yPos
+    cannonUI.anchorX = 0
+    cannonUI.anchorY = 0
     cannonUI:setFillColor(0.458, 0.686, 0.717)
     local miniStatusBar = display.newRect(backgroundUiGroup, 0, yPos, display.viewableContentWidth,
      miniHeight)
+     miniStatusBar.y = miniYPos
+    miniStatusBar.anchorX = 0
+    miniStatusBar.anchorY = 0
+    local miniStatusGradient = {
+        type="gradient",
+        color1= {0.4, 0.4, 0.8}, color2={0.9, 0.9, 1}, direction="down"
+    }
+    miniStatusBar:setFillColor(miniStatusGradient)
+    miniStatusBar:setStrokeColor(0, 0, 0)
+    miniStatusBar.strokeWidth = 0
+
 end
 
 local function initiateBackground()
@@ -68,7 +82,7 @@ end
 local function initiateVehicle()
     local vehicleImage = display.newImageRect(commonsGroup, "assets/images/commons/tanktemporary.png", 45, 45)
     vehicleImage.x = 160
-    vehicleImage.y = 400
+    vehicleImage.y = 370
     vehicleImage.myName = "vehicle"
     physics.addBody(vehicleImage, "dynamic", {isSensor = true})
     vehicleImage:toFront()
@@ -83,7 +97,7 @@ local function updateMeasures(event, countdownText)
 end
 
 local function initiateUiElements(uiGroup, countdownTimer)
-    -- drawCannonUI()
+    drawCannonUI()
     M.hpBar = hpBarFactory:new()
     M.hpBar:drawBar(uiGroup)
     M.countdownTimer = countdownTimer

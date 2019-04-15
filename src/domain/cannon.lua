@@ -19,7 +19,7 @@ end
 function Cannon:drawCoolDownSquare(buttonId)
     local coolDownSquare = display.newRoundedRect(20 + (100 * buttonId), 550, 80, 80, 6)
     coolDownSquare.anchorX, coolDownSquare.anchorY = 0, 1
-    coolDownSquare:setFillColor(0.1,0.1,0.1,0.3)
+    coolDownSquare:setFillColor(0.1,0.1,0.1,0.7)
     transition.to(coolDownSquare, {time=2000, height = 0})
 end
 
@@ -39,7 +39,7 @@ function Cannon:fire(event)
         firedBall.image.y = self.associatedVehicle.image.y
         firedBall.image:toFront()
         firedBall.image:addEventListener("collision", function (event) return self:shootColision(event) end)
-        firedBall.image:setLinearVelocity(0, -360)
+        firedBall.image:setLinearVelocity(0, -500)
     end
     return true
 end
@@ -76,6 +76,7 @@ function Cannon:loadFiringButtons(elementsAvailable, ballGroup, fireButtonGroup)
         )
         fireButtonGroup:insert(button)
         elementIcon:toFront()
+        table.insert(fireButtonGroup, button)
         table.insert(self.firingButtons, button)
         counter = counter + 1
     end
