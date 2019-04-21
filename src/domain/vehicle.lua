@@ -1,6 +1,6 @@
 local Vehicle = {hp = 100, invulnerable = false, invulnerableTime = 1500}
 
-function Vehicle:new(o, vehicleImage, carVelocity)
+function Vehicle:new(o, vehicleImage, carVelocity, backgroundObject, barrierGroup)
     o = o or {}
     setmetatable(o, self)
     self.__index = self
@@ -11,7 +11,10 @@ function Vehicle:new(o, vehicleImage, carVelocity)
     self.image = vehicleImage
     self.carVelocity = carVelocity
     self.boostStatus = 1
-    self.boostingOnCoolDown = false
+    self.boostTimer = 5
+    self.boostText = display.newText({parent = uiGroup, text = self.boostStatus, x = display.viewableContentWidth - 30, y = display.viewableContentHeight - 125,
+    font = "DejaVuSansMono", width = 20})
+    self.boostText:setFillColor(0, 0, 0)
     return o
 end
 
@@ -72,13 +75,15 @@ function Vehicle:makeMovement(event)
             self.image:setLinearVelocity(vehicleXVelocity, vehicleYVelocity)
         end
     end
+    return true
 end
 
 function Vehicle:boost(event, backgroundObject, barrierGroup)
     if self.carVelocity <= 315 then
-        print("boosting")
         self.carVelocity = self.carVelocity + 35
         self.boostStatus = self.boostStatus + 1
+        self.boostText.text = self.boostStatus
+        self.boostTimer = 5
         backgroundObject.objectBackGroup:setLinearVelocity(0, self.carVelocity)
         backgroundObject.objectSecondaryBackGroup:setLinearVelocity(0, self.carVelocity)
         for k, v in ipairs(barrierGroup) do
@@ -87,15 +92,24 @@ function Vehicle:boost(event, backgroundObject, barrierGroup)
                 v:setLinearVelocity(0, self.carVelocity)
             end
         end
-        local ceaseBoost = function() return self:ceaseBoost(backgroundObject, barrierGroup) end
-        timer.performWithDelay(1500, ceaseBoost)
     end
     return true
+end
+
+function Vehicle:boostcount(backgroundObject, barrierGroup)
+    if self.boostStatus ~= 1 then
+        self.boostTimer = self.boostTimer - 1
+        if self.boostTimer == 0 then
+            self.boostTimer = 5
+            self:ceaseBoost(backgroundObject, barrierGroup)
+        end
+    end
 end
 
 function Vehicle:ceaseBoost(backgroundObject, barrierGroup)
     self.carVelocity = self.carVelocity - 35
     self.boostStatus = self.boostStatus - 1
+    self.boostText.text = self.boostStatus
     backgroundObject.objectBackGroup:setLinearVelocity(0, self.carVelocity)
     backgroundObject.objectSecondaryBackGroup:setLinearVelocity(0, self.carVelocity)
     for k, v in ipairs(barrierGroup) do
@@ -157,6 +171,11 @@ function Vehicle:controlMovement()
         end
     end
     return true
+end
+
+function Vehicle:initiateBoostLoop(backgroundObject, barrierGroup)
+    local boostcount = function() return self:boostcount(backgroundObject, barrierGroup) end
+    self.boostCount = timer.performWithDelay(500, boostcount, 0)
 end
 
 function Vehicle:move(event)

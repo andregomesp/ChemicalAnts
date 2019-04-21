@@ -1,6 +1,6 @@
 local M = {}
 
-function M:initiateCommonListeners(commons, shootGroup, effectsGroup, barrierGroup)
+function M:initiateCommonListeners(commons, effectsGroup, barrierGroup, backgroundUiGroup)
 
 
     local function controlVehicleMovement(event)
@@ -21,8 +21,12 @@ function M:initiateCommonListeners(commons, shootGroup, effectsGroup, barrierGro
         return true
     end
 
+    local function doNothing(event)
+        print("tomarnocuuuuuuu")
+        return true
+    end
     local function handleBackground(event)
-        needToMoveGroup = commons.background:checkBackgroundNeedsRebuild()
+        local needToMoveGroup = commons.background:checkBackgroundNeedsRebuild()
         if needToMoveGroup ~= false then
             commons.background:moveBackgroundGroup(needToMoveGroup)
         end
@@ -32,13 +36,14 @@ function M:initiateCommonListeners(commons, shootGroup, effectsGroup, barrierGro
     local function moveVehicle(event)
             if (event.phase == "ended" and event.yStart - event.y > 30) then
                 commons.vehicle:boost(event, commons.background, barrierGroup)
-            elseif (event.phase == "ended") then 
+            elseif (event.phase == "ended") then
                 commons.vehicle:move(event)
             end
         return true
     end
 
-
+    commons.cannonUiBar:addEventListener("touch", doNothing)
+    commons.miniStatusBar:addEventListener("touch", doNothing)
     commons.background.objectSecondaryBackGroup:addEventListener("touch", moveVehicle)
     commons.background.objectBackGroup:addEventListener("touch", moveVehicle)
     commons.background.image:addEventListener("touch", moveVehicle)

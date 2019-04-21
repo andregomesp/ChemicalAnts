@@ -23,6 +23,8 @@ M.countdownTimer = nil
 M.totalTime = nil
 M.meters = 0
 M.carVelocity = 140
+M.cannonUiBar = nil
+M.cannonUiMiniBar = nil
 
 local backgroundFactory = require("src.domain.background")
 local cannonFactory = require("src.domain.cannon")
@@ -45,6 +47,7 @@ local function drawCannonUI()
         height)
     cannonUI.x = 0
     cannonUI.y = yPos
+    cannonUI.myName = "cannon"
     cannonUI.anchorX = 0
     cannonUI.anchorY = 0
     cannonUI:setFillColor(0.458, 0.686, 0.717)
@@ -60,7 +63,8 @@ local function drawCannonUI()
     miniStatusBar:setFillColor(miniStatusGradient)
     miniStatusBar:setStrokeColor(0, 0, 0)
     miniStatusBar.strokeWidth = 0
-
+    M.cannonUiBar = cannonUI
+    M.miniStatusBar = miniStatusBar
 end
 
 local function initiateBackground()
@@ -86,8 +90,9 @@ local function initiateVehicle()
     vehicleImage.myName = "vehicle"
     physics.addBody(vehicleImage, "dynamic", {isSensor = true})
     vehicleImage:toFront()
-    M.vehicle = vehicleFactory:new(nil, vehicleImage, M.carVelocity)
+    M.vehicle = vehicleFactory:new(nil, vehicleImage, M.carVelocity, M.background, barrierGroup)
     M.carVelocity = M.vehicle.carVelocity
+    M.vehicle:initiateBoostLoop(M.background, barrierGroup)
 end
 
 local function updateMeasures(event, countdownText)
@@ -97,9 +102,18 @@ local function updateMeasures(event, countdownText)
 end
 
 local function initiateUiElements(uiGroup, countdownTimer)
+    -- CANNON UI
     drawCannonUI()
+
+    -- HP Bar
     M.hpBar = hpBarFactory:new()
     M.hpBar:drawBar(uiGroup)
+
+    -- Boost label
+    local boostLabel = display.newText({parent = uiGroup, text = "Boost", x = display.viewableContentWidth - 80, y = display.viewableContentHeight - 125,
+    font = "DejaVuSansMono", width = 70})
+    boostLabel:setFillColor(0, 0, 0)
+    -- Countdown Timer
     M.countdownTimer = countdownTimer
     M.totalTime = countdownTimer * 1
     local backCircle = display.newRoundedRect(uiGroup, display.contentCenterX - 20, 15, 60, 20, 10)
@@ -136,7 +150,7 @@ function M.initiateCommons(stageNumber, availableBallTypes, countdownTimer)
     initiateVehicle()
     initiateCannon(ballGroup, fireButtonGroup, shootGroup, effectsGroup)
     initiateBarriers(stageNumber, barrierGroup)
-    eventFactory:initiateCommonListeners(M, shootGroup, effectsGroup, barrierGroup)
+    eventFactory:initiateCommonListeners(M, effectsGroup, barrierGroup, backgroundUiGroup)
 end
 
 return M
