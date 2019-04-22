@@ -108,11 +108,14 @@ function Vehicle:boost(event, backgroundObject, barrierGroup, effectsGroup)
 end
 
 function Vehicle:boostcount(backgroundObject, barrierGroup, effectsGroup)
-    if self.boostStatus ~= 1 and self.stopped == false then
+    if self.boostStatus ~= 1 then
         self.boostTimer = self.boostTimer - 1
-        if self.boostTimer == 0 then
+        if self.boostTimer == 0 and self.stopped == false then
             self.boostTimer = 5
             self:ceaseBoost(backgroundObject, barrierGroup, effectsGroup)
+        elseif self.stopped == true then
+            self.boostStatus = 1
+            self.boostText.text = self.boostStatus
         end
     end
 end
@@ -234,7 +237,6 @@ function Vehicle:desaccelerateObjects(backgroundObject, barrierGroup, effectsGro
     else
         self.carVelocity = self.carVelocity / 2
     end    
-    print("desaccelerating " .. self.desaccelerationIteration)
     backgroundObject.objectBackGroup:setLinearVelocity(0, self.carVelocity)
     backgroundObject.objectSecondaryBackGroup:setLinearVelocity(0, self.carVelocity)
     for i=1, barrierGroup.numChildren do
@@ -250,29 +252,32 @@ function Vehicle:desaccelerateObjects(backgroundObject, barrierGroup, effectsGro
 end
 
 function Vehicle:desacceleratedStop(backgroundObject, barrierGroup, effectsGroup)
-    print("desaccelerating")
     desaccelerate = function () return self:desaccelerateObjects(backgroundObject, barrierGroup, effectsGroup) end
     timer.performWithDelay(500, desaccelerate, 10)
 end
 
-function Vehicle:repositionSmokePuff(smoke)
-
+function Vehicle:eraseSmokePuff(smoke)
+    display.remove(smoke)
+    smoke = nil
+    self.isFlyingSmokeAnimation = false
 end
 
-function Vehicle:flySmokePuff(smoke)
+function Vehicle:flySmokePuff()
+    local smoke = display.newImage("assets/images/commons/carsmoke.png", self.image.x, self.image.y)
+    smoke.width = 25
+    smoke.height = 25
     if self.isFlyingSmokeAnimation == false then
         self.isFlyingSmokeAnimation = true
-        transition.to(smoke, {time = 300, x = smoke.x + 20, y = smoke.y - 30, alpha = 0, transition=easing.inQuint, onComplete=repositionSmoke})
+        local eraseSmoke = function() return self:eraseSmokePuff(smoke) end
+        transition.to(smoke, {time = 500, x = smoke.x + 20, y = smoke.y - 40, alpha = 0, transition=easing.inQuint, onComplete=eraseSmoke})
     end        
 end
 
 function Vehicle:initiateDestroyedAnimation(backgroundObject, barrierGroup, effectsGroup)
-    print("animation initiated") 
+    self.stopped = true
     self:desacceleratedStop(backgroundObject, barrierGroup, effectsGroup)
-    local smoke = display.newImage(effectsGroup, "assets/images/commons/smoke.png", self.image.x, self.image.y)
-    local repositionSmoke = function() return self:repositionSmokePuff(smoke) end
     local flySmoke = function() return self:flySmokePuff(smoke) end
-    self.smokeTimer = timer.performWithDelay(350, flySmoke, 0)
+    self.smokeTimer = timer.performWithDelay(550, flySmoke, 0)
 end
 
 return Vehicle

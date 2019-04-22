@@ -118,7 +118,7 @@ local function initiateDeathChecker(countdownTimer)
     print(barrierGroup)
     local barrierGroup = barrierGroup
     checkDeath = function() return checkingDeath() end
-    timer.performWithDelay(1000, checkingDeath, countdownTimer)
+    timer.performWithDelay(500, checkingDeath, countdownTimer)
 end
 
 local function updateMeasures(event, countdownText)
