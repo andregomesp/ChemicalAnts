@@ -17,6 +17,8 @@ function Vehicle:new(o, vehicleImage, carVelocity, stopped, backgroundObject, ba
     font = "DejaVuSansMono", width = 20})
     self.boostText:setFillColor(0, 0, 0)
     self.desaccelerationIteration = 0
+    self.isFlyingSmokeAnimation = false
+    self.smokeTimer = nil
     self.backgroundObject = backgroundObject
     self.barrierGroup = barrierGroup
     self.effectsGroup = effectsGroup
@@ -253,11 +255,24 @@ function Vehicle:desacceleratedStop(backgroundObject, barrierGroup, effectsGroup
     timer.performWithDelay(500, desaccelerate, 10)
 end
 
+function Vehicle:repositionSmokePuff(smoke)
+
+end
+
+function Vehicle:flySmokePuff(smoke)
+    if self.isFlyingSmokeAnimation == false then
+        self.isFlyingSmokeAnimation = true
+        transition.to(smoke, {time = 300, x = smoke.x + 20, y = smoke.y - 30, alpha = 0, transition=easing.inQuint, onComplete=repositionSmoke})
+    end        
+end
+
 function Vehicle:initiateDestroyedAnimation(backgroundObject, barrierGroup, effectsGroup)
     print("animation initiated") 
     self:desacceleratedStop(backgroundObject, barrierGroup, effectsGroup)
-    
-
+    local smoke = display.newImage(effectsGroup, "assets/images/commons/smoke.png", self.image.x, self.image.y)
+    local repositionSmoke = function() return self:repositionSmokePuff(smoke) end
+    local flySmoke = function() return self:flySmokePuff(smoke) end
+    self.smokeTimer = timer.performWithDelay(350, flySmoke, 0)
 end
 
 return Vehicle
