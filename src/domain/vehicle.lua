@@ -1,6 +1,6 @@
 local Vehicle = {hp = 100, invulnerable = false, invulnerableTime = 1500}
 
-function Vehicle:new(o, vehicleImage, carVelocity, backgroundObject, barrierGroup)
+function Vehicle:new(o, vehicleImage, carVelocity, stopped, backgroundObject, barrierGroup)
     o = o or {}
     setmetatable(o, self)
     self.__index = self
@@ -12,9 +12,14 @@ function Vehicle:new(o, vehicleImage, carVelocity, backgroundObject, barrierGrou
     self.carVelocity = carVelocity
     self.boostStatus = 1
     self.boostTimer = 5
+    self.stopped = stopped
     self.boostText = display.newText({parent = uiGroup, text = self.boostStatus, x = display.viewableContentWidth - 30, y = display.viewableContentHeight - 125,
     font = "DejaVuSansMono", width = 20})
     self.boostText:setFillColor(0, 0, 0)
+    self.desaccelerationIteration = 0
+    self.backgroundObject = backgroundObject
+    self.barrierGroup = barrierGroup
+    self.effectsGroup = effectsGroup
     return o
 end
 
@@ -86,14 +91,14 @@ function Vehicle:boost(event, backgroundObject, barrierGroup, effectsGroup)
         self.boostTimer = 5
         backgroundObject.objectBackGroup:setLinearVelocity(0, self.carVelocity)
         backgroundObject.objectSecondaryBackGroup:setLinearVelocity(0, self.carVelocity)
-        for k, v in ipairs(barrierGroup) do
-            if v ~= nil then
-                v:setLinearVelocity(0, self.carVelocity)
+        for i=1, barrierGroup.numChildren do
+            if barrierGroup[i] ~= nil then
+                barrierGroup[i]:setLinearVelocity(0, self.carVelocity) 
             end
         end
-        for k, v in ipairs(effectsGroup) do
-            if v ~= nil then
-                v:setLinearVelocity(0, self.carVelocity)
+        for i=1, effectsGroup.numChildren do
+            if effectsGroup[i] ~= nil then
+                effectsGroup[i]:setLinearVelocity(0, self.carVelocity) 
             end
         end
     end
@@ -101,7 +106,7 @@ function Vehicle:boost(event, backgroundObject, barrierGroup, effectsGroup)
 end
 
 function Vehicle:boostcount(backgroundObject, barrierGroup, effectsGroup)
-    if self.boostStatus ~= 1 then
+    if self.boostStatus ~= 1 and self.stopped == false then
         self.boostTimer = self.boostTimer - 1
         if self.boostTimer == 0 then
             self.boostTimer = 5
@@ -116,14 +121,14 @@ function Vehicle:ceaseBoost(backgroundObject, barrierGroup, effectsGroup)
     self.boostText.text = self.boostStatus
     backgroundObject.objectBackGroup:setLinearVelocity(0, self.carVelocity)
     backgroundObject.objectSecondaryBackGroup:setLinearVelocity(0, self.carVelocity)
-    for k, v in ipairs(barrierGroup) do
-        if v ~= nil then
-            v:setLinearVelocity(0, self.carVelocity)
+    for i=1, barrierGroup.numChildren do
+        if barrierGroup[i] ~= nil then
+            barrierGroup[i]:setLinearVelocity(0, self.carVelocity) 
         end
     end
-    for k, v in ipairs(effectsGroup) do
-        if v ~= nil then
-            v:setLinearVelocity(0, self.carVelocity)
+    for i=1, effectsGroup.numChildren do
+        if effectsGroup[i] ~= nil then
+            effectsGroup[i]:setLinearVelocity(0, self.carVelocity) 
         end
     end
     return true
@@ -220,7 +225,39 @@ function Vehicle:takeDamage(ammount, hpBar, effectsGroup)
     end
 end
 
-function Vehicle:destroyCar()
+function Vehicle:desaccelerateObjects(backgroundObject, barrierGroup, effectsGroup)
+    self.desaccelerationIteration = self.desaccelerationIteration + 1
+    if self.desaccelerationIteration == 10 then
+        self.carVelocity = 0
+    else
+        self.carVelocity = self.carVelocity / 2
+    end    
+    print("desaccelerating " .. self.desaccelerationIteration)
+    backgroundObject.objectBackGroup:setLinearVelocity(0, self.carVelocity)
+    backgroundObject.objectSecondaryBackGroup:setLinearVelocity(0, self.carVelocity)
+    for i=1, barrierGroup.numChildren do
+        if barrierGroup[i] ~= nil then
+            barrierGroup[i]:setLinearVelocity(0, self.carVelocity) 
+        end
+    end
+    for i=1, effectsGroup.numChildren do
+        if effectsGroup[i] ~= nil then
+            effectsGroup[i]:setLinearVelocity(0, self.carVelocity) 
+        end
+    end
+end
+
+function Vehicle:desacceleratedStop(backgroundObject, barrierGroup, effectsGroup)
+    print("desaccelerating")
+    desaccelerate = function () return self:desaccelerateObjects(backgroundObject, barrierGroup, effectsGroup) end
+    timer.performWithDelay(500, desaccelerate, 10)
+end
+
+function Vehicle:initiateDestroyedAnimation(backgroundObject, barrierGroup, effectsGroup)
+    print("animation initiated") 
+    self:desacceleratedStop(backgroundObject, barrierGroup, effectsGroup)
+    
+
 end
 
 return Vehicle

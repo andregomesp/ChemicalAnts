@@ -25,7 +25,11 @@ M.meters = 0
 M.carVelocity = 140
 M.cannonUiBar = nil
 M.cannonUiMiniBar = nil
+M.rain = nil
 M.nextBarrierIndex = 1
+M.machineReached = false
+M.paused = false
+M.stopped = false
 
 local backgroundFactory = require("src.domain.background")
 local cannonFactory = require("src.domain.cannon")
@@ -81,7 +85,7 @@ end
 
 local function initiateCannon(ballGroup, fireButtonGroup, shootGroup, effectsGroup)
     M.cannon = cannonFactory:new(nil, M.vehicle, shootGroup, coolDownSquareGroup, effectsGroup)
-    M.cannon:loadFiringButtons(M.params.availableBallTypes, ballGroup, fireButtonGroup)
+    M.cannon:loadFiringButtons(M.params.availableBallTypes, ballGroup, fireButtonGroup, M)
 end
 
 local function initiateVehicle()
@@ -91,15 +95,42 @@ local function initiateVehicle()
     vehicleImage.myName = "vehicle"
     physics.addBody(vehicleImage, "dynamic", {isSensor = true})
     vehicleImage:toFront()
-    M.vehicle = vehicleFactory:new(nil, vehicleImage, M.carVelocity, M.background, barrierGroup)
+    M.vehicle = vehicleFactory:new(nil, vehicleImage, M.carVelocity, M.stopped, M.background, barrierGroup)
     M.carVelocity = M.vehicle.carVelocity
-    M.vehicle:initiateBoostLoop(M.background, barrierGroup)
+    M.vehicle:initiateBoostLoop(M.background, barrierGroup, effectsGroup)
+end
+
+local function initiateRain()
+    M.rain = true
+end
+
+local function timeIsUp()
+end
+
+local function checkingDeath()
+    if M.vehicle.hp == 0 and M.stopped == false then
+        M.stopped = true
+        M.vehicle:initiateDestroyedAnimation(M.background, barrierGroup, effectsGroup)
+    end
+end
+
+local function initiateDeathChecker(countdownTimer)
+    print(barrierGroup)
+    local barrierGroup = barrierGroup
+    checkDeath = function() return checkingDeath() end
+    timer.performWithDelay(1000, checkingDeath, countdownTimer)
 end
 
 local function updateMeasures(event, countdownText)
     M.countdownTimer = M.countdownTimer - 1
     countdownText.text = M.countdownTimer
     M.meters = M.meters + M.vehicle.carVelocity
+    if M.countdownTimer <= 30 and M.rain == nil and M.machineReached == false then
+        initiateRain()
+    end
+    if M.countdownTimer == 0 and M.machineReached == false then
+        timeIsUp()
+    end
 end
 
 local function initiateUiElements(uiGroup, countdownTimer)
@@ -114,6 +145,7 @@ local function initiateUiElements(uiGroup, countdownTimer)
     local boostLabel = display.newText({parent = uiGroup, text = "Boost", x = display.viewableContentWidth - 80, y = display.viewableContentHeight - 125,
     font = "DejaVuSansMono", width = 70})
     boostLabel:setFillColor(0, 0, 0)
+
     -- Countdown Timer
     M.countdownTimer = countdownTimer
     M.totalTime = countdownTimer * 1
@@ -131,7 +163,7 @@ local function positionCheck(patterns, barrierFactory)
         M.nextBarrierIndex = M.nextBarrierIndex + 1
         local pattern = patterns[patternIndex]
         local barrier = barrierFactory:new()
-        barrier:drawBarrier(barrierGroup, pattern, M.carVelocity, barrier, patternIndex)
+        barrier:drawBarrier(barrierGroup, pattern, M.vehicle.carVelocity, barrier, patternIndex)
     end
 end
 
@@ -140,20 +172,8 @@ local function initiateBarriers(stageNumber, barrierGroup)
     local patternList = require(patternFilePath)
     local patterns = patternList:getPatterns()
     local barrierFactory = require("src.domain.barrier")
-    -- local i = 1
     local positioningcheck = function() return positionCheck(patterns, barrierFactory) end
     timer.performWithDelay(1000, positioningcheck, 0)
-    -- while i <= #patterns do
-    --     local pattern = patterns[i]
-    --     local time = patterns[i]["time"]
-    --     local patternIndex = i * 1
-    --     local newBarrier = function()
-    --         local barrier = barrierFactory:new()
-    --         barrier:drawBarrier(barrierGroup, pattern, M.carVelocity, barrier, patternIndex)
-    --     end
-    --     timer.performWithDelay(time, newBarrier)
-    --     i = i + 1
-    -- end
 end
 
 function M.initiateCommons(stageNumber, availableBallTypes, countdownTimer)
@@ -163,6 +183,7 @@ function M.initiateCommons(stageNumber, availableBallTypes, countdownTimer)
     initiateVehicle()
     initiateCannon(ballGroup, fireButtonGroup, shootGroup, effectsGroup)
     initiateBarriers(stageNumber, barrierGroup)
+    initiateDeathChecker(countdownTimer, barrierGroup, effectsGroup)
     eventFactory:initiateCommonListeners(M, effectsGroup, barrierGroup, backgroundUiGroup)
 end
 

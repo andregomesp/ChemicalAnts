@@ -23,8 +23,8 @@ function Cannon:drawCoolDownSquare(buttonId)
     transition.to(coolDownSquare, {time=2000, height = 0})
 end
 
-function Cannon:fire(event)
-    if self.onCoolDown[event.target.id.element] == nil then
+function Cannon:fire(event, commons)
+    if self.onCoolDown[event.target.id.element] == nil and commons.stopped == false then
         self:initiateCoolDown(event.target.id.element, event.target.id.buttonId)
         local ballFactory = require("src.domain.ball")
         local ballColor = self.ballParametersList.getImage(event.target.id.element)
@@ -50,7 +50,7 @@ function Cannon:initiateCoolDown(bulletId, buttonId)
     timer.performWithDelay(2000, function(event) return self:closeCoolDown(event, bulletId) end)
 end
 
-function Cannon:loadFiringButtons(elementsAvailable, ballGroup, fireButtonGroup)
+function Cannon:loadFiringButtons(elementsAvailable, ballGroup, fireButtonGroup, commons)
     local widget = require("widget")
     local counter = 0
     -- todo: Elements available needs fixing, It is currently passing the whole list and not the stage parameters
@@ -59,6 +59,7 @@ function Cannon:loadFiringButtons(elementsAvailable, ballGroup, fireButtonGroup)
         local elementIcon = display.newImageRect(ballGroup, "assets/images/commons/balls/" .. ballColor, 30, 30)
         elementIcon.x = 60 + (100 * counter)
         elementIcon.y = 510
+        local fireTheBall = function(event) return self:fire(event, commons) end
         local button = widget.newButton(
             {
                 left = 20 + (100 * counter),
@@ -71,7 +72,8 @@ function Cannon:loadFiringButtons(elementsAvailable, ballGroup, fireButtonGroup)
                 fillColor = { default={0.396,0.447,0.529,1}, over={1,0.1,0.7,1} },
                 strokeColor = { default={1,0.4,0,1}, over={0.8,0.8,1,1} },
                 strokeWidth = 2,
-                onRelease = function(event) return self:fire(event) end
+                -- onRelease = function(event) return self:fire(event) end
+                onRelease = fireTheBall
             }
         )
         fireButtonGroup:insert(button)
