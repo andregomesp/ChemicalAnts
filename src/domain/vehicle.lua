@@ -78,7 +78,7 @@ function Vehicle:makeMovement(event)
     return true
 end
 
-function Vehicle:boost(event, backgroundObject, barrierGroup)
+function Vehicle:boost(event, backgroundObject, barrierGroup, effectsGroup)
     if self.carVelocity <= 315 then
         self.carVelocity = self.carVelocity + 35
         self.boostStatus = self.boostStatus + 1
@@ -88,7 +88,11 @@ function Vehicle:boost(event, backgroundObject, barrierGroup)
         backgroundObject.objectSecondaryBackGroup:setLinearVelocity(0, self.carVelocity)
         for k, v in ipairs(barrierGroup) do
             if v ~= nil then
-                print(k.myName)
+                v:setLinearVelocity(0, self.carVelocity)
+            end
+        end
+        for k, v in ipairs(effectsGroup) do
+            if v ~= nil then
                 v:setLinearVelocity(0, self.carVelocity)
             end
         end
@@ -96,23 +100,28 @@ function Vehicle:boost(event, backgroundObject, barrierGroup)
     return true
 end
 
-function Vehicle:boostcount(backgroundObject, barrierGroup)
+function Vehicle:boostcount(backgroundObject, barrierGroup, effectsGroup)
     if self.boostStatus ~= 1 then
         self.boostTimer = self.boostTimer - 1
         if self.boostTimer == 0 then
             self.boostTimer = 5
-            self:ceaseBoost(backgroundObject, barrierGroup)
+            self:ceaseBoost(backgroundObject, barrierGroup, effectsGroup)
         end
     end
 end
 
-function Vehicle:ceaseBoost(backgroundObject, barrierGroup)
+function Vehicle:ceaseBoost(backgroundObject, barrierGroup, effectsGroup)
     self.carVelocity = self.carVelocity - 35
     self.boostStatus = self.boostStatus - 1
     self.boostText.text = self.boostStatus
     backgroundObject.objectBackGroup:setLinearVelocity(0, self.carVelocity)
     backgroundObject.objectSecondaryBackGroup:setLinearVelocity(0, self.carVelocity)
     for k, v in ipairs(barrierGroup) do
+        if v ~= nil then
+            v:setLinearVelocity(0, self.carVelocity)
+        end
+    end
+    for k, v in ipairs(effectsGroup) do
         if v ~= nil then
             v:setLinearVelocity(0, self.carVelocity)
         end
@@ -173,8 +182,8 @@ function Vehicle:controlMovement()
     return true
 end
 
-function Vehicle:initiateBoostLoop(backgroundObject, barrierGroup)
-    local boostcount = function() return self:boostcount(backgroundObject, barrierGroup) end
+function Vehicle:initiateBoostLoop(backgroundObject, barrierGroup, effectsGroup)
+    local boostcount = function() return self:boostcount(backgroundObject, barrierGroup, effectsGroup) end
     self.boostCount = timer.performWithDelay(500, boostcount, 0)
 end
 

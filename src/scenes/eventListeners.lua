@@ -22,7 +22,6 @@ function M:initiateCommonListeners(commons, effectsGroup, barrierGroup, backgrou
     end
 
     local function doNothing(event)
-        print("tomarnocuuuuuuu")
         return true
     end
     local function handleBackground(event)

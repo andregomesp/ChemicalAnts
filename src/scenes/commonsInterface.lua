@@ -25,6 +25,7 @@ M.meters = 0
 M.carVelocity = 140
 M.cannonUiBar = nil
 M.cannonUiMiniBar = nil
+M.nextBarrierIndex = 1
 
 local backgroundFactory = require("src.domain.background")
 local cannonFactory = require("src.domain.cannon")
@@ -124,23 +125,35 @@ local function initiateUiElements(uiGroup, countdownTimer)
     timer.performWithDelay(1000, updateMeasures, M.totalTime)
 end
 
+local function positionCheck(patterns, barrierFactory)
+    if patterns[M.nextBarrierIndex] ~= nil and M.meters >= patterns[M.nextBarrierIndex]["time"] then
+        local patternIndex = M.nextBarrierIndex * 1
+        M.nextBarrierIndex = M.nextBarrierIndex + 1
+        local pattern = patterns[patternIndex]
+        local barrier = barrierFactory:new()
+        barrier:drawBarrier(barrierGroup, pattern, M.carVelocity, barrier, patternIndex)
+    end
+end
+
 local function initiateBarriers(stageNumber, barrierGroup)
     local patternFilePath = "src.barrierPatterns.stage" .. tostring(stageNumber)
     local patternList = require(patternFilePath)
     local patterns = patternList:getPatterns()
     local barrierFactory = require("src.domain.barrier")
-    local i = 1
-    while i <= #patterns do
-        local pattern = patterns[i]
-        local time = patterns[i]["time"]
-        local patternIndex = i * 1
-        local newBarrier = function()
-            local barrier = barrierFactory:new()
-            barrier:drawBarrier(barrierGroup, pattern, M.carVelocity, barrier, patternIndex)
-        end
-        timer.performWithDelay(time, newBarrier)
-        i = i + 1
-    end
+    -- local i = 1
+    local positioningcheck = function() return positionCheck(patterns, barrierFactory) end
+    timer.performWithDelay(1000, positioningcheck, 0)
+    -- while i <= #patterns do
+    --     local pattern = patterns[i]
+    --     local time = patterns[i]["time"]
+    --     local patternIndex = i * 1
+    --     local newBarrier = function()
+    --         local barrier = barrierFactory:new()
+    --         barrier:drawBarrier(barrierGroup, pattern, M.carVelocity, barrier, patternIndex)
+    --     end
+    --     timer.performWithDelay(time, newBarrier)
+    --     i = i + 1
+    -- end
 end
 
 function M.initiateCommons(stageNumber, availableBallTypes, countdownTimer)
