@@ -1,6 +1,6 @@
 local Vehicle = {hp = 100, invulnerable = false, invulnerableTime = 1500}
 
-function Vehicle:new(o, vehicleImage, carVelocity, stopped, backgroundObject, barrierGroup)
+function Vehicle:new(o, vehicleImage, carVelocity, stopped, backgroundObject, barrierGroup, antsGroup)
     o = o or {}
     setmetatable(o, self)
     self.__index = self
@@ -22,6 +22,7 @@ function Vehicle:new(o, vehicleImage, carVelocity, stopped, backgroundObject, ba
     self.backgroundObject = backgroundObject
     self.barrierGroup = barrierGroup
     self.effectsGroup = effectsGroup
+    self.antsGroup = antsGroup
     return o
 end
 
@@ -263,14 +264,22 @@ function Vehicle:eraseSmokePuff(smoke)
 end
 
 function Vehicle:flySmokePuff()
-    local smoke = display.newImage("assets/images/commons/carsmoke.png", self.image.x, self.image.y)
-    smoke.width = 25
-    smoke.height = 25
     if self.isFlyingSmokeAnimation == false then
+        local smoke = display.newImage("assets/images/commons/carsmoke.png", self.image.x, self.image.y)
+        smoke.width = 25
+        smoke.height = 25
         self.isFlyingSmokeAnimation = true
         local eraseSmoke = function() return self:eraseSmokePuff(smoke) end
         transition.to(smoke, {time = 500, x = smoke.x + 20, y = smoke.y - 40, alpha = 0, transition=easing.inQuint, onComplete=eraseSmoke})
     end        
+end
+
+function Vehicle:initiateFixingAnimation()
+    local antA = display.newImage(self.antsGroup, "assets/images/commons/ants/ant_left.png", self.image.x, self.image.y)
+    antA.width = 22
+    antA.height = 22
+    transition.to(antA, {time=300, x = self.image.x - 35})
+    transition.to(antA, {time=300, y = self.image.y - 10})
 end
 
 function Vehicle:initiateDestroyedAnimation(backgroundObject, barrierGroup, effectsGroup)
@@ -278,6 +287,8 @@ function Vehicle:initiateDestroyedAnimation(backgroundObject, barrierGroup, effe
     self:desacceleratedStop(backgroundObject, barrierGroup, effectsGroup)
     local flySmoke = function() return self:flySmokePuff(smoke) end
     self.smokeTimer = timer.performWithDelay(550, flySmoke, 0)
+    self:initiateFixingAnimation()
+
 end
 
 return Vehicle

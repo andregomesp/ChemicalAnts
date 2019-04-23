@@ -8,9 +8,9 @@ local shootGroup = display.newGroup()
 local fireButtonGroup = display.newGroup()
 local ballGroup = display.newGroup()
 local coolDownSquareGroup = display.newGroup()
+local antsGroup = display.newGroup()
 local commonsGroup = display.newGroup()
 local uiGroup = display.newGroup()
-
 local effectsGroup = display.newGroup()
 
 M.background = nil
@@ -95,7 +95,7 @@ local function initiateVehicle()
     vehicleImage.myName = "vehicle"
     physics.addBody(vehicleImage, "dynamic", {isSensor = true})
     vehicleImage:toFront()
-    M.vehicle = vehicleFactory:new(nil, vehicleImage, M.carVelocity, M.stopped, M.background, barrierGroup)
+    M.vehicle = vehicleFactory:new(nil, vehicleImage, M.carVelocity, M.stopped, M.background, barrierGroup, antsGroup)
     M.carVelocity = M.vehicle.carVelocity
     M.vehicle:initiateBoostLoop(M.background, barrierGroup, effectsGroup)
 end
