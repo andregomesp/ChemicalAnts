@@ -46,7 +46,7 @@ function M:initiateCommonListeners(commons, effectsGroup, barrierGroup, backgrou
             elseif (event.phase == "ended") then
                 commons.vehicle:move(event)
             end
-        end    
+        end
         return true
     end
 

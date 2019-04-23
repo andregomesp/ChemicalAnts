@@ -237,7 +237,7 @@ function Vehicle:desaccelerateObjects(backgroundObject, barrierGroup, effectsGro
         self.carVelocity = 0
     else
         self.carVelocity = self.carVelocity / 2
-    end    
+    end
     backgroundObject.objectBackGroup:setLinearVelocity(0, self.carVelocity)
     backgroundObject.objectSecondaryBackGroup:setLinearVelocity(0, self.carVelocity)
     for i=1, barrierGroup.numChildren do
@@ -249,6 +249,9 @@ function Vehicle:desaccelerateObjects(backgroundObject, barrierGroup, effectsGro
         if effectsGroup[i] ~= nil then
             effectsGroup[i]:setLinearVelocity(0, self.carVelocity) 
         end
+    end
+    if self.desaccelerationIteration == 10 then
+        self:initiateFixingAnimation()
     end
 end
 
@@ -271,7 +274,7 @@ function Vehicle:flySmokePuff()
         self.isFlyingSmokeAnimation = true
         local eraseSmoke = function() return self:eraseSmokePuff(smoke) end
         transition.to(smoke, {time = 500, x = smoke.x + 20, y = smoke.y - 40, alpha = 0, transition=easing.inQuint, onComplete=eraseSmoke})
-    end        
+    end
 end
 
 function Vehicle:initiateFixingAnimation()
@@ -287,8 +290,6 @@ function Vehicle:initiateDestroyedAnimation(backgroundObject, barrierGroup, effe
     self:desacceleratedStop(backgroundObject, barrierGroup, effectsGroup)
     local flySmoke = function() return self:flySmokePuff(smoke) end
     self.smokeTimer = timer.performWithDelay(550, flySmoke, 0)
-    self:initiateFixingAnimation()
-
 end
 
 return Vehicle
