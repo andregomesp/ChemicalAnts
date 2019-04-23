@@ -16,6 +16,7 @@ function HpBar:drawBar(uiGroup)
     local boxImage = display.newRoundedRect(uiGroup, barX, 60, 20, 90, 5)
     local boxBackgroundImage = display.newRoundedRect(uiGroup, barX, 60, 20, 90, 5)
     local hpBarImage = display.newRoundedRect(uiGroup, barX - 10, 105, 20, 90, 5)
+    self.originalSize = 90
     self.barImage = hpBarImage
     self.boxBackgroundImage = boxBackgroundImage
     self.boxImage = boxImage
@@ -34,7 +35,10 @@ function HpBar:subtractHpAnimation(ammountSubtracted)
     local imageCurrentHeightPerCentToSubtract = (ammountSubtracted / 100) * self.boxImage.height
     transition.to(self.barImage, {time=400, height=self.barImage.height - imageCurrentHeightPerCentToSubtract,
     transition = easing.outQuart, onComplete = function() return self:restoreBarColor() end})
+end
 
+function HpBar:refillAllHpAnimation()
+    transition.to(self.barImage, {time=600, height=self.originalSize})
 end
 
 return HpBar

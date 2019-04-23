@@ -27,6 +27,7 @@ end
 
 local function corrosionCollision(event)
     if event.other.myName == "barrier" and event.other.isCorroding == false then
+        event.other.isHittable = false
         event.other.isCorroding = true
         local directionX, directionY
         local effect = "filter.linearWipe"
@@ -93,6 +94,7 @@ local function dissolution(event, effectsGroup, carVelocity)
         event.target = nil
         for k, v in pairs(event.other.barrier.pieces) do
             if v.fill ~= nil then
+                v.isHittable = false
                 v.fill.effect = "filter.bloom"
                 v.fill.effect.levels.white = 1.0
                 v.fill.effect.levels.black = 0.0
@@ -112,6 +114,7 @@ end
 
 local function explosionCollision(event)
     if event.other.myName == "barrier" then
+        event.other.isHittable = false
         display.remove(event.other)
         event.other = nil
     end

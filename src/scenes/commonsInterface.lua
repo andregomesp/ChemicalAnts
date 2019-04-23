@@ -95,7 +95,7 @@ local function initiateVehicle()
     vehicleImage.myName = "vehicle"
     physics.addBody(vehicleImage, "dynamic", {isSensor = true})
     vehicleImage:toFront()
-    M.vehicle = vehicleFactory:new(nil, vehicleImage, M.carVelocity, M.stopped, M.background, barrierGroup, antsGroup)
+    M.vehicle = vehicleFactory:new(nil, vehicleImage, M.carVelocity, M.background, barrierGroup, effectsGroup, antsGroup, M)
     M.carVelocity = M.vehicle.carVelocity
     M.vehicle:initiateBoostLoop(M.background, barrierGroup, effectsGroup)
 end

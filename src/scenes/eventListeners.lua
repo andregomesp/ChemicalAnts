@@ -10,16 +10,15 @@ function M:initiateCommonListeners(commons, effectsGroup, barrierGroup, backgrou
 
     local function collisionCar(event)
             if commons.paused == false then
-            if event.other.myName == "barrier" then
-                commons.vehicle:takeDamage(100, commons.hpBar, effectsGroup)
+            if event.other.myName == "barrier" and event.other.isHittable == true then
+                commons.vehicle:takeDamage(10, commons.hpBar, effectsGroup)
                 -- Todo: ball hitting removed crashed object. Bugs happening.
                 -- Possible solution: execute with delay
+                event.other.isHittable = false
                 display.remove(event.other)
                 event.other = nil
             elseif event.other.myName == "explosion" then
                 commons.vehicle:takeDamage(15, commons.hpBar, effectsGroup)
-            elseif event.other.myName == "objectBackGroup" then
-                -- commons.vehicle:bounceOffWall()
             end
         end 
         return true

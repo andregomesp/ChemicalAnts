@@ -60,6 +60,7 @@ function M:drawPattern(barrierGroup, pattern, pieceSize, carVelocity, barrier)
         local image = display.newImageRect(barrierGroup,
         "assets/images/commons/barriers/" .. type .. "-" .. piece .. ".png", pieceSize, pieceSize)
         image.myName = "barrier"
+        image.isHittable = true
         image.barrier = barrier
         image.element = type
         image.isCorroding = false

@@ -86,8 +86,9 @@ end
 
 function Cannon:shootColision(event)
     if event.target.canColide == true then
-        if (event.other.myName) == "barrier" then
+        if (event.other.myName) == "barrier" and event.other.isHittable == true then
             event.target.canColide = false
+            event.other.isHittable = false
             local reactions = require("src.reactions.reactions")
             reactions.initiateReaction(event, self.effectsGroup, self.associatedVehicle.carVelocity)
         end

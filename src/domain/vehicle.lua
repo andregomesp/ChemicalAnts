@@ -1,6 +1,6 @@
 local Vehicle = {hp = 100, invulnerable = false, invulnerableTime = 1500}
 
-function Vehicle:new(o, vehicleImage, carVelocity, stopped, backgroundObject, barrierGroup, antsGroup)
+function Vehicle:new(o, vehicleImage, carVelocity, backgroundObject, barrierGroup, effectsGroup, antsGroup, commons)
     o = o or {}
     setmetatable(o, self)
     self.__index = self
@@ -12,17 +12,19 @@ function Vehicle:new(o, vehicleImage, carVelocity, stopped, backgroundObject, ba
     self.carVelocity = carVelocity
     self.boostStatus = 1
     self.boostTimer = 5
-    self.stopped = stopped
     self.boostText = display.newText({parent = uiGroup, text = self.boostStatus, x = display.viewableContentWidth - 30, y = display.viewableContentHeight - 125,
     font = "DejaVuSansMono", width = 20})
     self.boostText:setFillColor(0, 0, 0)
     self.desaccelerationIteration = 0
+    self.accelerationIteration = 0
     self.isFlyingSmokeAnimation = false
     self.smokeTimer = nil
     self.backgroundObject = backgroundObject
     self.barrierGroup = barrierGroup
     self.effectsGroup = effectsGroup
     self.antsGroup = antsGroup
+    self.commons = commons
+    self.wrench = nil
     return o
 end
 
@@ -111,10 +113,10 @@ end
 function Vehicle:boostcount(backgroundObject, barrierGroup, effectsGroup)
     if self.boostStatus ~= 1 then
         self.boostTimer = self.boostTimer - 1
-        if self.boostTimer == 0 and self.stopped == false then
+        if self.boostTimer == 0 and self.commons.stopped == false then
             self.boostTimer = 5
             self:ceaseBoost(backgroundObject, barrierGroup, effectsGroup)
-        elseif self.stopped == true then
+        elseif self.commons.stopped == true then
             self.boostStatus = 1
             self.boostText.text = self.boostStatus
         end
@@ -213,6 +215,10 @@ function Vehicle:adjustInvulnerability()
     timer.performWithDelay(self.invulnerableTime, function() return self:turnOffInvulnerability() end)
 end
 
+function Vehicle:bornInvulnerability()
+    self.invulnerable = true
+end
+
 function Vehicle:takeDamage(ammount, hpBar, effectsGroup)
     if self.invulnerable == false then
         local physicalHit = require("src.reactions.physicalHit")
@@ -251,13 +257,50 @@ function Vehicle:desaccelerateObjects(backgroundObject, barrierGroup, effectsGro
         end
     end
     if self.desaccelerationIteration == 10 then
-        self:initiateFixingAnimation()
+        local fixingAnimation = function() return self:initiateFixingAnimation() end
+        timer.performWithDelay(100, fixingAnimation)
+        self.desaccelerationIteration = 0
     end
 end
 
 function Vehicle:desacceleratedStop(backgroundObject, barrierGroup, effectsGroup)
     desaccelerate = function () return self:desaccelerateObjects(backgroundObject, barrierGroup, effectsGroup) end
     timer.performWithDelay(500, desaccelerate, 10)
+end
+
+
+function Vehicle:accelerateObjects()
+    self.accelerationIteration = self.accelerationIteration + 1
+    if self.accelerationIteration == 10 then
+        self.carVelocity = 140
+    else
+        self.carVelocity = self.carVelocity + 14
+    end
+    self.backgroundObject.objectBackGroup:setLinearVelocity(0, self.carVelocity)
+    self.backgroundObject.objectSecondaryBackGroup:setLinearVelocity(0, self.carVelocity)
+    for i=1, self.barrierGroup.numChildren do
+        if self.barrierGroup[i] ~= nil then
+            self.barrierGroup[i]:setLinearVelocity(0, self.carVelocity) 
+        end
+    end
+    for i=1, self.effectsGroup.numChildren do
+        if self.effectsGroup[i] ~= nil then
+            self.effectsGroup[i]:setLinearVelocity(0, self.carVelocity) 
+        end
+    end
+    if self.accelerationIteration == 10 then
+        transition.cancel(self.image)
+        self:turnOffInvulnerability()
+        self.accelerationIteration = 0
+    end
+end
+
+function Vehicle:reAcceleratedStart()
+    transition.blink(self.image, {time = 200, onCancel = function() self.image.alpha = 1.0 end})
+    self:bornInvulnerability()
+    self.commons.stopped = false
+    accelerate = function() return self:accelerateObjects() end
+    timer.performWithDelay(500, accelerate, 10)
 end
 
 function Vehicle:eraseSmokePuff(smoke)
@@ -277,18 +320,50 @@ function Vehicle:flySmokePuff()
     end
 end
 
+function Vehicle:rotateAnt(antA)
+    antA.xScale = -1
+end
+
+function Vehicle:fixingAnimation()
+    self.wrench = display.newImage("assets/images/commons/wrench.png", self.image.x, self.image.y)
+    timer.cancel(self.smokeTimer)
+    self.isFlyingSmokeAnimation = false
+    self.hp = 100
+    self.commons.hpBar:refillAllHpAnimation()
+end
+
+function Vehicle:restartCar(antA)
+    display.remove(self.wrench)
+    self.wrench = nil
+    display.remove(antA)
+    antA = nil
+    self:reAcceleratedStart()
+end
+
+function Vehicle:jumpingOnCarAnimation(antA)
+    transition.to(antA, {time=300, x = self.image.x, transition=easing.inQuad})
+    local restart = function() return self:restartCar(antA) end
+    transition.to(antA, {time=300, y = self.image.y, transition=easing.outQuart, onComplete=restart})
+end
+
 function Vehicle:initiateFixingAnimation()
     local antA = display.newImage(self.antsGroup, "assets/images/commons/ants/ant_left.png", self.image.x, self.image.y)
     antA.width = 22
     antA.height = 22
-    transition.to(antA, {time=300, x = self.image.x - 35})
-    transition.to(antA, {time=300, y = self.image.y - 10})
+    transition.to(antA, {time=300, x = self.image.x - 35, transition=easing.outQuart})
+    transition.to(antA, {time=300, y = self.image.y + 10, transition=easing.inQuad})
+    local rotateAnt = function() return self:rotateAnt(antA) end
+    timer.performWithDelay(400, rotateAnt)
+    local fixAnimation = function() return self:fixingAnimation() end
+    timer.performWithDelay(500, fixAnimation)
+    local jumpOnCar = function() return self:jumpingOnCarAnimation(antA) end
+    timer.performWithDelay(2000, jumpOnCar)
 end
 
 function Vehicle:initiateDestroyedAnimation(backgroundObject, barrierGroup, effectsGroup)
-    self.stopped = true
+    self.commons.stopped = true
     self:desacceleratedStop(backgroundObject, barrierGroup, effectsGroup)
-    local flySmoke = function() return self:flySmokePuff(smoke) end
+    local flySmoke = function() return self:flySmokePuff() end
     self.smokeTimer = timer.performWithDelay(550, flySmoke, 0)
 end
 
