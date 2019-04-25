@@ -237,26 +237,26 @@ function Vehicle:takeDamage(ammount, hpBar, effectsGroup)
     end
 end
 
-function Vehicle:desaccelerateObjects(backgroundObject, barrierGroup, effectsGroup)
+function Vehicle:desaccelerateObjects(isPausing)
     self.desaccelerationIteration = self.desaccelerationIteration + 1
     if self.desaccelerationIteration == 10 then
         self.carVelocity = 0
     else
         self.carVelocity = self.carVelocity / 2
     end
-    backgroundObject.objectBackGroup:setLinearVelocity(0, self.carVelocity)
-    backgroundObject.objectSecondaryBackGroup:setLinearVelocity(0, self.carVelocity)
-    for i=1, barrierGroup.numChildren do
-        if barrierGroup[i] ~= nil then
-            barrierGroup[i]:setLinearVelocity(0, self.carVelocity) 
+    self.backgroundObject.objectBackGroup:setLinearVelocity(0, self.carVelocity)
+    self.backgroundObject.objectSecondaryBackGroup:setLinearVelocity(0, self.carVelocity)
+    for i=1, self.barrierGroup.numChildren do
+        if self.barrierGroup[i] ~= nil then
+            self.barrierGroup[i]:setLinearVelocity(0, self.carVelocity) 
         end
     end
-    for i=1, effectsGroup.numChildren do
-        if effectsGroup[i] ~= nil then
-            effectsGroup[i]:setLinearVelocity(0, self.carVelocity) 
+    for i=1, self.effectsGroup.numChildren do
+        if self.effectsGroup[i] ~= nil then
+            self.effectsGroup[i]:setLinearVelocity(0, self.carVelocity) 
         end
     end
-    if self.desaccelerationIteration == 10 then
+    if self.desaccelerationIteration == 10 and isPausing == false then
         local fixingAnimation = function() return self:initiateFixingAnimation() end
         timer.performWithDelay(100, fixingAnimation)
         self.desaccelerationIteration = 0
@@ -264,7 +264,8 @@ function Vehicle:desaccelerateObjects(backgroundObject, barrierGroup, effectsGro
 end
 
 function Vehicle:desacceleratedStop(backgroundObject, barrierGroup, effectsGroup)
-    desaccelerate = function () return self:desaccelerateObjects(backgroundObject, barrierGroup, effectsGroup) end
+    local isPausing = false
+    local desaccelerate = function () return self:desaccelerateObjects(isPausing) end
     timer.performWithDelay(500, desaccelerate, 10)
 end
 

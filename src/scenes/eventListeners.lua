@@ -9,7 +9,7 @@ function M:initiateCommonListeners(commons, effectsGroup, barrierGroup, backgrou
     end
 
     local function collisionCar(event)
-            if commons.paused == false then
+        if commons.paused == false then
             if event.other.myName == "barrier" and event.other.isHittable == true then
                 commons.vehicle:takeDamage(10, commons.hpBar, effectsGroup)
                 -- Todo: ball hitting removed crashed object. Bugs happening.
@@ -29,11 +29,9 @@ function M:initiateCommonListeners(commons, effectsGroup, barrierGroup, backgrou
     end
 
     local function handleBackground(event)
-        if commons.paused == false then
-            local needToMoveGroup = commons.background:checkBackgroundNeedsRebuild()
-            if needToMoveGroup ~= false then
-                commons.background:moveBackgroundGroup(needToMoveGroup)
-            end
+        local needToMoveGroup = commons.background:checkBackgroundNeedsRebuild()
+        if needToMoveGroup ~= false then
+            commons.background:moveBackgroundGroup(needToMoveGroup)
         end
         return true
     end

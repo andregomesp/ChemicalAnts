@@ -24,7 +24,7 @@ function Cannon:drawCoolDownSquare(buttonId)
 end
 
 function Cannon:fire(event, commons)
-    if self.onCoolDown[event.target.id.element] == nil and commons.stopped == false then
+    if self.onCoolDown[event.target.id.element] == nil and commons.stopped == false and commons.paused == false then
         self:initiateCoolDown(event.target.id.element, event.target.id.buttonId)
         local ballFactory = require("src.domain.ball")
         local ballColor = self.ballParametersList.getImage(event.target.id.element)
