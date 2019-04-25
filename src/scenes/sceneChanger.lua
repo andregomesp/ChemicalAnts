@@ -10,8 +10,6 @@ function M:destroyScene()
         effect = "crossFade",
         time = 1200
     })
-    print("ois")
-    
 end
 
 return M
