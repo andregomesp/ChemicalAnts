@@ -32,6 +32,7 @@ M.machineReached = false
 M.paused = false
 M.stopped = false
 M.timers = {}
+M.macine = nil
 
 local backgroundFactory = require("src.domain.background")
 local cannonFactory = require("src.domain.cannon")
@@ -176,7 +177,7 @@ local function initiateDeathChecker(countdownTimer)
     local barrierGroup = barrierGroup
     checkDeath = function() return checkingDeath() end
     local deathTimer = timer.performWithDelay(500, checkingDeath, countdownTimer)
-    table.insert(m.timers, deathTimer)
+    table.insert(M.timers, deathTimer)
 end
 
 local function updateMeasures(event, countdownText)
@@ -221,8 +222,18 @@ local function positionCheck(patterns, barrierFactory)
         local patternIndex = M.nextBarrierIndex * 1
         M.nextBarrierIndex = M.nextBarrierIndex + 1
         local pattern = patterns[patternIndex]
-        local barrier = barrierFactory:new()
-        barrier:drawBarrier(barrierGroup, pattern, M.vehicle.carVelocity, barrier, patternIndex)
+        local type = pattern["type"]
+        if type == "machine" then
+            M.machine = display.newImage(barrierGroup, "assets/images/commons/machine.png")
+            M.machine.x = display.viewableContentWidth / 2
+            M.machine.y = -260
+            M.machine.myName = "machine"
+            physics.addBody(M.machine, "dynamic", {isSensor=true})
+            M.machine:setLinearVelocity(0, M.vehicle.carVelocity)
+        else
+            local barrier = barrierFactory:new()
+            barrier:drawBarrier(barrierGroup, pattern, M.vehicle.carVelocity, barrier, patternIndex)
+        end
     end
 end
 

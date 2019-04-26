@@ -8,7 +8,7 @@ function scene:create( event )
     local sceneGroup = self.view -- add display objects to this group
     local availableBallTypes = {"oxygen", "water"}
     local stageNumber = 1
-    local countDownTimer = 2
+    local countDownTimer = 60
     local commons = require("src.scenes.commonsInterface")
     commons.initiateCommons(sceneGroup, stageNumber, availableBallTypes, countDownTimer)
 end

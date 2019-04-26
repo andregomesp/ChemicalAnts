@@ -4,7 +4,6 @@ local function restartScene(sceneNumber)
 end
 
 local function cancelTimers(timers)
-    print("cancelling timer")
     for k, v in ipairs(timers) do
         timer.cancel(v)
     end
