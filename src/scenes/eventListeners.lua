@@ -1,12 +1,12 @@
 local M = {}
-
+local controlTheVehicle = nil
+local handleTheBackground = nil
 function M:initiateCommonListeners(commons, effectsGroup, barrierGroup, backgroundUiGroup)
-
-
     local function controlVehicleMovement(event)
         commons.vehicle:controlMovement()
         return true
     end
+    controlTheVehicle = controlVehicleMovement
 
     local function collisionCar(event)
         if commons.paused == false then
@@ -35,6 +35,7 @@ function M:initiateCommonListeners(commons, effectsGroup, barrierGroup, backgrou
         end
         return true
     end
+    handleTheBackground = handleBackground
 
     local function moveVehicle(event)
         if commons.paused == false and commons.stopped == false then
@@ -54,11 +55,14 @@ function M:initiateCommonListeners(commons, effectsGroup, barrierGroup, backgrou
     commons.background.image:addEventListener("touch", moveVehicle)
     commons.vehicle.image:addEventListener("collision", collisionCar)
     Runtime:addEventListener( "enterFrame", controlVehicleMovement )
-    Runtime:addEventListener( "enterFrame", function (event) return handleBackground(event) end )
+    -- Runtime:addEventListener( "enterFrame", function (event) return handleBackground(event) end )
+    Runtime:addEventListener( "enterFrame", handleBackground)
 end
 
-function M:removeEventListeners(commons)
-
+function M:removeEventListeners()
+    print("removendo...")
+    Runtime:removeEventListener("enterFrame", controlTheVehicle)
+    Runtime:removeEventListener("enterFrame", handleTheBackground)
 end
 
 return M

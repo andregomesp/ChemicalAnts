@@ -3,9 +3,18 @@ local M = {}
 local function restartScene(sceneNumber)
 end
 
-function M:destroyScene()
-    local composer = require("composer")
+local function cancelTimers(timers)
+    print("cancelling timer")
+    for k, v in ipairs(timers) do
+        timer.cancel(v)
+    end
+end
+
+function M:destroyScene(eventFactory, timers)
     
+    local composer = require("composer")
+    eventFactory:removeEventListeners()
+    cancelTimers(timers)
     composer.gotoScene("src.scenes.sceneTransition", {
         effect = "crossFade",
         time = 1200
