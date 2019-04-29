@@ -18,7 +18,6 @@ M.background = nil
 M.cannon = nil
 M.hpBar = nil
 M.params = nil
-M.stageParameters = nil
 M.stageNumber = nil
 M.vehicle = nil
 M.countdownTimer = nil
@@ -38,7 +37,6 @@ M.macine = nil
 local backgroundFactory = require("src.domain.background")
 local cannonFactory = require("src.domain.cannon")
 local eventFactory = require("src.scenes.eventListeners")
-local stageParameters = require("src.scenes.sceneParameters")
 local vehicleFactory = require("src.domain.vehicle")
 local hpBarFactory = require("src.domain.hpBar")
 
@@ -77,10 +75,12 @@ local function drawCannonUI()
 end
 
 local function initiateBackground()
-    local backgroundImage = display.newImageRect(mainBackGroup, "assets/images/backgrounds/" .. M.params.background, 
-    display.pixelHeight, display.pixelWidth)
-    backgroundImage.x = display.contentCenterX
-    backgroundImage.y = display.contentCenterY
+    -- local backgroundImage = display.newImageRect(mainBackGroup, "assets/images/backgrounds/" .. M.params.background, 
+    -- display.pixelHeight, display.pixelWidth)
+    local backgroundImage = display.newRect(mainBackGroup, display.contentCenterX, display.contentCenterY, display.viewableContentWidth, display.viewableContentHeight)
+    -- backgroundImage.x = display.contentCenterX
+    -- backgroundImage.y = display.contentCenterY
+    backgroundImage:setFillColor(M.params.color.r, M.params.color.g, M.params.color.b)
     physics.addBody(backgroundImage, "dynamic", { isSensor=true })
     M.background = backgroundFactory:new(nil, backgroundImage, objectBackGroup, objectSecondaryBackGroup, mainBackGroup)
     M.background:buildBackground(M.carVelocity)
@@ -126,8 +126,8 @@ local function timeIsUp()
         timeIsUpTag.anchorX = 0 
         local widget = require("widget")
         local sceneChanger = require("src.scenes.sceneChanger")
-        local restartGame = function() return sceneChanger:destroyScene(eventFactory, M.timers, M.stageNumber, "sameStage") end
-        local exitGame = function() return sceneChanger:destroyScene(eventFactory, M.timers, M.stageNumber, "gameover") end
+        local restartGame = function() return sceneChanger:destroyStageScene(eventFactory, M.timers, M.stageNumber, "sameStage") end
+        local exitGame = function() return sceneChanger:destroyStageScene(eventFactory, M.timers, M.stageNumber, "gameover") end
         local buttonRetry = widget.newButton(
             {
                 left = questionBox.x + 30,

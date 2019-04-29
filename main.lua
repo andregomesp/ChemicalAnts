@@ -12,4 +12,4 @@ else
 end
 
 local composer = require("composer")
-composer.gotoScene( "src.scenes.scene1")
+composer.gotoScene( "src.scenes.scene2")

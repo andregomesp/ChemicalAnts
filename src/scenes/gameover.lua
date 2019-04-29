@@ -1,6 +1,8 @@
 local composer = require ("composer")
 local scene = composer.newScene()
 
+local function drawGameOverScene()
+end   
 function scene:create( event )
 end
 

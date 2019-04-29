@@ -18,7 +18,7 @@ function M:initiateCommonListeners(commons, effectsGroup, barrierGroup, backgrou
                 display.remove(event.other)
                 event.other = nil
             elseif event.other.myName == "explosion" then
-                commons.vehicle:takeDamage(15, commons.hpBar, effectsGroup)
+                commons.vehicle:takeDamage(20, commons.hpBar, effectsGroup)
             end
         end 
         return true

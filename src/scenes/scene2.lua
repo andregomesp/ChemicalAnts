@@ -6,9 +6,8 @@ physics.start()
 physics.setGravity(0, 0)
 function scene:create( event )
     local sceneGroup = self.view -- add display objects to this group
-    local availableBallTypes = {"oxygen", "water"}
     local stageNumber = 2
-    local countDownTimer = 70
+    local countDownTimer = 60
     local commons = require("src.scenes.commonsInterface")
     commons.initiateCommons(sceneGroup, stageNumber, availableBallTypes, countDownTimer)
 end

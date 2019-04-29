@@ -9,7 +9,7 @@ local function cancelTimers(timers)
     end
 end
 
-function M:destroyScene(eventFactory, timers, stageNumber)
+function M:destroyStageScene(eventFactory, timers, stageNumber)
     
     local composer = require("composer")
     eventFactory:removeEventListeners()
