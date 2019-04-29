@@ -11,7 +11,7 @@ function M:initiateCommonListeners(commons, effectsGroup, barrierGroup, backgrou
     local function collisionCar(event)
         if commons.paused == false then
             if event.other.myName == "barrier" and event.other.isHittable == true then
-                commons.vehicle:takeDamage(10, commons.hpBar, effectsGroup)
+                commons.vehicle:takeDamage(15, commons.hpBar, effectsGroup)
                 -- Todo: ball hitting removed crashed object. Bugs happening.
                 -- Possible solution: execute with delay
                 event.other.isHittable = false
@@ -60,7 +60,6 @@ function M:initiateCommonListeners(commons, effectsGroup, barrierGroup, backgrou
 end
 
 function M:removeEventListeners()
-    print("removendo...")
     Runtime:removeEventListener("enterFrame", controlTheVehicle)
     Runtime:removeEventListener("enterFrame", handleTheBackground)
 end

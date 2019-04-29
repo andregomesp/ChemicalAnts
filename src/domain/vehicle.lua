@@ -1,6 +1,6 @@
 local Vehicle = {hp = 100, invulnerable = false, invulnerableTime = 1500}
 
-function Vehicle:new(o, vehicleImage, carVelocity, backgroundObject, barrierGroup, effectsGroup, antsGroup, commons)
+function Vehicle:new(o, vehicleImage, carVelocity, backgroundObject, barrierGroup, effectsGroup, antsGroup, uiGroup, commons)
     o = o or {}
     setmetatable(o, self)
     self.__index = self
@@ -326,7 +326,7 @@ function Vehicle:rotateAnt(antA)
 end
 
 function Vehicle:fixingAnimation()
-    self.wrench = display.newImage("assets/images/commons/wrench.png", self.image.x, self.image.y)
+    self.wrench = display.newImage(self.effectsGroup, "assets/images/commons/wrench.png", self.image.x, self.image.y)
     timer.cancel(self.smokeTimer)
     self.isFlyingSmokeAnimation = false
     self.hp = 100

@@ -9,14 +9,18 @@ local function cancelTimers(timers)
     end
 end
 
-function M:destroyScene(eventFactory, timers)
+function M:destroyScene(eventFactory, timers, stageNumber)
     
     local composer = require("composer")
     eventFactory:removeEventListeners()
     cancelTimers(timers)
     composer.gotoScene("src.scenes.sceneTransition", {
-        effect = "crossFade",
-        time = 1200
+        effect = "fade",
+        time = 2500,
+        params = {
+            stage = stageNumber,
+            goTo = "gameover"
+        }      
     })
 end
 

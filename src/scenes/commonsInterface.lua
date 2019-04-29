@@ -19,6 +19,7 @@ M.cannon = nil
 M.hpBar = nil
 M.params = nil
 M.stageParameters = nil
+M.stageNumber = nil
 M.vehicle = nil
 M.countdownTimer = nil
 M.totalTime = nil
@@ -98,7 +99,7 @@ local function initiateVehicle()
     vehicleImage.myName = "vehicle"
     physics.addBody(vehicleImage, "dynamic", {isSensor = true})
     vehicleImage:toFront()
-    M.vehicle = vehicleFactory:new(nil, vehicleImage, M.carVelocity, M.background, barrierGroup, effectsGroup, antsGroup, M)
+    M.vehicle = vehicleFactory:new(nil, vehicleImage, M.carVelocity, M.background, barrierGroup, effectsGroup, antsGroup, uiGroup, M)
     M.carVelocity = M.vehicle.carVelocity
     M.vehicle:initiateBoostLoop(M.background, barrierGroup, effectsGroup)
 end
@@ -125,8 +126,8 @@ local function timeIsUp()
         timeIsUpTag.anchorX = 0 
         local widget = require("widget")
         local sceneChanger = require("src.scenes.sceneChanger")
-        -- local restartGame = function() return sceneChanger:destroyScene() end
-        local exitGame = function() return sceneChanger:destroyScene(eventFactory, M.timers) end
+        local restartGame = function() return sceneChanger:destroyScene(eventFactory, M.timers, M.stageNumber, "sameStage") end
+        local exitGame = function() return sceneChanger:destroyScene(eventFactory, M.timers, M.stageNumber, "gameover") end
         local buttonRetry = widget.newButton(
             {
                 left = questionBox.x + 30,
@@ -148,8 +149,6 @@ local function timeIsUp()
             {
                 left = questionBox.x + 140,
                 top = questionBox.y + 120,
-                -- left = 30,
-                -- top = 30,
                 height = 60,
                 width = 60,
                 cornerRadius = 22,
@@ -161,6 +160,10 @@ local function timeIsUp()
             }
         )
         exitButtonGroup:insert(exit)
+        local repeatIcon = display.newImage(exitButtonGroup, "assets/images/commons/ui/rep.png", buttonRetry.x, buttonRetry.y)
+        local exitIcon = display.newImage(exitButtonGroup, "assets/images/commons/ui/x.png", exit.x,
+        exit.y)
+
         transition.to(exitButtonGroup, {time=2000, y=(display.viewableContentHeight / 2) + 30 })
     end
 end
@@ -173,7 +176,6 @@ local function checkingDeath()
 end
 
 local function initiateDeathChecker(countdownTimer)
-    print(barrierGroup)
     local barrierGroup = barrierGroup
     checkDeath = function() return checkingDeath() end
     local deathTimer = timer.performWithDelay(500, checkingDeath, countdownTimer)
@@ -244,7 +246,7 @@ local function initiateBarriers(stageNumber, barrierGroup)
     local barrierFactory = require("src.domain.barrier")
     local positioningcheck = function() return positionCheck(patterns, barrierFactory) end
     local positionChecker = timer.performWithDelay(1000, positioningcheck, 0)
-    table.insert(M.timers, positionCheck)
+    table.insert(M.timers, positionChecker)
 end
 
 local function fillGroupsIntoSceneGroup(sceneGroup)
@@ -265,6 +267,7 @@ local function fillGroupsIntoSceneGroup(sceneGroup)
 end
 
 function M.initiateCommons(sceneGroup, stageNumber, availableBallTypes, countdownTimer)
+    M.stageNumber = stageNumber
     fillGroupsIntoSceneGroup(sceneGroup)
     getStageParameters(stageNumber)
     initiateBackground()
