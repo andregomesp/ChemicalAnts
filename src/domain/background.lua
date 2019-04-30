@@ -11,7 +11,7 @@ function Background:new(o, background, objectBackGroup, objectSecondaryBackGroup
     return o
 end
 
-function Background:buildBackground(carVelocity)
+function Background:buildBackground(carVelocity, stageParams)
     self.objectBackGroup.x = 0
     self.objectBackGroup.y = -160
     self.objectBackGroup.myName = "objectBackGroup"
@@ -20,12 +20,19 @@ function Background:buildBackground(carVelocity)
     self.objectSecondaryBackGroup.myName = "objectBackGroup"
     local i = 0
     while i < 16 do
+        print(stageParams.leftWall)
         local leftWall = display.newImageRect(self.objectBackGroup,
-        "assets/images/commons/scenario/trees.png", 120, 120)
+        stageParams.leftWall, 120, 120)
         local rightWall = display.newImageRect(self.objectSecondaryBackGroup,
-        "assets/images/commons/scenario/trees.png", 120, 120)
+        stageParams.rightWall, 120, 120)
         leftWall.y = 50 * i
         rightWall.y = 50 * i
+        if (stageParams.stageNumber == 2) then
+            rightWall:toBack()
+            leftWall.y = 100 * i
+            rightWall.y = 100 * i
+        end
+        
         i = i + 1
     end
     physics.addBody(self.objectBackGroup, "dynamic", {isSensor = true})
@@ -48,8 +55,8 @@ end
 
 function Background:moveBackgroundGroup(moveGroup)
     if moveGroup == true then
-        self.objectBackGroup.y = -160
-        self.objectSecondaryBackGroup.y = -160
+        self.objectBackGroup.y = -210
+        self.objectSecondaryBackGroup.y = -210
     end
 end
 
