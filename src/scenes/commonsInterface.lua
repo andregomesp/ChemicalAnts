@@ -169,21 +169,23 @@ local function timeIsUp()
     end
 end
 
-local function machineChecking(eventFactory)
-    if M.paused == false then 
+local function machineChecking()
+    if M.paused == false then
         if M.machine.y >= display.viewableContentWidth / 3 then
             M.stopped = true
             M.machine:setLinearVelocity(0, 0)
             local sceneChanger = require("src.scenes.sceneChanger")
-            local nextStage = function() return sceneChanger:destroyStageScene(eventFactory, M.timers, M.stageNumber, "nextStage") end
-            timer.performWithDelay(500, nextStage)
+            sceneChanger:destroyStageScene(eventFactory, M.timers, M.stageNumber, "nextStage")
+            -- local nextStage = function() return sceneChanger:destroyStageScene(eventFactory, M.timers, M.stageNumber, "nextStage") end
+            -- timer.performWithDelay(500, nextStage)
         end
     end
 end
 
-local function initiateMachineCheck(countdownTimer, eventFactory)
-    local machineCheck = function() return machineChecking(eventFactory) end 
+local function initiateMachineCheck(countdownTimer)
+    local machineCheck = function() return machineChecking() end
     local machineTimer = timer.performWithDelay(100, machineCheck, countdownTimer * 10)
+    table.insert(M.timers,machineTimer)
 end
 
 local function checkingDeath()
@@ -236,14 +238,14 @@ local function initiateUiElements(uiGroup, countdownTimer)
     table.insert(M.timers, measurerTimer)
 end
 
-local function positionCheck(patterns, barrierFactory, countdownTimer, eventFactory)
+local function positionCheck(patterns, barrierFactory, countdownTimer)
     if patterns[M.nextBarrierIndex] ~= nil and M.meters >= patterns[M.nextBarrierIndex]["time"] then
         local patternIndex = M.nextBarrierIndex * 1
         M.nextBarrierIndex = M.nextBarrierIndex + 1
         local pattern = patterns[patternIndex]
         local type = pattern["type"]
         if type == "machine" then
-            initiateMachineCheck(countdownTimer, eventFactory)
+            initiateMachineCheck(countdownTimer)
             M.machine = display.newImage(barrierGroup, "assets/images/commons/machine.png")
             M.machine.x = display.viewableContentWidth / 2
             M.machine.y = -260
@@ -257,7 +259,7 @@ local function positionCheck(patterns, barrierFactory, countdownTimer, eventFact
     end
 end
 
-local function initiateBarriers(stageNumber, barrierGroup, countdownTimer, eventFactory)
+local function initiateBarriers(stageNumber, barrierGroup, countdownTimer)
     local patternFilePath = "src.barrierPatterns.stage" .. tostring(stageNumber)
     local patternList = require(patternFilePath)
     local patterns = patternList:getPatterns()
@@ -284,7 +286,7 @@ local function fillGroupsIntoSceneGroup(sceneGroup)
     sceneGroup:insert(exitButtonGroup)
 end
 
-function M.initiateCommons(sceneGroup, stageNumber, availableBallTypes, countdownTimer)
+function M.initiateCommons(sceneGroup, stageNumber, countdownTimer)
     M.stageNumber = stageNumber
     fillGroupsIntoSceneGroup(sceneGroup)
     getStageParameters(stageNumber)

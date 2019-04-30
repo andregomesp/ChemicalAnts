@@ -20,7 +20,6 @@ function Background:buildBackground(carVelocity, stageParams)
     self.objectSecondaryBackGroup.myName = "objectBackGroup"
     local i = 0
     while i < 16 do
-        print(stageParams.leftWall)
         local leftWall = display.newImageRect(self.objectBackGroup,
         stageParams.leftWall, 120, 120)
         local rightWall = display.newImageRect(self.objectSecondaryBackGroup,
