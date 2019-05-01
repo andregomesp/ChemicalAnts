@@ -1,7 +1,11 @@
 local M = {}
 local controlTheVehicle = nil
 local handleTheBackground = nil
-function M:initiateCommonListeners(commons, effectsGroup, barrierGroup, backgroundUiGroup)
+local collisionTheCar = nil
+local commons = nil
+
+function M:initiateCommonListeners(commonsValues, effectsGroup, barrierGroup, backgroundUiGroup)
+    commons = commonsValues
     local function controlVehicleMovement(event)
         commons.vehicle:controlMovement()
         return true
@@ -21,6 +25,8 @@ function M:initiateCommonListeners(commons, effectsGroup, barrierGroup, backgrou
         end 
         return true
     end
+
+    collisionTheCar = collisionCar
 
     local function doNothing(event)
         return true
@@ -60,6 +66,10 @@ end
 function M:removeEventListeners()
     Runtime:removeEventListener("enterFrame", controlTheVehicle)
     Runtime:removeEventListener("enterFrame", handleTheBackground)
+end
+
+function M:removeVehicleHitListener()
+    commons.vehicle.image:removeEventListener("collision", collisionTheCar)
 end
 
 return M

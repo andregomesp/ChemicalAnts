@@ -1,8 +1,9 @@
 local composer = require ("composer")
 local scene = composer.newScene()
 local isShowing = false
+local sceneGroup = nil
 
-local function drawBlackScreen(sceneGroup)
+local function drawBlackScreen()
     local blackScreen = display.newRect(0, 0, display.viewableContentWidth, display.viewableContentHeight)
     blackScreen.anchorX = 0
     blackScreen.anchorY = 0
@@ -28,35 +29,35 @@ local function selectScene(params)
     elseif params.goTo == "end" then
         sceneName = "src.scenes.end"
     end
-    print(sceneName)
     return sceneName
 end
 
-local function goToStage()
+local function goToStage(newScene)
+    print(newScene)
+    composer.gotoScene(newScene, {
+        effect = "fade",
+        time = 2500
+    })
 end
 
 function scene:create( event )
+    sceneGroup = self.view
+end
+
+local function removePreviousScene(event)
+    local previousScene = composer.getSceneName("previous")
+    composer.removeScene(previousScene)
+
 end
 
 function scene:show(event)
     if isShowing == false then
         isShowing = true
-        local sceneGroup = self.view
-        local previousScene = composer.getSceneName("previous")
-        print(previousScene)
-        composer.removeScene(previousScene)
         drawBlackScreen(sceneGroup)
         local newScene = selectScene(event.params)
-        -- local openNextScene = function () return  composer.gotoScene(newScene, {
-        --     effect = "fade",
-        --     time = 2500
-        -- }) end
-        -- timer.performWithDelay(500, openNextScene)
-
-        composer.gotoScene(newScene, {
-            effect = "fade",
-            time = 2500
-        })
+        timer.performWithDelay(2500, removePreviousScene)
+        openNewScene = function() return goToStage(newScene) end
+        timer.performWithDelay(3000, openNewScene)
     end
 end
 function scene:hide(event)

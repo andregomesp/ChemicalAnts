@@ -127,8 +127,8 @@ local function timeIsUp()
         timeIsUpTag.anchorX = 0 
         local widget = require("widget")
         local sceneChanger = require("src.scenes.sceneChanger")
-        local restartGame = function() return sceneChanger:destroyStageScene(eventFactory, M.timers, M.stageNumber, "sameStage") end
-        local exitGame = function() return sceneChanger:destroyStageScene(eventFactory, M.timers, M.stageNumber, "gameover") end
+        local restartGame = function() return sceneChanger:gotoSceneTransition(eventFactory, M.timers, M.stageNumber, "sameStage") end
+        local exitGame = function() return sceneChanger:gotoSceneTransition(eventFactory, M.timers, M.stageNumber, "gameover") end
         local buttonRetry = widget.newButton(
             {
                 left = questionBox.x + 30,
@@ -142,7 +142,7 @@ local function timeIsUp()
                 fillColor = { default={0.396,0.447,0.529,1}, over={1,0.1,0.7,1} },
                 strokeColor = { default={0, 0, 0.2,1}, over={0.8,0.8,1,1} },
                 strokeWidth = 1,
-                -- onRelease=
+                onRelease= restartGame
             }
         )
         exitButtonGroup:insert(buttonRetry)
@@ -175,8 +175,9 @@ local function machineChecking()
             M.stopped = true
             M.machine:setLinearVelocity(0, 0)
             local sceneChanger = require("src.scenes.sceneChanger")
-            sceneChanger:destroyStageScene(eventFactory, M.timers, M.stageNumber, "nextStage")
-            -- local nextStage = function() return sceneChanger:destroyStageScene(eventFactory, M.timers, M.stageNumber, "nextStage") end
+            eventFactory:removeVehicleHitListener()
+            sceneChanger:gotoSceneTransition(eventFactory, M.timers, M.stageNumber, "nextStage")
+            -- local nextStage = function() return sceneChanger:gotoSceneTransition(eventFactory, M.timers, M.stageNumber, "nextStage") end
             -- timer.performWithDelay(500, nextStage)
         end
     end
@@ -297,6 +298,13 @@ function M.initiateCommons(sceneGroup, stageNumber, countdownTimer)
     initiateBarriers(stageNumber, barrierGroup, countdownTimer)
     initiateDeathChecker(countdownTimer, barrierGroup, effectsGroup)
     eventFactory:initiateCommonListeners(M, effectsGroup, barrierGroup, backgroundUiGroup)
+end
+
+function M.destroyCommons()
+    eventFactory:removeEventListeners()
+    for k, v in ipairs(M.timers) do
+        timer.cancel(v)
+    end
 end
 
 return M
