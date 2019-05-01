@@ -20,8 +20,9 @@ function scene:show(event)
         local stageNumber = 1
         local countDownTimer = 50
         commons = require(commonsInterfaceName)
-        backgroundSongPlay = audio.play(backgroundSong, {fadein = 1500, loops = -1})
+        backgroundSongPlay = audio.play(backgroundSong, {channel = 1, fadein = 1500, loops = -1})
         commons.initiateCommons(sceneGroup, stageNumber, countDownTimer)
+        print("songs")
         print(backgroundSong)
         print(backgroundSongPlay)
     end
@@ -30,7 +31,7 @@ function scene:hide(event)
     
 end
 function scene:destroy(event)
-    audio.fadeOut({channel=backgroundSongPlay, time=2000})
+    audio.fadeOut({channel=1, time=500})
     commons.destroyCommons()
     package.loaded[commonsInterfaceName] = nil
     commons = nil

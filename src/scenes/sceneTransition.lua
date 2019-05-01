@@ -33,7 +33,6 @@ local function selectScene(params)
 end
 
 local function goToStage(newScene)
-    print(newScene)
     composer.gotoScene(newScene, {
         effect = "fade",
         time = 2500

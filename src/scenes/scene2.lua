@@ -22,10 +22,10 @@ function scene:show(event)
         local stageNumber = 2
         local countDownTimer = 60
         commons = require(commonsInterfaceName)
+        audio.setVolume(1.0, {channel=1})
         backgroundSongPlay = audio.play(backgroundSong, {fadein = 1500, loops = -1})
-        print(audio.getVolume({channel = backgroundSongPlay}))
-        audio.setVolume(1.0, {channel=backgroundSongPlay})
         commons.initiateCommons(sceneGroup, stageNumber, countDownTimer)
+        print("songs")
         print(backgroundSong)
         print(backgroundSongPlay)
     end
