@@ -13,4 +13,4 @@ end
 
 local composer = require("composer")
 -- composer.gotoScene( "src.scenes.scene1")
-composer.gotoScene("src.scenes.stageBetween")
+composer.gotoScene("src.scenes.stageBetween", {params={screenStatus="pre", stageNumber="1"}})
