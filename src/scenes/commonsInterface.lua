@@ -124,7 +124,7 @@ local function timeIsUp()
         local timeisUpText = "Time is up!"
         local timeIsUpTag = display.newText({parent=exitButtonGroup,text=timeisUpText, x=questionBox.x + 40,
             y=questionBox.y + 35, fontSize=35})
-        timeIsUpTag.anchorX = 0 
+        timeIsUpTag.anchorX = 0
         local widget = require("widget")
         local sceneChanger = require("src.scenes.sceneChanger")
         local restartGame = function() return sceneChanger:gotoSceneTransition(eventFactory, M.timers, M.stageNumber, "sameStage") end
