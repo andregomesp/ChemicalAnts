@@ -11,6 +11,8 @@ physics.start()
 physics.setGravity(0, 0)
 function scene:create( event )
     sceneGroup = self.view -- add display objects to this group
+    local sceneChanger = require("src.scenes.sceneChanger")
+    timer.performWithDelay(2500, function() return sceneChanger:removePreviousScene() end)
     backgroundSong = audio.loadStream("assets/audio/songs/Desert of Lost Souls.mp3")
 end
 
@@ -31,7 +33,6 @@ function scene:hide(event)
     
 end
 function scene:destroy(event)
-    print(audio.getVolume({channel = backgroundSongPlay}))
     audio.fadeOut({channel=1, time=2000})
     commons.destroyCommons()
     package.loaded[commonsInterfaceName] = nil

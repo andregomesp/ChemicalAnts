@@ -11,6 +11,8 @@ physics.start()
 physics.setGravity(0, 0)
 function scene:create( event )
     sceneGroup = self.view -- add display objects to this group
+    local sceneChanger = require("src.scenes.sceneChanger")
+    timer.performWithDelay(2500, function() return sceneChanger:removePreviousScene() end)
     backgroundSong = audio.loadStream("assets/audio/songs/Cyborg Ninja.mp3")
 end
 
@@ -20,11 +22,9 @@ function scene:show(event)
         local stageNumber = 1
         local countDownTimer = 50
         commons = require(commonsInterfaceName)
+        audio.setVolume(1.0, {channel=1})
         backgroundSongPlay = audio.play(backgroundSong, {channel = 1, fadein = 1500, loops = -1})
         commons.initiateCommons(sceneGroup, stageNumber, countDownTimer)
-        print("songs")
-        print(backgroundSong)
-        print(backgroundSongPlay)
     end
 end
 function scene:hide(event)

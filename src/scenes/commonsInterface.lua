@@ -127,8 +127,8 @@ local function timeIsUp()
         timeIsUpTag.anchorX = 0
         local widget = require("widget")
         local sceneChanger = require("src.scenes.sceneChanger")
-        local restartGame = function() return sceneChanger:gotoSceneTransition(eventFactory, M.timers, M.stageNumber, "sameStage") end
-        local exitGame = function() return sceneChanger:gotoSceneTransition(eventFactory, M.timers, M.stageNumber, "gameover") end
+        local restartGame = function() return sceneChanger:gotoSceneTransition(M.stageNumber, "sameStage") end
+        local exitGame = function() return sceneChanger:gotoSceneTransition(M.stageNumber, "gameover") end
         local buttonRetry = widget.newButton(
             {
                 left = questionBox.x + 30,
@@ -170,13 +170,14 @@ local function timeIsUp()
 end
 
 local function machineChecking()
-    if M.paused == false then
+    if M.paused == false and M.stopped == false then
         if M.machine.y >= display.viewableContentWidth / 3 then
             M.stopped = true
             M.machine:setLinearVelocity(0, 0)
-            local sceneChanger = require("src.scenes.sceneChanger")
             eventFactory:removeVehicleHitListener()
-            sceneChanger:gotoSceneTransition(eventFactory, M.timers, M.stageNumber, "nextStage")
+            local sceneChanger = require("src.scenes.sceneChanger")
+            print(M.stageNumber)
+            sceneChanger:gotoSceneTransition(M.stageNumber, "stageBetween")
             -- local nextStage = function() return sceneChanger:gotoSceneTransition(eventFactory, M.timers, M.stageNumber, "nextStage") end
             -- timer.performWithDelay(500, nextStage)
         end
