@@ -205,9 +205,9 @@ local function initiateDeathChecker(countdownTimer)
 end
 
 local function updateMeasures(event, countdownText)
-    M.countdownTimer = M.countdownTimer - 0.2
     M.timerUpdateDecimal = M.timerUpdateDecimal + 1
-    if M.timerUpdateDecimal == 5 then    
+    if M.timerUpdateDecimal == 5 then
+        M.countdownTimer = M.countdownTimer - 1    
         M.timerUpdateDecimal = 0
         countdownText.text = M.countdownTimer
     end
