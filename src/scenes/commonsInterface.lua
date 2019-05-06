@@ -33,6 +33,7 @@ M.paused = false
 M.stopped = false
 M.timers = {}
 M.machine = nil
+M.timerUpdateDecimal = 0
 
 local backgroundFactory = require("src.domain.background")
 local cannonFactory = require("src.domain.cannon")
@@ -204,9 +205,13 @@ local function initiateDeathChecker(countdownTimer)
 end
 
 local function updateMeasures(event, countdownText)
-    M.countdownTimer = M.countdownTimer - 1
-    countdownText.text = M.countdownTimer
-    M.meters = M.meters + M.vehicle.carVelocity
+    M.countdownTimer = M.countdownTimer - 0.2
+    M.timerUpdateDecimal = M.timerUpdateDecimal + 1
+    if M.timerUpdateDecimal == 5 then    
+        M.timerUpdateDecimal = 0
+        countdownText.text = M.countdownTimer
+    end
+    M.meters = M.meters + (M.vehicle.carVelocity / 5)
     if M.countdownTimer <= 30 and M.rain == nil and M.machineReached == false then
         initiateRain()
     end
@@ -236,7 +241,7 @@ local function initiateUiElements(uiGroup, countdownTimer)
     local countdownText = display.newText({parent = uiGroup, text = M.countdownTimer, x = display.contentCenterX, y = 15,
     font = "DejaVuSansMono", width = 70})
     local updateMeasures = function() return updateMeasures(event, countdownText) end
-    local measurerTimer = timer.performWithDelay(1000, updateMeasures, M.totalTime)
+    local measurerTimer = timer.performWithDelay(200, updateMeasures, M.totalTime * 5)
     table.insert(M.timers, measurerTimer)
 end
 
@@ -267,7 +272,7 @@ local function initiateBarriers(stageNumber, barrierGroup, countdownTimer)
     local patterns = patternList:getPatterns()
     local barrierFactory = require("src.domain.barrier")
     local positioningcheck = function() return positionCheck(patterns, barrierFactory, countdownTimer, eventFactory) end
-    local positionChecker = timer.performWithDelay(1000, positioningcheck, 0)
+    local positionChecker = timer.performWithDelay(200, positioningcheck, 0)
     table.insert(M.timers, positionChecker)
 end
 

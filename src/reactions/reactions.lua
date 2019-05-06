@@ -1,7 +1,7 @@
 local M = {}
 local reactionsList = {
-    ["water"] = {sodium = "explosion"},
-    ["oxygen"] = {sodium = "corrosion"}
+    ["water"] = {sodium = "explosion", ferrum = "nothing", chlorine = "dissolution"},
+    ["oxygen"] = {sodium = "corrosion", ferrum = "nothing", chlorine = "corrosion"}
 }
 
 local function analyseReaction(element1, element2)
@@ -152,6 +152,11 @@ local function explosion(event, effectsGroup, carVelocity)
     return true
 end
 
+local function doNothing(event)
+    display.remove(event.other)
+    event.other = nil
+end
+
 function M.initiateReaction(event, effectsGroup, carVelocity)
     local reaction = analyseReaction(event.target.element, event.other.element)
     if reaction ~= nil then
@@ -165,6 +170,9 @@ function M.initiateReaction(event, effectsGroup, carVelocity)
         elseif reaction == "dissolution" then
             local dissolution = function() return dissolution(event, effectsGroup, carVelocity) end
             timer.performWithDelay(20, dissolution)
+        else
+            local doNothing = function() return doNothing(event) end
+            timer.performWithDelay(20, doNothing)
         end
     end
     return true
