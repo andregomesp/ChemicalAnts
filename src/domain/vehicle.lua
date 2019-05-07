@@ -89,7 +89,7 @@ function Vehicle:makeMovement(event)
 end
 
 function Vehicle:boost(event, backgroundObject, barrierGroup, effectsGroup)
-    if self.carVelocity <= 315 then
+    if self.carVelocity <= 315 and self.boostStatus <= 7 then
         self.carVelocity = self.carVelocity + 35
         self.boostStatus = self.boostStatus + 1
         self.boostText.text = self.boostStatus
@@ -292,6 +292,7 @@ function Vehicle:accelerateObjects()
     if self.accelerationIteration == 10 then
         transition.cancel(self.image)
         self:turnOffInvulnerability()
+        self.commons.stopped = false
         self.accelerationIteration = 0
     end
 end
@@ -299,9 +300,8 @@ end
 function Vehicle:reAcceleratedStart()
     transition.blink(self.image, {time = 200, onCancel = function() self.image.alpha = 1.0 end})
     self:bornInvulnerability()
-    self.commons.stopped = false
     accelerate = function() return self:accelerateObjects() end
-    timer.performWithDelay(500, accelerate, 10)
+    timer.performWithDelay(200, accelerate, 10)
 end
 
 function Vehicle:eraseSmokePuff(smoke)
@@ -362,7 +362,6 @@ function Vehicle:initiateFixingAnimation()
 end
 
 function Vehicle:initiateDestroyedAnimation(backgroundObject, barrierGroup, effectsGroup)
-    self.commons.stopped = true
     self:desacceleratedStop(backgroundObject, barrierGroup, effectsGroup)
     local flySmoke = function() return self:flySmokePuff() end
     self.smokeTimer = timer.performWithDelay(550, flySmoke, 0)

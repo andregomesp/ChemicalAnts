@@ -179,8 +179,6 @@ local function machineChecking()
             local sceneChanger = require("src.scenes.sceneChanger")
             print(M.stageNumber)
             sceneChanger:gotoSceneTransition(M.stageNumber, "stageBetween")
-            -- local nextStage = function() return sceneChanger:gotoSceneTransition(eventFactory, M.timers, M.stageNumber, "nextStage") end
-            -- timer.performWithDelay(500, nextStage)
         end
     end
 end

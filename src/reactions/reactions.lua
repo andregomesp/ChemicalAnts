@@ -153,8 +153,8 @@ local function explosion(event, effectsGroup, carVelocity)
 end
 
 local function doNothing(event)
-    display.remove(event.other)
-    event.other = nil
+    display.remove(event.target)
+    event.target = nil
 end
 
 function M.initiateReaction(event, effectsGroup, carVelocity)
