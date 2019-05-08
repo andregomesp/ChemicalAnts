@@ -18,6 +18,10 @@ end
 
 function scene:show(event)
     if isShowing == false then
+        local previousScene = composer.getSceneName("previous")
+        if previousScene ~= nil then
+            composer.removeScene(previousScene)
+        end
         isShowing = true
         local stageNumber = 1
         local countDownTimer = 50
