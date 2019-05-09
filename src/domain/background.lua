@@ -87,22 +87,12 @@ function Background:drawShader(shaderGroup)
     subShaderGroup1:insert(subShaderGroup2)
     local shader = display.newRect(subShaderGroup2, 0, 0, display.viewableContentWidth, display.viewableContentHeight)
     local shader2 = display.newRect(subShaderGroup2, 0, 0, display.viewableContentWidth, display.viewableContentHeight)
-    -- shader:setFillColor(0.0156, 0, 0.156, 0.7)
-    shader:setFillColor(0, 0, 0, 0.8)
-    -- shader2:setFillColor(0.0156, 0, 0.156, 0.7)
-    shader2:setFillColor(0, 0, 0, 0.8)
-    -- local compositePaint = {
-    --     type="composite",
-    --     paint1={ type="image", filename="assets/images/commons/scenario/trees.png" },
-    --     paint2={ type="image", filename="assets/images/commons/masks/lightmask2.png" }
-    -- }
-    -- shader2.fill = compositePaint
-    -- shader2.fill.effect = "composite.exclusion"
+    shader:setFillColor(0, 0, 0, 0.98)
+    shader2:setFillColor(0, 0, 0, 0.98)
     shader.anchorX = 0
     shader.anchorY = 0
     shader2.anchorX = 0
     shader2.anchorY = 0
-    -- shader2.fill.alpha = 0.2
     self:createLightMask(shaderGroup, subShaderGroup1, subShaderGroup2, shader, shader2)
 end
 
@@ -117,6 +107,12 @@ function Background:createLightMask(shaderGroup, subShaderGroup1, subShaderGroup
     shaderGroup:setMask(lightMask2)
     shaderGroup.maskX = 40
     shaderGroup.maskY = 60
+    transition.to(shaderGroup, {maskX = 200, time = 3000})
+    timer.performWithDelay(6100, function() return transition.to(shaderGroup, {maskX = 40, time = 3000}) end)
+    local fiery = function () return transition.to(shaderGroup, {maskScaleX = 0.95, maskScaleY = 0.95, time = 400}) end
+    local fiery2 = function () return transition.to(shaderGroup, {maskScaleX = 0.85, maskScaleY = 0.85, time = 400}) end
+    local fadeOutTimer = timer.performWithDelay(500, fiery, 0)
+    local fadeInTimer = timer.performWithDelay(500, fiery2, 0)
 end
 
 return Background

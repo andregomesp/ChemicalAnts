@@ -13,7 +13,7 @@ function scene:create( event )
     sceneGroup = self.view -- add display objects to this group
     local sceneChanger = require("src.scenes.sceneChanger")
     timer.performWithDelay(2500, function() return sceneChanger:removePreviousScene() end)
-    backgroundSong = audio.loadStream("assets/audio/songs/Desert of Lost Souls.mp3")
+    backgroundSong = audio.loadStream("assets/audio/songs/Unholy Knight.mp3")
 end
 
 function scene:show(event)
