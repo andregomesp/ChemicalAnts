@@ -1,5 +1,5 @@
--- Min value: 50, max value: 240 (note: max is the right anchor. multiply value * pieceSize * numberOfPieces)
---
+-- Min value: 65, max value: 240 (note: max is the right anchor. multiply value * pieceSize * numberOfPieces)
+-- Stage 5 has smaller space and darkness
 local M = {}
 
 local patterns = {

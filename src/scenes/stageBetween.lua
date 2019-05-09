@@ -137,7 +137,6 @@ function scene:show(event)
         isShowing = true
         backgroundSongPlay = audio.play(backgroundSong, {channel = 1, loops = -1})
         audio.setVolume(1.0, {channel=1})
-        print(audio.getVolume({channel = 1}))
         stageNumber = event.params.stageNumber
         screenStatus = event.params.screenStatus
         drawBlackScreen()

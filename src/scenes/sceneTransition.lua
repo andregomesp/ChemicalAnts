@@ -37,7 +37,6 @@ local function goToStage(newScene, stageNo)
         if stageNo == 0 then
             screenStatus = "pos"
         end
-        print("printing pure stage number")
         params = {screenStatus = screenStatus, stageNumber=stageNo}
     end
     composer.gotoScene(newScene, {

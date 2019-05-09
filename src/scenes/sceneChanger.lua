@@ -3,7 +3,6 @@ local M = {}
 function M:removePreviousScene()
     local composer = require('composer')
     local previousScene = composer.getSceneName("previous")
-    print(previousScene)
     if previousScene ~= nil then
         composer.removeScene(previousScene)
     end

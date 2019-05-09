@@ -12,6 +12,8 @@ local antsGroup = display.newGroup()
 local commonsGroup = display.newGroup()
 local uiGroup = display.newGroup()
 local effectsGroup = display.newGroup()
+local shaderGroup = display.newGroup()
+local lightGroup = display.newGroup() 
 local exitButtonGroup = display.newGroup()
 
 M.background = nil
@@ -85,6 +87,9 @@ local function initiateBackground()
     physics.addBody(backgroundImage, "dynamic", { isSensor=true })
     M.background = backgroundFactory:new(nil, backgroundImage, objectBackGroup, objectSecondaryBackGroup, mainBackGroup)
     M.background:buildBackground(M.carVelocity, M.params)
+    if M.stageNumber == 5 then
+        M.background:drawShader(shaderGroup)
+    end
 
 end
 
@@ -177,7 +182,6 @@ local function machineChecking()
             M.machine:setLinearVelocity(0, 0)
             eventFactory:removeVehicleHitListener()
             local sceneChanger = require("src.scenes.sceneChanger")
-            print(M.stageNumber)
             sceneChanger:gotoSceneTransition(M.stageNumber, "stageBetween")
         end
     end
@@ -288,6 +292,8 @@ local function fillGroupsIntoSceneGroup(sceneGroup)
     sceneGroup:insert(commonsGroup)
     sceneGroup:insert(uiGroup)
     sceneGroup:insert(effectsGroup)
+    sceneGroup:insert(shaderGroup)
+    sceneGroup:insert(lightGroup)
     sceneGroup:insert(exitButtonGroup)
 end
 

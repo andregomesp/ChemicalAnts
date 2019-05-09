@@ -35,7 +35,7 @@ local parameters = {
     },
     [5] = {
         -- background = "grassBackgroundTemporary.jpg",
-        color = {r = 0.435, g = 0.623, b= 0.196},
+        color = {r = 0.415, g = 0.463, b= 0.196},
         availableBallTypes = {"oxygen", "water"},
         leftWall = "assets/images/commons/scenario/autumn-trees.png",
         rightWall = "assets/images/commons/scenario/autumn-trees.png",
