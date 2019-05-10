@@ -81,38 +81,16 @@ function Background:moveBackgroundGroup(moveGroup)
 end
 
 function Background:drawShader(shaderGroup)
-    local subShaderGroup1 = display.newGroup()
-    local subShaderGroup2 = display.newGroup()
-    shaderGroup:insert(subShaderGroup1)
-    subShaderGroup1:insert(subShaderGroup2)
-    local shader = display.newRect(subShaderGroup2, 0, 0, display.viewableContentWidth, display.viewableContentHeight)
-    local shader2 = display.newRect(subShaderGroup2, 0, 0, display.viewableContentWidth, display.viewableContentHeight)
+    local shader = display.newRect(shaderGroup, 0, 0, display.viewableContentWidth, display.viewableContentHeight)
+    local shader2 = display.newRect(shaderGroup, 0, 0, display.viewableContentWidth, display.viewableContentHeight)
     shader:setFillColor(0, 0, 0, 0.98)
     shader2:setFillColor(0, 0, 0, 0.98)
     shader.anchorX = 0
     shader.anchorY = 0
     shader2.anchorX = 0
     shader2.anchorY = 0
-    self:createLightMask(shaderGroup, subShaderGroup1, subShaderGroup2, shader, shader2)
 end
 
-function Background:createLightMask(shaderGroup, subShaderGroup1, subShaderGroup2, shader, shader2)
-    local lightMask = graphics.newMask("assets/images/commons/masks/lightmask3.png")
-    subShaderGroup1:setMask(lightMask)
-    subShaderGroup1.maskX = 160
-    subShaderGroup1.maskY = 360
-    subShaderGroup1.maskScaleX = 0.4
-    subShaderGroup1.maskScaleY = 0.4
-    local lightMask2 = graphics.newMask("assets/images/commons/masks/lightmask3.png")
-    shaderGroup:setMask(lightMask2)
-    shaderGroup.maskX = 40
-    shaderGroup.maskY = 60
-    transition.to(shaderGroup, {maskX = 200, time = 3000})
-    timer.performWithDelay(6100, function() return transition.to(shaderGroup, {maskX = 40, time = 3000}) end)
-    local fiery = function () return transition.to(shaderGroup, {maskScaleX = 0.95, maskScaleY = 0.95, time = 400}) end
-    local fiery2 = function () return transition.to(shaderGroup, {maskScaleX = 0.85, maskScaleY = 0.85, time = 400}) end
-    local fadeOutTimer = timer.performWithDelay(500, fiery, 0)
-    local fadeInTimer = timer.performWithDelay(500, fiery2, 0)
-end
+
 
 return Background

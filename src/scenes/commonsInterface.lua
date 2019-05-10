@@ -9,12 +9,13 @@ local fireButtonGroup = display.newGroup()
 local ballGroup = display.newGroup()
 local coolDownSquareGroup = display.newGroup()
 local antsGroup = display.newGroup()
-local commonsGroup = display.newGroup()
+local vehicleGroup = display.newGroup()
 local uiGroup = display.newGroup()
 local effectsGroup = display.newGroup()
-local shaderGroup = display.newGroup()
-local lightGroup = display.newGroup() 
 local exitButtonGroup = display.newGroup()
+local lightGroup = nil
+local subLightGroup = nil
+local shaderGroup = nil
 
 M.background = nil
 M.cannon = nil
@@ -99,7 +100,7 @@ local function initiateCannon(ballGroup, fireButtonGroup, shootGroup, effectsGro
 end
 
 local function initiateVehicle()
-    local vehicleImage = display.newImageRect(commonsGroup, "assets/images/commons/tanktemporary.png", 45, 45)
+    local vehicleImage = display.newImageRect(vehicleGroup, "assets/images/commons/tanktemporary.png", 45, 45)
     vehicleImage.x = 160
     vehicleImage.y = 370
     vehicleImage.myName = "vehicle"
@@ -278,6 +279,21 @@ local function initiateBarriers(stageNumber, barrierGroup, countdownTimer)
     table.insert(M.timers, positionChecker)
 end
 
+local function initiateShaderGroups(stageNumber)
+    if stageNumber == 5 then
+        lightGroup = display.newGroup()
+        subLightGroup = display.newGroup()
+        shaderGroup = display.newGroup()
+    end
+end
+
+local function initiateGhosts()
+    if M.stageNumber == 5 then
+        local ghostHandler = require("src.engine.ghostHandler")
+        ghostHandler:initiateStageFiveGhosts(lightGroup, subLightGroup)
+    end
+end
+
 local function fillGroupsIntoSceneGroup(sceneGroup)
     sceneGroup:insert(mainBackGroup)
     sceneGroup:insert(objectBackGroup)
@@ -289,19 +305,26 @@ local function fillGroupsIntoSceneGroup(sceneGroup)
     sceneGroup:insert(ballGroup)
     sceneGroup:insert(coolDownSquareGroup)
     sceneGroup:insert(antsGroup)
-    sceneGroup:insert(commonsGroup)
+    sceneGroup:insert(vehicleGroup)
     sceneGroup:insert(uiGroup)
+    if M.stageNumber == 5 then
+        sceneGroup:insert(lightGroup)
+        sceneGroup:insert(subLightGroup)
+        sceneGroup:insert(shaderGroup)
+        lightGroup:insert(subLightGroup)
+        subLightGroup:insert(shaderGroup)
+    end
     sceneGroup:insert(effectsGroup)
-    sceneGroup:insert(shaderGroup)
-    sceneGroup:insert(lightGroup)
     sceneGroup:insert(exitButtonGroup)
 end
 
 function M.initiateCommons(sceneGroup, stageNumber, countdownTimer)
     M.stageNumber = stageNumber
+    initiateShaderGroups(stageNumber)
     fillGroupsIntoSceneGroup(sceneGroup)
     getStageParameters(stageNumber)
     initiateBackground()
+    initiateGhosts()
     initiateUiElements(uiGroup, countdownTimer)
     initiateVehicle()
     initiateCannon(ballGroup, fireButtonGroup, shootGroup, effectsGroup)
