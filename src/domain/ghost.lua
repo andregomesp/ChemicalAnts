@@ -16,7 +16,6 @@ end
 
 function Ghost:createLightMask(x, y)
     local dynamicAccess = {}
-    print(self.ghostName)
     dynamicAccess[self.ghostName] = graphics.newMask("assets/images/commons/masks/lightmask3.png")
     self.ghostGroup:setMask(dynamicAccess[self.ghostName])
     self.ghostGroup.maskX = x
@@ -38,7 +37,7 @@ function Ghost:initiatePatterns(type)
     self:enablePatterns()
     if type == "a" then
         self:doPattern(1, 1)
-    else 
+    else
         self:doPattern(1, 2)
     end
 end
@@ -46,9 +45,9 @@ end
 local patternList = {
     [1] = {
         [1] = function (context, ghostGroup, pattern, step) return transition.to(ghostGroup,
-            {maskX = 70, time = 3000, delay = 800, onComplete=function() return context:doPattern(pattern, step+1) end}) end,
+            {maskX = 70, time = 3000, delay = 800, tag="ghostMovement", onComplete=function() return context:doPattern(pattern, step+1) end}) end,
         [2] = function (context, ghostGroup, pattern, step) return transition.to(ghostGroup,
-            {maskX = 240, time = 3000, delay = 800, onComplete=function() return context:doPattern(pattern, step-1) end}) end
+            {maskX = 240, time = 3000, delay = 800, tag="ghostMovement", onComplete=function() return context:doPattern(pattern, step-1) end}) end
     }
     -- [2] = 
     -- [3] =
