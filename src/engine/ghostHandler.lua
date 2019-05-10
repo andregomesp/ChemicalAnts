@@ -1,7 +1,6 @@
 local M = {}
-local ghostA = "tomarnocu"
+local ghostA = nil
 local ghostB = nil
-local ghostPattern = 1
 local ghostFactory = require("src.domain.ghost")
 
 local function initiateGhostPatternSystem()
