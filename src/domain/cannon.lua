@@ -16,16 +16,16 @@ function Cannon:closeCoolDown(event, bulletId)
     return true
 end
 
-function Cannon:drawCoolDownSquare(buttonId)
+function Cannon:drawCoolDownSquare(buttonId, coolDownTime)
     local coolDownSquare = display.newRoundedRect(20 + (100 * buttonId), 550, 80, 80, 6)
     coolDownSquare.anchorX, coolDownSquare.anchorY = 0, 1
     coolDownSquare:setFillColor(0.1,0.1,0.1,0.7)
-    transition.to(coolDownSquare, {time=2000, height = 0})
+    transition.to(coolDownSquare, {time=coolDownTime, height = 0})
 end
 
 function Cannon:fire(event, commons)
     if self.onCoolDown[event.target.id.element] == nil and commons.stopped == false and commons.paused == false then
-        self:initiateCoolDown(event.target.id.element, event.target.id.buttonId)
+        self:initiateCoolDown(event.target.id.element, event.target.id.buttonId, event.target.id.coolDown)
         local ballFactory = require("src.domain.ball")
         local ballColor = self.ballParametersList.getImage(event.target.id.element)
         local ballImage = display.newImageRect(self.shootGroup, "assets/images/commons/balls/" .. ballColor, 25, 25)
@@ -44,10 +44,11 @@ function Cannon:fire(event, commons)
     return true
 end
 
-function Cannon:initiateCoolDown(bulletId, buttonId)
+function Cannon:initiateCoolDown(bulletId, buttonId, coolDownTime)
+    print(bulletId)
     self.onCoolDown[bulletId] = true
-    self:drawCoolDownSquare(buttonId)
-    timer.performWithDelay(2000, function(event) return self:closeCoolDown(event, bulletId) end)
+    self:drawCoolDownSquare(buttonId, coolDownTime)
+    timer.performWithDelay(coolDownTime, function(event) return self:closeCoolDown(event, bulletId) end)
 end
 
 function Cannon:loadFiringButtons(elementsAvailable, ballGroup, fireButtonGroup, commons)
@@ -57,6 +58,7 @@ function Cannon:loadFiringButtons(elementsAvailable, ballGroup, fireButtonGroup,
     for key, value in pairs(elementsAvailable) do
         local ballColor = self.ballParametersList.getImage(value)
         local elementIcon = display.newImageRect(ballGroup, "assets/images/commons/balls/" .. ballColor, 30, 30)
+        local elementText = display.newText({parent=ballGroup, text=value, x=60 + (100 * counter), y=480})
         elementIcon.x = 60 + (100 * counter)
         elementIcon.y = 510
         local fireTheBall = function(event) return self:fire(event, commons) end
@@ -66,7 +68,7 @@ function Cannon:loadFiringButtons(elementsAvailable, ballGroup, fireButtonGroup,
                 top = 470,
                 height = 80,
                 width = 80,
-                id = {buttonId= counter, element= value},
+                id = {buttonId= counter, element= value, coolDown = commons['params']['coolDownTime'][counter + 1]},
                 shape = "roundedRect",
                 cornerRadius = 6,
                 fillColor = { default={0.396,0.447,0.529,1}, over={1,0.1,0.7,1} },
@@ -81,6 +83,33 @@ function Cannon:loadFiringButtons(elementsAvailable, ballGroup, fireButtonGroup,
         table.insert(self.firingButtons, button)
         counter = counter + 1
     end
+    while counter < 3 do
+        self:drawUselessButton(fireButtonGroup, ballGroup, counter, widget)
+        counter = counter + 1
+    end
+end
+
+function Cannon:drawUselessButton(fireButtonGroup, ballGroup, counter, widget)
+    local XIcon = display.newImageRect(ballGroup, "assets/images/commons/ui/forbidden.png", 80, 80)
+    XIcon.x = 60 + (100 * counter)
+    XIcon.y = 510
+    local button = widget.newButton(
+        {
+            left = 20 + (100 * counter),
+            top = 470,
+            height = 80,
+            width = 80,
+            shape = "roundedRect",
+            cornerRadius = 6,
+            fillColor = { default={0.396,0.447,0.529,1}, over={1,0.1,0.7,1} },
+            strokeColor = { default={1,0.4,0,1}, over={0.8,0.8,1,1} },
+            strokeWidth = 2
+        }
+    )
+    fireButtonGroup:insert(button)
+    XIcon:toFront()
+    table.insert(fireButtonGroup, button)
+    table.insert(self.firingButtons, button)
 end
 
 function Cannon:shootColision(event)

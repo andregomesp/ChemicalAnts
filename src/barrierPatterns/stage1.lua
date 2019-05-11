@@ -1,5 +1,5 @@
 -- Min value: 50, max value: 240 (note: max is the right anchor. multiply value * pieceSize * numberOfPieces)
---
+-- Variable time is not counting time, but rather distance. The name was not changed to avoid problems
 local M = {}
 
 local patterns = {

@@ -39,6 +39,9 @@ function Background:buildBackground(carVelocity, stageParams)
             rightWall.y = 100 * i
             leftWall.anchorX = 0.4
             rightWall.anchorX = 0.8
+        elseif stageParams.stageNumber == 4 then
+            leftWall.y = 100 * i
+            rightWall.y = 100 * i
         elseif (stageParams.stageNumber == 5) then
             leftWall.width = 140
             leftWall.height = 140
@@ -46,8 +49,7 @@ function Background:buildBackground(carVelocity, stageParams)
             rightWall.height = 140
             leftWall.y = 50 * i
             rightWall.y = 50 * i
-        end
-        
+        end        
         i = i + 1
     end
     physics.addBody(self.objectBackGroup, "dynamic", {isSensor = true})
@@ -70,13 +72,8 @@ end
 
 function Background:moveBackgroundGroup(moveGroup)
     if moveGroup == true then
-        if self.stageNumber ~= 3 then
         self.objectBackGroup.y = -210
         self.objectSecondaryBackGroup.y = -210
-        else
-            self.objectBackGroup.y = -210
-            self.objectSecondaryBackGroup.y = -210
-        end
     end
 end
 

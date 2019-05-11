@@ -12,8 +12,9 @@ function Vehicle:new(o, vehicleImage, carVelocity, backgroundObject, barrierGrou
     self.carVelocity = carVelocity
     self.boostStatus = 1
     self.boostTimer = 5
-    self.boostText = display.newText({parent = uiGroup, text = self.boostStatus, x = display.viewableContentWidth - 30, y = display.viewableContentHeight - 125,
-    font = "DejaVuSansMono", width = 20})
+    self.boostText = display.newText({parent = uiGroup, text = self.boostStatus,
+        x = commons.miniStatusBar.x + commons.miniStatusBar.width / 1.1,
+        y = commons.miniStatusBar.y + commons.miniStatusBar.height / 2, font = "DejaVuSansMono", width = 20})
     self.boostText:setFillColor(0, 0, 0)
     self.desaccelerationIteration = 0
     self.accelerationIteration = 0
@@ -263,7 +264,7 @@ function Vehicle:desaccelerateObjects(isPausing)
     end
 end
 
-function Vehicle:desacceleratedStop(backgroundObject, barrierGroup, effectsGroup)
+function Vehicle:desacceleratedStop()
     local isPausing = false
     local desaccelerate = function () return self:desaccelerateObjects(isPausing) end
     timer.performWithDelay(500, desaccelerate, 10)

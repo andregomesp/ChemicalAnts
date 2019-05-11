@@ -34,9 +34,11 @@ M.nextBarrierIndex = 1
 M.machineReached = false
 M.paused = false
 M.stopped = false
+M.timeIsUp = false
 M.timers = {}
 M.machine = nil
 M.timerUpdateDecimal = 0
+M.goalMarker = require("src.engine.goalMarker")
 
 local backgroundFactory = require("src.domain.background")
 local cannonFactory = require("src.domain.cannon")
@@ -119,6 +121,7 @@ local function timeIsUp()
     if M.paused == false then
         M.paused = true
         M.stopped = true
+        M.timeIsUp = true
         local isPausing = true
         local stop = function () return M.vehicle:desaccelerateObjects(isPausing) end
         local stopTimer = timer.performWithDelay(500, stop, 10)
@@ -177,7 +180,10 @@ local function timeIsUp()
 end
 
 local function machineChecking()
-    if M.paused == false and M.stopped == false then
+    if M.timeIsUp == false and M.paused == false and M.stopped == false then
+        if M.machine == nil then
+            M.machineReached = true
+        end
         if M.machine.y >= display.viewableContentWidth / 3 then
             M.stopped = true
             M.machine:setLinearVelocity(0, 0)
@@ -210,9 +216,10 @@ end
 local function updateMeasures(event, countdownText)
     M.timerUpdateDecimal = M.timerUpdateDecimal + 1
     if M.timerUpdateDecimal == 5 then
-        M.countdownTimer = M.countdownTimer - 1    
+        M.countdownTimer = M.countdownTimer - 1
         M.timerUpdateDecimal = 0
         countdownText.text = M.countdownTimer
+        M.goalMarker:remarkGoal(M.meters)
     end
     M.meters = M.meters + (M.vehicle.carVelocity / 5)
     if M.countdownTimer <= 30 and M.rain == nil and M.machineReached == false then
@@ -232,7 +239,8 @@ local function initiateUiElements(uiGroup, countdownTimer)
     M.hpBar:drawBar(uiGroup)
 
     -- Boost label
-    local boostLabel = display.newText({parent = uiGroup, text = "Boost", x = display.viewableContentWidth - 80, y = display.viewableContentHeight - 125,
+    local boostLabel = display.newText({parent = uiGroup, text = "Boost", x = M.miniStatusBar.x + M.miniStatusBar.width / 1.25,
+        y = M.miniStatusBar.y + M.miniStatusBar.height / 2,
     font = "DejaVuSansMono", width = 70})
     boostLabel:setFillColor(0, 0, 0)
 
@@ -241,11 +249,12 @@ local function initiateUiElements(uiGroup, countdownTimer)
     M.totalTime = countdownTimer * 1
     local backCircle = display.newRoundedRect(uiGroup, display.contentCenterX - 20, 15, 60, 20, 10)
      backCircle:setFillColor(0, 0, 0, 0.3)
-    local countdownText = display.newText({parent = uiGroup, text = M.countdownTimer, x = display.contentCenterX, y = 15,
+    local countdownText = display.newText({parent = uiGroup, text = M.countdownTimer, x = display.contentCenterX + 5, y = 15,
     font = "DejaVuSansMono", width = 70})
     local updateMeasures = function() return updateMeasures(event, countdownText) end
     local measurerTimer = timer.performWithDelay(200, updateMeasures, M.totalTime * 5)
     table.insert(M.timers, measurerTimer)
+    M.goalMarker:initiateGoalMarker(uiGroup, M.miniStatusBar, M.stageNumber)
 end
 
 local function positionCheck(patterns, barrierFactory, countdownTimer)

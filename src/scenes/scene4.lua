@@ -23,7 +23,7 @@ function scene:show(event)
             composer.removeScene(previousScene)
         end
         isShowing = true
-        local stageNumber = 3
+        local stageNumber = 4
         local countDownTimer = 60
         commons = require(commonsInterfaceName)
         audio.setVolume(1.0, {channel=1})
