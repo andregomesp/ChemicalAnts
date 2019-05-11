@@ -72,7 +72,6 @@ function Cannon:loadFiringButtons(elementsAvailable, ballGroup, fireButtonGroup,
                 fillColor = { default={0.396,0.447,0.529,1}, over={1,0.1,0.7,1} },
                 strokeColor = { default={1,0.4,0,1}, over={0.8,0.8,1,1} },
                 strokeWidth = 2,
-                -- onRelease = function(event) return self:fire(event) end
                 onRelease = fireTheBall
             }
         )
