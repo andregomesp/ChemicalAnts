@@ -31,13 +31,13 @@ M.cannonUiBar = nil
 M.cannonUiMiniBar = nil
 M.rain = nil
 M.nextBarrierIndex = 1
-M.machineReached = false
-M.paused = false
-M.stopped = false
-M.timeIsUp = false
+M.machineReached = false    -- Machine was reached
+M.paused = false            -- Game is currently paused
+M.stopped = false           -- Car is stopped
+M.timeIsUp = false          -- Time is up
 M.timers = {}
-M.machine = nil
-M.timerUpdateDecimal = 0
+M.machine = nil             -- Hold machine information when it appears
+M.timerUpdateDecimal = 0    -- Measure milisecond in intervals until a second comes
 M.goalMarker = require("src.engine.goalMarker")
 
 local backgroundFactory = require("src.domain.background")
@@ -96,7 +96,7 @@ local function initiateBackground()
 
 end
 
-local function initiateCannon(ballGroup, fireButtonGroup, shootGroup, effectsGroup)
+local function initiateCannon()
     M.cannon = cannonFactory:new(nil, M.vehicle, shootGroup, coolDownSquareGroup, effectsGroup)
     M.cannon:loadFiringButtons(M.params.availableBallTypes, ballGroup, fireButtonGroup, M)
 end
@@ -118,70 +118,20 @@ local function initiateRain()
 end
 
 local function timeIsUp()
-    if M.paused == false then
-        M.paused = true
+    if M.timeIsUp == false and M.machineReached == false then
         M.stopped = true
         M.timeIsUp = true
-        local isPausing = true
-        local stop = function () return M.vehicle:desaccelerateObjects(isPausing) end
-        local stopTimer = timer.performWithDelay(500, stop, 10)
-        table.insert(M.timers, stopTimer)
-        local questionBox = display.newRoundedRect(exitButtonGroup, 40,
-        -270, display.viewableContentWidth - 80, 240, 12)
-        questionBox:setFillColor(0.7, 0.4, 0.2)
-        questionBox.anchorX = 0
-        questionBox.anchorY = 0
-        local timeisUpText = "Time is up!"
-        local timeIsUpTag = display.newText({parent=exitButtonGroup,text=timeisUpText, x=questionBox.x + 40,
-            y=questionBox.y + 35, fontSize=35})
-        timeIsUpTag.anchorX = 0
-        local widget = require("widget")
-        local sceneChanger = require("src.scenes.sceneChanger")
-        local restartGame = function() return sceneChanger:gotoSceneTransition(M.stageNumber, "sameStage") end
-        local exitGame = function() return sceneChanger:gotoSceneTransition(M.stageNumber, "gameover") end
-        local buttonRetry = widget.newButton(
-            {
-                left = questionBox.x + 30,
-                top = questionBox.y + 120,
-                -- left = 30,
-                -- top = 30,
-                height = 60,
-                width = 60,
-                cornerRadius = 22,
-                shape = "roundedRect",
-                fillColor = { default={0.396,0.447,0.529,1}, over={1,0.1,0.7,1} },
-                strokeColor = { default={0, 0, 0.2,1}, over={0.8,0.8,1,1} },
-                strokeWidth = 1,
-                onRelease= restartGame
-            }
-        )
-        exitButtonGroup:insert(buttonRetry)
-        local exit = widget.newButton(
-            {
-                left = questionBox.x + 140,
-                top = questionBox.y + 120,
-                height = 60,
-                width = 60,
-                cornerRadius = 22,
-                shape = "roundedRect",
-                fillColor = { default={0.396,0.447,0.529,1}, over={1,0.1,0.7,1} },
-                strokeColor = { default={0,0,0.2,1}, over={0.8,0.8,1,1} },
-                strokeWidth = 1,
-                onRelease = exitGame
-            }
-        )
-        exitButtonGroup:insert(exit)
-        local repeatIcon = display.newImage(exitButtonGroup, "assets/images/commons/ui/rep.png", buttonRetry.x, buttonRetry.y)
-        local exitIcon = display.newImage(exitButtonGroup, "assets/images/commons/ui/x.png", exit.x,
-        exit.y)
-
-        transition.to(exitButtonGroup, {time=2000, y=(display.viewableContentHeight / 2) + 30 })
+        local stopVehicle = function () return M.vehicle:desaccelerateObjects(M.stopped) end
+        local stopVehicleTimer = timer.performWithDelay(500, stopVehicle, 10)
+        table.insert(M.timers, stopVehicleTimer)
+        local miscMenus = require("src.engine.MiscMenus")
+        miscMenus:drawTimeIsUpBox(exitButtonGroup, M.stageNumber)
     end
 end
 
 local function machineChecking()
     if M.timeIsUp == false and M.paused == false and M.stopped == false then
-        if M.machine == nil then
+        if M.machine ~= nil then
             M.machineReached = true
         end
         if M.machine.y >= display.viewableContentWidth / 3 then
@@ -195,8 +145,7 @@ local function machineChecking()
 end
 
 local function initiateMachineCheck(countdownTimer)
-    local machineCheck = function() return machineChecking() end
-    local machineTimer = timer.performWithDelay(100, machineCheck, countdownTimer * 10)
+    local machineTimer = timer.performWithDelay(100, machineChecking, countdownTimer * 10)
     table.insert(M.timers,machineTimer)
 end
 
@@ -208,7 +157,6 @@ local function checkingDeath()
 end
 
 local function initiateDeathChecker(countdownTimer)
-    checkDeath = function() return checkingDeath() end
     local deathTimer = timer.performWithDelay(500, checkingDeath, countdownTimer * 2)
     table.insert(M.timers, deathTimer)
 end
@@ -336,10 +284,10 @@ function M.initiateCommons(sceneGroup, stageNumber, countdownTimer)
     initiateGhosts()
     initiateUiElements(uiGroup, countdownTimer)
     initiateVehicle()
-    initiateCannon(ballGroup, fireButtonGroup, shootGroup, effectsGroup)
+    initiateCannon()
     initiateBarriers(stageNumber, barrierGroup, countdownTimer)
     initiateDeathChecker(countdownTimer, barrierGroup, effectsGroup)
-    eventFactory:initiateCommonListeners(M, effectsGroup, barrierGroup, backgroundUiGroup)
+    eventFactory:initiateCommonListeners(M, effectsGroup, barrierGroup)
 end
 
 function M.destroyCommons()

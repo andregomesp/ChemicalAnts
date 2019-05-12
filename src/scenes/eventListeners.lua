@@ -4,7 +4,7 @@ local handleTheBackground = nil
 local collisionTheCar = nil
 local commons = nil
 
-function M:initiateCommonListeners(commonsValues, effectsGroup, barrierGroup, backgroundUiGroup)
+function M:initiateCommonListeners(commonsValues, effectsGroup, barrierGroup)
     commons = commonsValues
     local function controlVehicleMovement(event)
         commons.vehicle:controlMovement()
@@ -13,14 +13,14 @@ function M:initiateCommonListeners(commonsValues, effectsGroup, barrierGroup, ba
     controlTheVehicle = controlVehicleMovement
 
     local function collisionCar(event)
-        if commons.paused == false then
+        if commons.paused == false and commons.timeIsUp == false then
             if event.other.myName == "barrier" and event.other.isHittable == true then
-                commons.vehicle:takeDamage(15, commons.hpBar, effectsGroup)
+                commons.vehicle:takeDamage(100, commons.hpBar, effectsGroup)
                 event.other.isHittable = false
                 display.remove(event.other)
                 event.other = nil
             elseif event.other.myName == "explosion" then
-                commons.vehicle:takeDamage(20, commons.hpBar, effectsGroup)
+                commons.vehicle:takeDamage(25, commons.hpBar, effectsGroup)
             end
         end 
         return true
@@ -59,7 +59,6 @@ function M:initiateCommonListeners(commonsValues, effectsGroup, barrierGroup, ba
     commons.background.image:addEventListener("touch", moveVehicle)
     commons.vehicle.image:addEventListener("collision", collisionCar)
     Runtime:addEventListener( "enterFrame", controlVehicleMovement )
-    -- Runtime:addEventListener( "enterFrame", function (event) return handleBackground(event) end )
     Runtime:addEventListener( "enterFrame", handleBackground)
 end
 

@@ -238,7 +238,7 @@ function Vehicle:takeDamage(ammount, hpBar, effectsGroup)
     end
 end
 
-function Vehicle:desaccelerateObjects(isPausing)
+function Vehicle:desaccelerateObjects(timeIsUp)
     self.desaccelerationIteration = self.desaccelerationIteration + 1
     if self.desaccelerationIteration == 10 then
         self.carVelocity = 0
@@ -249,60 +249,66 @@ function Vehicle:desaccelerateObjects(isPausing)
     self.backgroundObject.objectSecondaryBackGroup:setLinearVelocity(0, self.carVelocity)
     for i=1, self.barrierGroup.numChildren do
         if self.barrierGroup[i] ~= nil then
-            self.barrierGroup[i]:setLinearVelocity(0, self.carVelocity) 
+            self.barrierGroup[i]:setLinearVelocity(0, self.carVelocity)
         end
     end
     for i=1, self.effectsGroup.numChildren do
-        if self.effectsGroup[i] ~= nil then
-            self.effectsGroup[i]:setLinearVelocity(0, self.carVelocity) 
+        if self.effectsGroup[i] ~= nil and self.effectsGroup[i].isBodyActive ~= nil then
+            self.effectsGroup[i]:setLinearVelocity(0, self.carVelocity)
         end
     end
-    if self.desaccelerationIteration == 10 and isPausing == false then
-        local fixingAnimation = function() return self:initiateFixingAnimation() end
-        timer.performWithDelay(100, fixingAnimation)
+    if self.desaccelerationIteration == 10 then
+        if self.commons.timeIsUp == false then
+            local fixingAnimation = function() return self:initiateFixingAnimation() end
+            timer.performWithDelay(100, fixingAnimation)
+        end
         self.desaccelerationIteration = 0
     end
 end
 
 function Vehicle:desacceleratedStop()
-    local isPausing = false
-    local desaccelerate = function () return self:desaccelerateObjects(isPausing) end
+    local timeIsUp = false
+    local desaccelerate = function () return self:desaccelerateObjects(timeIsUp) end
     timer.performWithDelay(500, desaccelerate, 10)
 end
 
 
 function Vehicle:accelerateObjects()
-    self.accelerationIteration = self.accelerationIteration + 1
-    if self.accelerationIteration == 10 then
-        self.carVelocity = 140
-    else
-        self.carVelocity = self.carVelocity + 14
-    end
-    self.backgroundObject.objectBackGroup:setLinearVelocity(0, self.carVelocity)
-    self.backgroundObject.objectSecondaryBackGroup:setLinearVelocity(0, self.carVelocity)
-    for i=1, self.barrierGroup.numChildren do
-        if self.barrierGroup[i] ~= nil then
-            self.barrierGroup[i]:setLinearVelocity(0, self.carVelocity) 
+    if self.commons.timeIsUp == false then
+        self.accelerationIteration = self.accelerationIteration + 1
+        if self.accelerationIteration == 10 then
+            self.carVelocity = 140
+        else
+            self.carVelocity = self.carVelocity + 14
         end
-    end
-    for i=1, self.effectsGroup.numChildren do
-        if self.effectsGroup[i] ~= nil then
-            self.effectsGroup[i]:setLinearVelocity(0, self.carVelocity) 
+        self.backgroundObject.objectBackGroup:setLinearVelocity(0, self.carVelocity)
+        self.backgroundObject.objectSecondaryBackGroup:setLinearVelocity(0, self.carVelocity)
+        for i=1, self.barrierGroup.numChildren do
+            if self.barrierGroup[i] ~= nil then
+                self.barrierGroup[i]:setLinearVelocity(0, self.carVelocity)
+            end
         end
-    end
-    if self.accelerationIteration == 10 then
-        transition.cancel(self.image)
-        self:turnOffInvulnerability()
-        self.commons.stopped = false
-        self.accelerationIteration = 0
+        for i=1, self.effectsGroup.numChildren do
+            if self.effectsGroup[i] ~= nil then
+                self.effectsGroup[i]:setLinearVelocity(0, self.carVelocity) 
+            end
+        end
+        if self.accelerationIteration == 10 then
+            transition.cancel(self.image)
+            self:turnOffInvulnerability()
+            self.commons.stopped = false
+            self.accelerationIteration = 0
+        end
     end
 end
 
 function Vehicle:reAcceleratedStart()
+    if self.commons.timeIsUp == false then
     transition.blink(self.image, {time = 200, onCancel = function() self.image.alpha = 1.0 end})
     self:bornInvulnerability()
-    accelerate = function() return self:accelerateObjects() end
+    local accelerate = function() return self:accelerateObjects() end
     timer.performWithDelay(200, accelerate, 10)
+    end
 end
 
 function Vehicle:eraseSmokePuff(smoke)
@@ -313,12 +319,14 @@ end
 
 function Vehicle:flySmokePuff()
     if self.isFlyingSmokeAnimation == false then
-        local smoke = display.newImage("assets/images/commons/carsmoke.png", self.image.x, self.image.y)
+        local smoke = display.newImage(self.effectsGroup, "assets/images/commons/carsmoke.png", self.image.x, self.image.y)
+        physics.addBody(smoke, {})
         smoke.width = 25
         smoke.height = 25
         self.isFlyingSmokeAnimation = true
         local eraseSmoke = function() return self:eraseSmokePuff(smoke) end
-        transition.to(smoke, {time = 500, x = smoke.x + 20, y = smoke.y - 40, alpha = 0, transition=easing.inQuint, onComplete=eraseSmoke})
+        transition.to(smoke, {time = 500, x = smoke.x + 20, y = smoke.y - 40, alpha = 0,
+         transition=easing.inQuint, onComplete=eraseSmoke})
     end
 end
 
@@ -328,6 +336,7 @@ end
 
 function Vehicle:fixingAnimation()
     self.wrench = display.newImage(self.effectsGroup, "assets/images/commons/wrench.png", self.image.x, self.image.y)
+
     timer.cancel(self.smokeTimer)
     self.isFlyingSmokeAnimation = false
     self.hp = 100

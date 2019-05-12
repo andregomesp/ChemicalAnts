@@ -6,7 +6,6 @@ local sceneGroup = nil
 local commons = nil
 local commonsInterfaceName = "src.scenes.commonsInterface"
 local backgroundSong = nil
-local backgroundSongPlay = nil
 physics.start()
 physics.setGravity(0, 0)
 function scene:create( event )
@@ -24,10 +23,10 @@ function scene:show(event)
         end
         isShowing = true
         local stageNumber = 1
-        local countDownTimer = 50
+        local countDownTimer = 10
         commons = require(commonsInterfaceName)
         audio.setVolume(1.0, {channel=1})
-        backgroundSongPlay = audio.play(backgroundSong, {channel = 1, fadein = 1500, loops = -1})
+        audio.play(backgroundSong, {channel = 1, fadein = 1500, loops = -1})
         commons.initiateCommons(sceneGroup, stageNumber, countDownTimer)
     end
 end
@@ -39,8 +38,6 @@ function scene:destroy(event)
     commons.destroyCommons()
     package.loaded[commonsInterfaceName] = nil
     commons = nil
-    -- display.remove(sceneGroup)
-    -- sceneGroup = nil
 end
 
 scene:addEventListener("create")
