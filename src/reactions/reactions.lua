@@ -1,7 +1,8 @@
 local M = {}
 local reactionsList = {
     ["water"] = {sodium = "explosion", ferrum = "nothing", chlorine = "dissolution"},
-    ["oxygen"] = {sodium = "corrosion", ferrum = "nothing", chlorine = "corrosion"}
+    ["oxygen"] = {sodium = "corrosion", ferrum = "nothing", chlorine = "corrosion"},
+    ["chlorideAcid"] = {sodium = "corrosion", ferrum = "corrosion", cholorine = "corrosion"}
 }
 
 local function analyseReaction(element1, element2)
