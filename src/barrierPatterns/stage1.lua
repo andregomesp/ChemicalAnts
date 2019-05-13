@@ -1,5 +1,7 @@
 -- Min value: 50, max value: 240 (note: max is the right anchor. multiply value * pieceSize * numberOfPieces)
 -- Variable time is not counting time, but rather distance. The name was not changed to avoid problems
+-- Ant fixing car takes approximately 9 seconds
+-- Drive speed is 140 pixels per second
 local M = {}
 
 local patterns = {

@@ -13,6 +13,7 @@ local vehicleGroup = display.newGroup()
 local uiGroup = display.newGroup()
 local effectsGroup = display.newGroup()
 local exitButtonGroup = display.newGroup()
+local rainGroup = nil
 local lightGroup = nil
 local subLightGroup = nil
 local shaderGroup = nil
@@ -57,7 +58,8 @@ local function drawCannonUI()
     local miniHeight = 30
     local yPos = display.viewableContentHeight - height
     local miniYPos = display.viewableContentHeight - height - miniHeight
-    local cannonUI = display.newImageRect(backgroundUiGroup, "assets/images/commons/ui/cannon_ui_texture.png", display.viewableContentWidth,
+    local cannonUI = display.newImageRect(backgroundUiGroup, "assets/images/commons/ui/cannon_ui_texture.png",
+     display.viewableContentWidth,
         height)
     cannonUI.x = 0
     cannonUI.y = yPos
@@ -82,7 +84,7 @@ local function drawCannonUI()
 end
 
 local function initiateBackground()
-    -- local backgroundImage = display.newImageRect(mainBackGroup, "assets/images/backgrounds/" .. M.params.background, 
+    -- local backgroundImage = display.newImageRect(mainBackGroup, "assets/images/backgrounds/" .. M.params.background,
     -- display.pixelHeight, display.pixelWidth)
     local backgroundImage = display.newRect(mainBackGroup, display.contentCenterX, display.contentCenterY, display.viewableContentWidth, display.viewableContentHeight)
     -- backgroundImage.x = display.contentCenterX
@@ -119,6 +121,18 @@ end
 
 local function initiateRain()
     M.rain = true
+    local rainShader = display.newRect(rainGroup, 0, 0 , display.viewableContentWidth, display.viewableContentHeight)
+    rainShader:setFillColor(0, 0, 0)
+    rainShader.anchorX = 0
+    rainShader.anchorY = 0
+    rainShader.alpha = 0
+    transition.to(rainShader, {alpha = 0.4, time = 2500})
+    local cloudA = display.newImage(rainGroup, "assets/images/commons/clouds/cloud_01.png", display.viewableContentWidth - 80,
+        20)
+    local cloudB = display.newImage(rainGroup)
+    local cloudC = display.newImage(rainGroup)
+    sounds:playASound("thunder_clap.mp3")
+
 end
 
 local function timeIsUp()
@@ -232,7 +246,7 @@ local function positionCheck(patterns, barrierFactory, countdownTimer)
     end
 end
 
-local function initiateBarriers(stageNumber, barrierGroup, countdownTimer)
+local function initiateBarriers(stageNumber, countdownTimer)
     local patternFilePath = "src.barrierPatterns.stage" .. tostring(stageNumber)
     local patternList = require(patternFilePath)
     local patterns = patternList:getPatterns()
@@ -243,7 +257,9 @@ local function initiateBarriers(stageNumber, barrierGroup, countdownTimer)
 end
 
 local function initiateShaderGroups(stageNumber)
-    if stageNumber == 4 then
+    if stageNumber == 1 or stageNumber == 2 or stageNumber == 3 then
+        rainGroup = display.newGroup()
+    elseif stageNumber == 4 then
         shaderGroup = display.newGroup()
     elseif stageNumber == 5 then
         lightGroup = display.newGroup()
@@ -264,12 +280,12 @@ local function fillGroupsIntoSceneGroup(sceneGroup)
     sceneGroup:insert(objectBackGroup)
     sceneGroup:insert(objectSecondaryBackGroup)
     sceneGroup:insert(barrierGroup)
-
     sceneGroup:insert(shootGroup)
-
     sceneGroup:insert(antsGroup)
     sceneGroup:insert(vehicleGroup)
-    if M.stageNumber == 4 then
+    if M.stageNumber == 1 or M.stageNumber == 2 or M.stageNumber == 3 then
+        sceneGroup:insert(rainGroup)
+    elseif M.stageNumber == 4 then
         sceneGroup:insert(shaderGroup)
     elseif M.stageNumber == 5 then
         sceneGroup:insert(lightGroup)

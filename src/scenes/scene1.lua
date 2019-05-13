@@ -23,7 +23,7 @@ function scene:show(event)
         end
         isShowing = true
         local stageNumber = 1
-        local countDownTimer = 60
+        local countDownTimer = 31
         commons = require(commonsInterfaceName)
         audio.setVolume(0.92, {channel=1})
         audio.play(backgroundSong, {channel = 1, fadein = 1500, loops = -1})
