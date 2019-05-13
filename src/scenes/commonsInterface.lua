@@ -127,11 +127,29 @@ local function initiateRain()
     rainShader.anchorY = 0
     rainShader.alpha = 0
     transition.to(rainShader, {alpha = 0.4, time = 2500})
-    local cloudA = display.newImage(rainGroup, "assets/images/commons/clouds/cloud_01.png", display.viewableContentWidth - 80,
-        20)
-    local cloudB = display.newImage(rainGroup)
-    local cloudC = display.newImage(rainGroup)
+    local cloudA = display.newImage(rainGroup, "assets/images/commons/clouds/cloud_01.png", display.viewableContentWidth + 180,
+        4)
+    local cloudB = display.newImage(rainGroup, "assets/images/commons/clouds/cloud_02.png", -160,
+        3)
+    local cloudC = display.newImage(rainGroup, "assets/images/commons/clouds/cloud_03.png", display.viewableContentWidth + 220,
+        12)
+    local cloudD = display.newImage(rainGroup, "assets/images/commons/clouds/cloud_04.png", - 180,
+        10)
+
+    cloudA.width = 150
+    cloudA.height = 50
+    cloudB.width = 150
+    cloudB.height = 50
+    cloudC.width = 150
+    cloudC.height = 50
+    cloudD.width = 150
+    cloudD.height = 50
+
     sounds:playASound("thunder_clap.mp3")
+    transition.to(cloudA, {time = 4500, x=display.viewableContentWidth / 1.8})
+    transition.to(cloudB, {time = 4400, x=display.viewableContentWidth / 4.5})
+    transition.to(cloudC, {time = 4600, x=display.viewableContentWidth / 1.4})
+    transition.to(cloudD, {time = 4600, x=display.viewableContentWidth / 3.2})
 
 end
 
@@ -313,7 +331,7 @@ function M.initiateCommons(sceneGroup, stageNumber, countdownTimer)
     initiateUiElements(uiGroup, countdownTimer)
     initiateVehicle()
     initiateCannon()
-    initiateBarriers(stageNumber, barrierGroup, countdownTimer)
+    initiateBarriers(stageNumber, countdownTimer)
     initiateDeathChecker(countdownTimer, barrierGroup, effectsGroup)
     eventFactory:initiateCommonListeners(M, effectsGroup, barrierGroup)
 end
