@@ -4,7 +4,7 @@ local M = {}
 
 local patterns = {
     -- [1] = {type = "machine", time = 200},
-    [1] = {type = "sodium", time = 500, xAnchor = 65, pattern = {form = "line", dimensions = 1, numberOfPieces = 4}},
+    [1] = {type = "ferrum", time = 500, xAnchor = 65, pattern = {form = "line", dimensions = 1, numberOfPieces = 4}},
     [2] = {type = "sodium", time = 800, xAnchor = 65, pattern = {
         form = "rectangle", dimensions = 2, numberOfPieces = {x= 3, y= 7}}},
     [3] = {type = "chlorine", time = 1000, xAnchor = 65, pattern = {form = "line", dimensions = 1, numberOfPieces = 7}},

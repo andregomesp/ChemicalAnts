@@ -1,6 +1,6 @@
 local Vehicle = {hp = 100, invulnerable = false, invulnerableTime = 1500}
 
-function Vehicle:new(o, vehicleImage, carVelocity, backgroundObject, barrierGroup, effectsGroup, antsGroup, uiGroup, commons)
+function Vehicle:new(o, vehicleImage, barrierGroup, effectsGroup, antsGroup, uiGroup, commons, sounds)
     o = o or {}
     setmetatable(o, self)
     self.__index = self
@@ -9,7 +9,7 @@ function Vehicle:new(o, vehicleImage, carVelocity, backgroundObject, barrierGrou
     self.image = nil
     self.xMoveDirection = nil
     self.image = vehicleImage
-    self.carVelocity = carVelocity
+    self.carVelocity = commons.carVelocity
     self.boostStatus = 1
     self.boostTimer = 5
     self.boostText = display.newText({parent = uiGroup, text = self.boostStatus,
@@ -20,12 +20,13 @@ function Vehicle:new(o, vehicleImage, carVelocity, backgroundObject, barrierGrou
     self.accelerationIteration = 0
     self.isFlyingSmokeAnimation = false
     self.smokeTimer = nil
-    self.backgroundObject = backgroundObject
+    self.backgroundObject = commons.background
     self.barrierGroup = barrierGroup
     self.effectsGroup = effectsGroup
     self.antsGroup = antsGroup
     self.commons = commons
     self.wrench = nil
+    self.sounds = sounds
     return o
 end
 
@@ -223,7 +224,7 @@ end
 function Vehicle:takeDamage(ammount, hpBar, effectsGroup)
     if self.invulnerable == false then
         local physicalHit = require("src.reactions.physicalHit")
-        physicalHit:initiateHitSequence(effectsGroup, self)
+        physicalHit:initiateHitSequence(effectsGroup, self.image, self.sounds)
         transition.blink(self.image, {time = 200, onCancel = function() self.image.alpha = 1.0 end})
         timer.performWithDelay(self.invulnerableTime - 100, function() transition.cancel(self.image) end)
         self:adjustInvulnerability()
@@ -234,11 +235,11 @@ function Vehicle:takeDamage(ammount, hpBar, effectsGroup)
         else
             self.hp = self.hp - ammount
         end
-        hpBar:subtractHpAnimation(ammountSubtracted, self)
+        hpBar:subtractHpAnimation(ammountSubtracted, self.image)
     end
 end
 
-function Vehicle:desaccelerateObjects(timeIsUp)
+function Vehicle:desaccelerateObjects()
     self.desaccelerationIteration = self.desaccelerationIteration + 1
     if self.desaccelerationIteration == 10 then
         self.carVelocity = 0
@@ -267,8 +268,7 @@ function Vehicle:desaccelerateObjects(timeIsUp)
 end
 
 function Vehicle:desacceleratedStop()
-    local timeIsUp = false
-    local desaccelerate = function () return self:desaccelerateObjects(timeIsUp) end
+    local desaccelerate = function () return self:desaccelerateObjects() end
     timer.performWithDelay(500, desaccelerate, 10)
 end
 
@@ -335,8 +335,10 @@ function Vehicle:rotateAnt(antA)
 end
 
 function Vehicle:fixingAnimation()
+    self.sounds:playASound("car_fix.mp3", 1)
+    local drillSound = function() return self.sounds:playASound("car_fix_2.mp3") end
+    timer.performWithDelay(50, drillSound)
     self.wrench = display.newImage(self.effectsGroup, "assets/images/commons/wrench.png", self.image.x, self.image.y)
-
     timer.cancel(self.smokeTimer)
     self.isFlyingSmokeAnimation = false
     self.hp = 100
@@ -368,13 +370,16 @@ function Vehicle:initiateFixingAnimation()
     local fixAnimation = function() return self:fixingAnimation() end
     timer.performWithDelay(500, fixAnimation)
     local jumpOnCar = function() return self:jumpingOnCarAnimation(antA) end
-    timer.performWithDelay(2000, jumpOnCar)
+    timer.performWithDelay(2500, jumpOnCar)
 end
 
-function Vehicle:initiateDestroyedAnimation(backgroundObject, barrierGroup, effectsGroup)
-    self:desacceleratedStop(backgroundObject, barrierGroup, effectsGroup)
+function Vehicle:initiateDestroyedAnimation()
+    self:desacceleratedStop()
     local flySmoke = function() return self:flySmokePuff() end
     self.smokeTimer = timer.performWithDelay(550, flySmoke, 0)
+    table.insert(self.commons.timers, self.smokeTimer)
+    local carFail = function() return self.sounds:playASound("car_fail.mp3") end
+    timer.performWithDelay(400, carFail)
 end
 
 return Vehicle

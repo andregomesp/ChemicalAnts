@@ -29,7 +29,7 @@ local parameters = {
     },
     [4] = {
         -- background = "grassBackgroundTemporary.jpg",
-        color = {r = 0.082, g = 0.423, b= 0.6},
+        color = {r = 0.317, g = 0.141, b= 0.023},
         availableBallTypes = {"oxygen", "water"},
         coolDownTime = {4000, 2000},
         leftWall = "assets/images/commons/scenario/left-cave-wall.png",
@@ -37,8 +37,7 @@ local parameters = {
         stageNumber = 4
     },
     [5] = {
-        -- background = "grassBackgroundTemporary.jpg",
-        color = {r = 0.415, g = 0.463, b= 0.196},
+        color = {r = 0.415, g = 0.411, b= 0.486},
         availableBallTypes = {"oxygen", "water"},
         coolDownTime = {4000, 2000},
         leftWall = "assets/images/commons/scenario/autumn-trees.png",

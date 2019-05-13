@@ -12,7 +12,7 @@ local function spriteHandler(event, sprite)
     return true
 end
 
-local function drawHit(effectsGroup, vehicle)
+local function drawHit(effectsGroup, vehicleImage, sounds)
     local sheetOptions = {
         numFrames = 10,
         width = 64,
@@ -30,17 +30,18 @@ local function drawHit(effectsGroup, vehicle)
         loopCount = 1
     }
     local hitAnimation = display.newSprite(effectsGroup, hit_sheet, sequence_hit)
-    hitAnimation.x = vehicle.image.x
-    hitAnimation.y = vehicle.image.y - vehicle.image.height / 2
+    hitAnimation.x = vehicleImage.x
+    hitAnimation.y = vehicleImage.y - vehicleImage.height / 2
     hitAnimation.myName = "hitAnimation"
     hitAnimation:play()
+    sounds:playASound("wall_hit.mp3")
     physics.addBody(hitAnimation, "dynamic", {isSensor = true})
     local spriteListener = function(event) return spriteHandler(event, hitAnimation) end
     hitAnimation:addEventListener("sprite", spriteListener)
 end
 
-function M:initiateHitSequence(effectsGroup, vehicle)
-    local hit = function() return drawHit(effectsGroup, vehicle, carVelocity) end
+function M:initiateHitSequence(effectsGroup, vehicleImage, sounds)
+    local hit = function() return drawHit(effectsGroup, vehicleImage, sounds) end
     timer.performWithDelay(40, hit)
 end
 return M

@@ -6,6 +6,9 @@ local parameters = {
     },
     oxygen = {
         image = "ball_red.png"
+    },
+    chlorideAcid = {
+        image = "ball_yellow.png"
     }
 }
 

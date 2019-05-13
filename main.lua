@@ -1,18 +1,18 @@
------------------------------------------------------------------------------------------
---
--- main.lua
---
------------------------------------------------------------------------------------------
 
--- Your code here
-if system.getInfo( "androidApiLevel" ) and system.getInfo( "androidApiLevel" ) < 28 then
+-- Hide android bar
+if system.getInfo( "androidApiLevel" ) and system.getInfo( "androidApiLevel" ) < 19 then
 	native.setProperty( "androidSystemUiVisibility", "lowProfile" )
 else
 	native.setProperty( "androidSystemUiVisibility", "immersiveSticky" )
 end
-
 local composer = require("composer")
+
+-- Load all sounds
+local sounds = require("src.engine.soundStash")
+sounds:loadAllCommonSounds()
+
+-- Open game
 -- composer.gotoScene( "src.scenes.scene1")
--- composer.gotoScene( "src.scenes.scene4")
+composer.gotoScene( "src.scenes.scene4")
 -- composer.gotoScene( "src.scenes.scene5")
-composer.gotoScene("src.scenes.stageBetween", {params={screenStatus="pos", stageNumber="0"}})
+-- composer.gotoScene("src.scenes.stageBetween", {params={screenStatus="pos", stageNumber="0"}})

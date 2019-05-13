@@ -13,7 +13,7 @@ function scene:create( event )
     sceneGroup = self.view -- add display objects to this group
     local sceneChanger = require("src.scenes.sceneChanger")
     timer.performWithDelay(2500, function() return sceneChanger:removePreviousScene() end)
-    backgroundSong = audio.loadStream("assets/audio/songs/Desert of Lost Souls.mp3")
+    backgroundSong = audio.loadStream("assets/audio/songs/Not As It Seems.mp3")
 end
 
 function scene:show(event)
@@ -26,7 +26,7 @@ function scene:show(event)
         local stageNumber = 4
         local countDownTimer = 60
         commons = require(commonsInterfaceName)
-        audio.setVolume(1.0, {channel=1})
+        audio.setVolume(0.92, {channel=1})
         audio.play(backgroundSong, {fadein = 1500, loops = -1})
         commons.initiateCommons(sceneGroup, stageNumber, countDownTimer)
     end
@@ -35,7 +35,9 @@ function scene:hide(event)
     
 end
 function scene:destroy(event)
-    audio.fadeOut({channel=1, time=2000})
+    audio.fadeOut({channel=1, time=500})
+    local disposeAudio = function () return audio.dispose(backgroundSong) end
+    timer.performWithDelay(600, disposeAudio)
     commons.destroyCommons()
     package.loaded[commonsInterfaceName] = nil
     commons = nil

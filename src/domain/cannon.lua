@@ -16,16 +16,16 @@ function Cannon:closeCoolDown(event, bulletId)
     return true
 end
 
-function Cannon:drawCoolDownSquare(buttonId, coolDownTime)
-    local coolDownSquare = display.newRoundedRect(20 + (100 * buttonId), 550, 80, 80, 6)
+function Cannon:drawCoolDownSquare(buttonId, coolDownTime, cooldownGroup)
+    local coolDownSquare = display.newRoundedRect(cooldownGroup, 20 + (100 * buttonId), 550, 80, 80, 6)
     coolDownSquare.anchorX, coolDownSquare.anchorY = 0, 1
     coolDownSquare:setFillColor(0.1,0.1,0.1,0.7)
     transition.to(coolDownSquare, {time=coolDownTime, height = 0})
 end
 
-function Cannon:fire(event, commons)
+function Cannon:fire(event, commons, sounds, cooldownGroup)
     if self.onCoolDown[event.target.id.element] == nil and commons.stopped == false and commons.paused == false then
-        self:initiateCoolDown(event.target.id.element, event.target.id.buttonId, event.target.id.coolDown)
+        self:initiateCoolDown(event.target.id.element, event.target.id.buttonId, event.target.id.coolDown, cooldownGroup)
         local ballFactory = require("src.domain.ball")
         local ballColor = self.ballParametersList.getImage(event.target.id.element)
         local ballImage = display.newImageRect(self.shootGroup, "assets/images/commons/balls/" .. ballColor, 25, 25)
@@ -38,20 +38,20 @@ function Cannon:fire(event, commons)
         firedBall.image.x = self.associatedVehicle.image.x
         firedBall.image.y = self.associatedVehicle.image.y
         firedBall.image:toFront()
-        firedBall.image:addEventListener("collision", function (event) return self:shootColision(event) end)
+        firedBall.image:addEventListener("collision", function (event) return self:shootColision(event, sounds) end)
         firedBall.image:setLinearVelocity(0, -500)
+        sounds:playASound("misc_element_shot.mp3")
     end
     return true
 end
 
-function Cannon:initiateCoolDown(bulletId, buttonId, coolDownTime)
-    print(bulletId)
+function Cannon:initiateCoolDown(bulletId, buttonId, coolDownTime, cooldownGroup)
     self.onCoolDown[bulletId] = true
-    self:drawCoolDownSquare(buttonId, coolDownTime)
+    self:drawCoolDownSquare(buttonId, coolDownTime, cooldownGroup)
     timer.performWithDelay(coolDownTime, function(event) return self:closeCoolDown(event, bulletId) end)
 end
 
-function Cannon:loadFiringButtons(elementsAvailable, ballGroup, fireButtonGroup, commons)
+function Cannon:loadFiringButtons(elementsAvailable, ballGroup, fireButtonGroup, commons, sounds, cooldownGroup)
     local widget = require("widget")
     local counter = 0
     -- todo: Elements available needs fixing, It is currently passing the whole list and not the stage parameters
@@ -61,7 +61,7 @@ function Cannon:loadFiringButtons(elementsAvailable, ballGroup, fireButtonGroup,
         local elementText = display.newText({parent=ballGroup, text=value, x=60 + (100 * counter), y=480})
         elementIcon.x = 60 + (100 * counter)
         elementIcon.y = 510
-        local fireTheBall = function(event) return self:fire(event, commons) end
+        local fireTheBall = function(event) return self:fire(event, commons, sounds, cooldownGroup) end
         local button = widget.newButton(
             {
                 left = 20 + (100 * counter),
@@ -112,13 +112,13 @@ function Cannon:drawUselessButton(fireButtonGroup, ballGroup, counter, widget)
     table.insert(self.firingButtons, button)
 end
 
-function Cannon:shootColision(event)
+function Cannon:shootColision(event, sounds)
     if event.target.canColide == true then
         if (event.other.myName) == "barrier" and event.other.isHittable == true then
             event.target.canColide = false
             event.other.isHittable = false
             local reactions = require("src.reactions.reactions")
-            reactions.initiateReaction(event, self.effectsGroup, self.associatedVehicle.carVelocity)
+            reactions.initiateReaction(event, self.effectsGroup, self.associatedVehicle.carVelocity, sounds)
         end
     end
     return true

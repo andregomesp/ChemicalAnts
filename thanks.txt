@@ -1,5 +1,6 @@
 Thanks to
 
+Art - Opengameart
 Julien Jorge
 Viktor Vahn
 Dan Norder
@@ -12,3 +13,10 @@ Buch
 Cookie
 Pavel Kozlov
 irmix
+
+sounds -
+Alan McKinney
+Sound effects obtained from https://www.zapsplat.com
+
+music
+Kevin MacLeod - Incompetech

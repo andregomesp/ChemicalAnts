@@ -45,6 +45,7 @@ local cannonFactory = require("src.domain.cannon")
 local eventFactory = require("src.scenes.eventListeners")
 local vehicleFactory = require("src.domain.vehicle")
 local hpBarFactory = require("src.domain.hpBar")
+local sounds = require("src.engine.soundStash")
 
 local function getStageParameters(stageNumber)
     local params = require("src.scenes.sceneParameters")
@@ -90,7 +91,9 @@ local function initiateBackground()
     physics.addBody(backgroundImage, "dynamic", { isSensor=true })
     M.background = backgroundFactory:new(nil, backgroundImage, objectBackGroup, objectSecondaryBackGroup, mainBackGroup)
     M.background:buildBackground(M.carVelocity, M.params)
-    if M.stageNumber == 5 then
+    if M.stageNumber == 4 then
+        M.background:drawAquaShader(shaderGroup)
+    elseif M.stageNumber == 5 then
         M.background:drawShader(shaderGroup)
     end
 
@@ -98,7 +101,7 @@ end
 
 local function initiateCannon()
     M.cannon = cannonFactory:new(nil, M.vehicle, shootGroup, coolDownSquareGroup, effectsGroup)
-    M.cannon:loadFiringButtons(M.params.availableBallTypes, ballGroup, fireButtonGroup, M)
+    M.cannon:loadFiringButtons(M.params.availableBallTypes, ballGroup, fireButtonGroup, M, sounds, coolDownSquareGroup)
 end
 
 local function initiateVehicle()
@@ -108,7 +111,8 @@ local function initiateVehicle()
     vehicleImage.myName = "vehicle"
     physics.addBody(vehicleImage, "dynamic", {isSensor = true})
     vehicleImage:toFront()
-    M.vehicle = vehicleFactory:new(nil, vehicleImage, M.carVelocity, M.background, barrierGroup, effectsGroup, antsGroup, uiGroup, M)
+    M.vehicle = vehicleFactory:new(nil, vehicleImage, barrierGroup, effectsGroup, antsGroup,
+        uiGroup, M, sounds)
     M.carVelocity = M.vehicle.carVelocity
     M.vehicle:initiateBoostLoop(M.background, barrierGroup, effectsGroup)
 end
@@ -126,6 +130,8 @@ local function timeIsUp()
         table.insert(M.timers, stopVehicleTimer)
         local miscMenus = require("src.engine.MiscMenus")
         miscMenus:drawTimeIsUpBox(exitButtonGroup, M.stageNumber)
+        local failSong = function() return sounds:playASound("lose_game.mp3") end
+        timer.performWithDelay(600, failSong)
     end
 end
 
@@ -152,7 +158,7 @@ end
 local function checkingDeath()
     if M.vehicle.hp == 0 and M.stopped == false then
         M.stopped = true
-        M.vehicle:initiateDestroyedAnimation(M.background, barrierGroup, effectsGroup)
+        M.vehicle:initiateDestroyedAnimation()
     end
 end
 
@@ -237,7 +243,9 @@ local function initiateBarriers(stageNumber, barrierGroup, countdownTimer)
 end
 
 local function initiateShaderGroups(stageNumber)
-    if stageNumber == 5 then
+    if stageNumber == 4 then
+        shaderGroup = display.newGroup()
+    elseif stageNumber == 5 then
         lightGroup = display.newGroup()
         subLightGroup = display.newGroup()
         shaderGroup = display.newGroup()
@@ -256,21 +264,25 @@ local function fillGroupsIntoSceneGroup(sceneGroup)
     sceneGroup:insert(objectBackGroup)
     sceneGroup:insert(objectSecondaryBackGroup)
     sceneGroup:insert(barrierGroup)
-    sceneGroup:insert(backgroundUiGroup)
+
     sceneGroup:insert(shootGroup)
-    sceneGroup:insert(fireButtonGroup)
-    sceneGroup:insert(ballGroup)
-    sceneGroup:insert(coolDownSquareGroup)
+
     sceneGroup:insert(antsGroup)
     sceneGroup:insert(vehicleGroup)
-    sceneGroup:insert(uiGroup)
-    if M.stageNumber == 5 then
+    if M.stageNumber == 4 then
+        sceneGroup:insert(shaderGroup)
+    elseif M.stageNumber == 5 then
         sceneGroup:insert(lightGroup)
         sceneGroup:insert(subLightGroup)
         sceneGroup:insert(shaderGroup)
         lightGroup:insert(subLightGroup)
         subLightGroup:insert(shaderGroup)
     end
+    sceneGroup:insert(backgroundUiGroup)
+    sceneGroup:insert(fireButtonGroup)
+    sceneGroup:insert(ballGroup)
+    sceneGroup:insert(uiGroup)
+    sceneGroup:insert(coolDownSquareGroup)
     sceneGroup:insert(effectsGroup)
     sceneGroup:insert(exitButtonGroup)
 end

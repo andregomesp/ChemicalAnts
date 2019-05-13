@@ -27,6 +27,10 @@ local function drawNextStageName()
         stageNameTag = "Defiant Desert"
     elseif nextStage == 3 then
         stageNameTag = "Antphibian Sea"
+    elseif nextStage == 4 then
+        stageNameTag = "Antique Caverns"
+    elseif nextStage == 5 then
+        stageNameTag = "???"
     end
     local stageNameDisplay = display.newText({parent=nextPhaseGroup, text = stageNameTag,
         x = display.viewableContentWidth / 3, y = display.viewableContentHeight / 1.3, fontSize = 18})

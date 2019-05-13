@@ -49,7 +49,7 @@ function Background:buildBackground(carVelocity, stageParams)
             rightWall.height = 140
             leftWall.y = 50 * i
             rightWall.y = 50 * i
-        end        
+        end
         i = i + 1
     end
     physics.addBody(self.objectBackGroup, "dynamic", {isSensor = true})
@@ -75,6 +75,13 @@ function Background:moveBackgroundGroup(moveGroup)
         self.objectBackGroup.y = -210
         self.objectSecondaryBackGroup.y = -210
     end
+end
+
+function Background:drawAquaShader(shaderGroup)
+    local shader = display.newRect(shaderGroup, 0, 0, display.viewableContentWidth, display.viewableContentHeight )
+    shader:setFillColor(0, 0, 200, 0.4)
+    shader.anchorX = 0
+    shader.anchorY = 0
 end
 
 function Background:drawShader(shaderGroup)

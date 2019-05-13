@@ -70,7 +70,7 @@ local function corrosionCollision(event)
     return true
 end
 
-local function corrosion(event, effectsGroup, carVelocity)
+local function corrosion(event, effectsGroup, carVelocity, sounds)
     if event.other.myName == "barrier" then
         display.remove(event.target)
         event.target = nil
@@ -79,6 +79,7 @@ local function corrosion(event, effectsGroup, carVelocity)
         physics.addBody(acidArea, "dynamic", {isSensor = true})
         physics.addBody(acidAreaHitBox, "dynamic", {isSensor = true})
         acidAreaHitBox:addEventListener("collision", function(event) return corrosionCollision(event) end)
+        sounds:playASound("acid_hit.mp3")
         acidArea.alpha = 0
         acidAreaHitBox.alpha = 0
         acidArea:setLinearVelocity(0, carVelocity)
@@ -88,7 +89,7 @@ local function corrosion(event, effectsGroup, carVelocity)
     return true
 end
 
-local function dissolution(event, effectsGroup, carVelocity)
+local function dissolution(event, effectsGroup, carVelocity, sounds)
     if event.other.myName == "barrier" then
         display.remove(event.target)
         event.target = nil
@@ -108,6 +109,7 @@ local function dissolution(event, effectsGroup, carVelocity)
             transition.to(v, {time = 1000, transition=easing.inOutCubic, x = event.other.x, y = event.other.y})
         end
     end
+    sounds:playASound("water_hit_2.mp3")
     return true
 end
 
@@ -121,7 +123,7 @@ local function explosionCollision(event)
     return true
 end
 
-local function explosion(event, effectsGroup, carVelocity)
+local function explosion(event, effectsGroup, carVelocity, sounds)
     local sheetOptions = {
         numFrames = 10,
         width = 32,
@@ -143,6 +145,7 @@ local function explosion(event, effectsGroup, carVelocity)
     explosionAnimation.y = event.other.y
     explosionAnimation.myName = "explosion"
     explosionAnimation:play()
+    sounds:playASound("explosion_hit.mp3")
     physics.addBody(explosionAnimation, "dynamic", {isSensor = true})
     explosionAnimation:setLinearVelocity(0, carVelocity - 12)
     display.remove(event.other)
@@ -152,26 +155,30 @@ local function explosion(event, effectsGroup, carVelocity)
     return true
 end
 
-local function doNothing(event)
+local function doNothing(event, sounds)
+    print(event.other.element)
+    if event.other.element == "ferrum" then
+        sounds:playASound("metal_is_hit.mp3")
+    end
     display.remove(event.target)
     event.target = nil
 end
 
-function M.initiateReaction(event, effectsGroup, carVelocity)
+function M.initiateReaction(event, effectsGroup, carVelocity, sounds)
     local reaction = analyseReaction(event.target.element, event.other.element)
     if reaction ~= nil then
         if reaction == "explosion" then
             display.remove(event.target)
-            local explosion = function() return explosion(event, effectsGroup, carVelocity) end
+            local explosion = function() return explosion(event, effectsGroup, carVelocity, sounds) end
             timer.performWithDelay(20, explosion)
         elseif reaction == "corrosion" then
-            local corrosion = function() return corrosion(event, effectsGroup, carVelocity) end
+            local corrosion = function() return corrosion(event, effectsGroup, carVelocity, sounds) end
             timer.performWithDelay(20, corrosion)
         elseif reaction == "dissolution" then
-            local dissolution = function() return dissolution(event, effectsGroup, carVelocity) end
+            local dissolution = function() return dissolution(event, effectsGroup, carVelocity, sounds) end
             timer.performWithDelay(20, dissolution)
         else
-            local doNothing = function() return doNothing(event) end
+            local doNothing = function() return doNothing(event, sounds) end
             timer.performWithDelay(20, doNothing)
         end
     end

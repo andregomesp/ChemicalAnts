@@ -56,7 +56,6 @@ local patternList = {
 }
 
 function Ghost:getPattern(pattern)
-    print("oi")
     return patternList[pattern]
 end
 
