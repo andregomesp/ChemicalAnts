@@ -95,6 +95,4 @@ function Background:drawShader(shaderGroup)
     shader2.anchorY = 0
 end
 
-
-
 return Background
