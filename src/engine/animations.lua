@@ -8,7 +8,7 @@ function M:drawTouchInfo(group, timers)
     
     local fadeInText = function () return transition.to(tapToAdvanceText, {time = 700,
         easing=easing.outInBack, alpha=1}) end
-    local fadeOutText = function () return transition.to(tapToAdvanceText, {time = 700, 
+    local fadeOutText = function () return transition.to(tapToAdvanceText, {time = 700,
         easing=easing.outInBack, alpha=0}) end
         local fadeOutTimer = timer.performWithDelay(700, fadeOutText, 0)
         local fadeInTimer = timer.performWithDelay(700, fadeInText, 0)

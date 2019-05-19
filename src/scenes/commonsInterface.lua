@@ -84,11 +84,8 @@ local function drawCannonUI()
 end
 
 local function initiateBackground()
-    -- local backgroundImage = display.newImageRect(mainBackGroup, "assets/images/backgrounds/" .. M.params.background,
-    -- display.pixelHeight, display.pixelWidth)
-    local backgroundImage = display.newRect(mainBackGroup, display.contentCenterX, display.contentCenterY, display.viewableContentWidth, display.viewableContentHeight)
-    -- backgroundImage.x = display.contentCenterX
-    -- backgroundImage.y = display.contentCenterY
+    local backgroundImage = display.newRect(mainBackGroup, display.contentCenterX,
+        display.contentCenterY, display.viewableContentWidth, display.viewableContentHeight)
     backgroundImage:setFillColor(M.params.color.r, M.params.color.g, M.params.color.b)
     physics.addBody(backgroundImage, "dynamic", { isSensor=true })
     M.background = backgroundFactory:new(nil, backgroundImage, objectBackGroup, objectSecondaryBackGroup, mainBackGroup)
@@ -136,13 +133,13 @@ local function initiateRain()
     local cloudD = display.newImage(rainGroup, "assets/images/commons/clouds/cloud_04.png", - 180,
         10)
 
-    cloudA.width = 150
-    cloudA.height = 50
-    cloudB.width = 150
-    cloudB.height = 50
-    cloudC.width = 150
-    cloudC.height = 50
-    cloudD.width = 150
+    cloudA.width = 220
+    cloudA.height = 40
+    cloudB.width = 250
+    cloudB.height = 45
+    cloudC.width = 260
+    cloudC.height = 48
+    cloudD.width = 250
     cloudD.height = 50
 
     sounds:playASound("thunder_clap.mp3")
@@ -208,7 +205,7 @@ local function updateMeasures(event, countdownText)
         M.goalMarker:remarkGoal(M.meters)
     end
     M.meters = M.meters + (M.vehicle.carVelocity / 5)
-    if M.countdownTimer <= 30 and M.rain == nil and M.machineReached == false then
+    if M.stageNumber ~= 4 and M.stageNumber ~= 5 and M.countdownTimer <= 30 and M.rain == nil and M.machineReached == false then
         initiateRain()
     end
     if M.countdownTimer == 0 and M.machineReached == false then

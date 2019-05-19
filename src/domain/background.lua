@@ -25,7 +25,10 @@ function Background:buildBackground(carVelocity, stageParams)
         stageParams.leftWall, 120, 120)
         local rightWall = display.newImageRect(self.objectSecondaryBackGroup,
         stageParams.rightWall, 120, 120)
-        if stageParams.stageNumber == 1 then
+        if stageParams.stageNumber == 0 then
+            leftWall.y = 50 * i
+            rightWall.y = 50 * i
+        elseif stageParams.stageNumber == 1 then
             leftWall.y = 50 * i
             rightWall.y = 50 * i
         elseif (stageParams.stageNumber == 2) then
@@ -74,6 +77,13 @@ function Background:moveBackgroundGroup(moveGroup)
     if moveGroup == true then
         self.objectBackGroup.y = -210
         self.objectSecondaryBackGroup.y = -210
+    end
+end
+
+function Background:moveBackgroundGroupIntro(moveGroup)
+    if moveGroup == true then
+        self.objectBackGroup.y = -160
+        self.objectSecondaryBackGroup.y = -160
     end
 end
 

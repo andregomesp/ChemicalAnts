@@ -11,6 +11,10 @@ local composer = require("composer")
 local sounds = require("src.engine.soundStash")
 sounds:loadAllCommonSounds()
 
+-- Open physics
+local physicsStarter = require("src.engine.physics")
+physicsStarter:startPhysics()
+
 -- Open game
 -- composer.gotoScene( "src.scenes.scene1")
 -- composer.gotoScene( "src.scenes.scene4")

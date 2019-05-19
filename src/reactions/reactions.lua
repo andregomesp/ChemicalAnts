@@ -1,7 +1,7 @@
 local M = {}
 local reactionsList = {
     ["water"] = {sodium = "explosion", ferrum = "nothing", chlorine = "dissolution"},
-    ["oxygen"] = {sodium = "corrosion", ferrum = "nothing", chlorine = "corrosion"},
+    ["hydrogen"] = {sodium = "explosion", ferrum = "nothing", chlorine = "corrosion"},
     ["chlorideAcid"] = {sodium = "corrosion", ferrum = "corrosion", cholorine = "corrosion"}
 }
 
