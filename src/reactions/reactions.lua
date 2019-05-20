@@ -10,10 +10,12 @@ local function analyseReaction(element1, element2)
     return reaction
 end
 
-local function spriteHandler(event, sprite)
+local function spriteHandler(event, sprite, sizeMultiplier)
     if event.phase == "next" or event.phase == "began" then
-        sprite.width = 100
-        sprite.height = 100
+        local width = 100 * sizeMultiplier
+        local height = 100 * sizeMultiplier
+        sprite.width = width
+        sprite.height = height
     elseif event.phase == "ended" then
         display.remove(sprite)
         sprite = nil
@@ -144,14 +146,22 @@ local function explosion(event, effectsGroup, carVelocity, sounds)
     local explosionAnimation = display.newSprite(effectsGroup, explosion_sheet, sequence_explosion)
     explosionAnimation.x = event.other.x
     explosionAnimation.y = event.other.y
+    local sizeMultiplier = 1
+    local shootElement = event.target.element
+    if shootElement == "hydrogen" then
+        explosionAnimation.width = 90
+        explosionAnimation.height = 90
+        sizeMultiplier = 1.3
+    end
     explosionAnimation.myName = "explosion"
+
     explosionAnimation:play()
     sounds:playASound("explosion_hit.mp3")
     physics.addBody(explosionAnimation, "dynamic", {isSensor = true})
     explosionAnimation:setLinearVelocity(0, carVelocity - 12)
     display.remove(event.other)
     explosionAnimation:addEventListener("collision", function(event) return explosionCollision(event) end)
-    local spriteListener = function(event) return spriteHandler(event, explosionAnimation) end
+    local spriteListener = function(event) return spriteHandler(event, explosionAnimation, sizeMultiplier) end
     explosionAnimation:addEventListener("sprite", spriteListener)
     return true
 end
