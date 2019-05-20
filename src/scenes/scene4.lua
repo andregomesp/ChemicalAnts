@@ -6,7 +6,6 @@ local sceneGroup = nil
 local commons = nil
 local commonsInterfaceName = "src.scenes.commonsInterface"
 local backgroundSong = nil
-local backgroundSongPlay = nil
 physics.start()
 physics.setGravity(0, 0)
 function scene:create( event )

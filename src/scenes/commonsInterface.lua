@@ -13,6 +13,8 @@ local vehicleGroup = display.newGroup()
 local uiGroup = display.newGroup()
 local effectsGroup = display.newGroup()
 local exitButtonGroup = display.newGroup()
+local currentGroup = nil
+local currentsTable = nil
 local rainGroup = nil
 local lightGroup = nil
 local subLightGroup = nil
@@ -95,7 +97,6 @@ local function initiateBackground()
     elseif M.stageNumber == 5 then
         M.background:drawShader(shaderGroup)
     end
-
 end
 
 local function initiateCannon()
@@ -213,7 +214,7 @@ local function updateMeasures(event, countdownText)
     end
 end
 
-local function initiateUiElements(uiGroup, countdownTimer)
+local function initiateUiElements(countdownTimer)
     -- CANNON UI
     drawCannonUI()
 
@@ -276,10 +277,20 @@ local function initiateShaderGroups(stageNumber)
         rainGroup = display.newGroup()
     elseif stageNumber == 4 then
         shaderGroup = display.newGroup()
+        currentGroup = display.newGroup()
     elseif stageNumber == 5 then
         lightGroup = display.newGroup()
         subLightGroup = display.newGroup()
         shaderGroup = display.newGroup()
+    end
+end
+
+local function initiateCurrents()
+    if M.stageNumber == 4 then
+        local currentHandler = require("src.engine.currentHandler")
+        local shuffling = function() return currentHandler:shuffleCurrents(M.countdownTimer, currentGroup, currentsTable) end
+        local runShuffle = timer.performWithDelay(2000, shuffling, -1)
+        table.insert(M.timers, runShuffle)
     end
 end
 
@@ -302,6 +313,8 @@ local function fillGroupsIntoSceneGroup(sceneGroup)
         sceneGroup:insert(rainGroup)
     elseif M.stageNumber == 4 then
         sceneGroup:insert(shaderGroup)
+        sceneGroup:insert(currentGroup)
+        currentsTable = {}
     elseif M.stageNumber == 5 then
         sceneGroup:insert(lightGroup)
         sceneGroup:insert(subLightGroup)
@@ -325,7 +338,8 @@ function M.initiateCommons(sceneGroup, stageNumber, countdownTimer)
     getStageParameters(stageNumber)
     initiateBackground()
     initiateGhosts()
-    initiateUiElements(uiGroup, countdownTimer)
+    initiateUiElements(countdownTimer)
+    initiateCurrents()
     initiateVehicle()
     initiateCannon()
     initiateBarriers(stageNumber, countdownTimer)
@@ -334,10 +348,18 @@ function M.initiateCommons(sceneGroup, stageNumber, countdownTimer)
 end
 
 function M.destroyCommons()
+    if M.stageNumber == 4 then
+        for i=1, #currentsTable do
+            if currentsTable[i] ~= nil then
+                currentsTable[i]:imediateDestroy()
+            end
+        end
+    end
     eventFactory:removeEventListeners()
     for k, v in ipairs(M.timers) do
         timer.cancel(v)
     end
+
 end
 
 return M

@@ -89,7 +89,7 @@ end
 
 function Background:drawAquaShader(shaderGroup)
     local shader = display.newRect(shaderGroup, 0, 0, display.viewableContentWidth, display.viewableContentHeight )
-    shader:setFillColor(0, 0, 200, 0.4)
+    shader:setFillColor(0, 0.2, 1, 0.2)
     shader.anchorX = 0
     shader.anchorY = 0
 end

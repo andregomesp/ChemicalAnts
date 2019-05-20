@@ -382,4 +382,19 @@ function Vehicle:initiateDestroyedAnimation()
     timer.performWithDelay(400, carFail)
 end
 
+function Vehicle:isPushedByWaterCurrent(orientation)
+    -- if self.commons.stopped == false then
+    --     for i=1, self.barrierGroup.numChildren do
+    --         if self.barrierGroup[i] ~= nil then
+    --             self.barrierGroup[i]:setLinearVelocity(0, self.carVelocity)
+    --         end
+    --     end
+    --     for i=1, self.effectsGroup.numChildren do
+    --         if self.effectsGroup[i] ~= nil and self.effectsGroup[i].isBodyActive ~= nil then
+    --             self.effectsGroup[i]:setLinearVelocity(0, self.carVelocity)
+    --         end
+    --     end
+    -- end
+end
+
 return Vehicle

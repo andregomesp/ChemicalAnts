@@ -14,6 +14,8 @@ function M:initiateCommonListeners(commonsValues, effectsGroup, barrierGroup)
 
     local function collisionCar(event)
         if commons.paused == false and commons.timeIsUp == false then
+            print(event.other.myName)
+            print(event.other.orientation)
             if event.other.myName == "barrier" and event.other.isHittable == true then
                 commons.vehicle:takeDamage(20, commons.hpBar, effectsGroup)
                 event.other.isHittable = false
@@ -21,6 +23,8 @@ function M:initiateCommonListeners(commonsValues, effectsGroup, barrierGroup)
                 event.other = nil
             elseif event.other.myName == "explosion" then
                 commons.vehicle:takeDamage(25, commons.hpBar, effectsGroup)
+            elseif event.other.myName == "bubbleHitBox" then
+                commons.vehicle:isPushedByWaterCurrent(orientation)
             end
         end 
         return true

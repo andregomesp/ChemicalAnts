@@ -29,7 +29,8 @@ local parameters = {
     },
     [4] = {
         -- background = "grassBackgroundTemporary.jpg",
-        color = {r = 0.317, g = 0.141, b= 0.023},
+        -- color = {r = 0.317, g = 0.141, b= 0.023},
+        color = {r = 0.117, g = 0.141, b= 0.223},
         availableBallTypes = {"hydrogen", "water", "chlorideAcid"},
         coolDownTime = {4000, 2000, 8000},
         leftWall = "assets/images/commons/scenario/left-cave-wall.png",
