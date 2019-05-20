@@ -2,7 +2,7 @@ local M = {}
 local reactionsList = {
     ["water"] = {sodium = "explosion", ferrum = "nothing", chlorine = "dissolution"},
     ["hydrogen"] = {sodium = "explosion", ferrum = "nothing", chlorine = "corrosion"},
-    ["chlorideAcid"] = {sodium = "corrosion", ferrum = "corrosion", cholorine = "corrosion"}
+    ["chlorideAcid"] = {sodium = "corrosion", ferrum = "corrosion", chlorine = "corrosion"}
 }
 
 local function analyseReaction(element1, element2)
@@ -166,6 +166,7 @@ local function doNothing(event, sounds)
 end
 
 function M.initiateReaction(event, effectsGroup, carVelocity, sounds)
+    print("initiating reaction")
     local reaction = analyseReaction(event.target.element, event.other.element)
     if reaction ~= nil then
         if reaction == "explosion" then

@@ -1,5 +1,7 @@
 -- Min value: 50, max value: 240 (note: max is the right anchor. multiply value * pieceSize * numberOfPieces)
---
+-- Variable time is not counting time, but rather distance. The name was not changed to avoid problems
+-- Ant fixing car takes approximately 9 seconds
+-- Drive speed is 140 pixels per second
 local M = {}
 
 local patterns = {
@@ -18,7 +20,18 @@ local patterns = {
     [11] = {type = "ferrum", time = 3800, xAnchor = 105, pattern = {form = "rectangle", dimensions = 2, numberOfPieces = {x= 2, y= 3}}},
     [12] = {type = "ferrum", time = 4300, xAnchor = 80, pattern = {form = "rectangle", dimensions = 2, numberOfPieces = {x= 2, y= 3}}},
     [13] = {type = "ferrum", time = 4700, xAnchor = 85, pattern = {form = "rectangle", dimensions = 2, numberOfPieces = {x= 3, y= 3}}},
-    [14] = {type = "machine", time = 5100}
+    [14] = {type = "chlorine", time = 5500, xAnchor = 60, pattern = {form = "line", dimensions = 1, numberOfPieces = 1}},
+    [15] = {type = "chlorine", time = 5600, xAnchor = 95, pattern = {form = "line", dimensions = 1, numberOfPieces = 1}},
+    [16] = {type = "chlorine", time = 5700, xAnchor = 130, pattern = {form = "line", dimensions = 1, numberOfPieces = 1}},
+    [17] = {type = "chlorine", time = 5800, xAnchor = 165, pattern = {form = "line", dimensions = 1, numberOfPieces = 1}},
+    [18] = {type = "chlorine", time = 5900, xAnchor = 60, pattern = {form = "line", dimensions = 1, numberOfPieces = 1}},
+    [19] = {type = "chlorine", time = 6000, xAnchor = 95, pattern = {form = "line", dimensions = 1, numberOfPieces = 1}},
+    [20] = {type = "chlorine", time = 6100, xAnchor = 130, pattern = {form = "line", dimensions = 1, numberOfPieces = 1}},
+    [21] = {type = "ferrum", time = 6600, xAnchor = 60, pattern = {form = "line", dimensions = 1, numberOfPieces = 1}},
+    [22] = {type = "ferrum", time = 6700, xAnchor = 190, pattern = {form = "line", dimensions = 1, numberOfPieces = 1}},
+    [23] = {type = "ferrum", time = 6800, xAnchor = 92, pattern = {form = "line", dimensions = 1, numberOfPieces = 1}},
+    [24] = {type = "ferrum", time = 6900, xAnchor = 128, pattern = {form = "line", dimensions = 1, numberOfPieces = 1}},
+    [25] = {type = "machine", time = 8000}
 }
 
 function M:getPatterns()

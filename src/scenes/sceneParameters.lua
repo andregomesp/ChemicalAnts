@@ -12,8 +12,8 @@ local parameters = {
     },
     [2] = {
         color = {r = 0.929, g = 0.788, b = 0.686},
-        availableBallTypes = {"hydrogen", "water"},
-        coolDownTime = {4000, 2000},
+        availableBallTypes = {"water", "hydrogen"},
+        coolDownTime = {2000, 4000},
         leftWall = "assets/images/commons/scenario/left-mountain-wall.png",
         rightWall = "assets/images/commons/scenario/right-sand-hole.png",
         stageNumber = 2
@@ -21,8 +21,8 @@ local parameters = {
     [3] = {
         -- background = "grassBackgroundTemporary.jpg",
         color = {r = 0.082, g = 0.423, b= 0.6},
-        availableBallTypes = {"hydrogen", "water", "chlorideAcid"},
-        coolDownTime = {4000, 2000, 8000},
+        availableBallTypes = { "water", "hydrogen", "chlorideAcid"},
+        coolDownTime = {2000, 4000, 8000},
         leftWall = "assets/images/commons/scenario/left-river-wall.png",
         rightWall = "assets/images/commons/scenario/right-river-wall.png",
         stageNumber = 3
@@ -31,16 +31,16 @@ local parameters = {
         -- background = "grassBackgroundTemporary.jpg",
         -- color = {r = 0.317, g = 0.141, b= 0.023},
         color = {r = 0.117, g = 0.141, b= 0.223},
-        availableBallTypes = {"hydrogen", "water", "chlorideAcid"},
-        coolDownTime = {4000, 2000, 8000},
+        availableBallTypes = {"hydrogen", "chlorideAcid"},
+        coolDownTime = {1000, 6000},
         leftWall = "assets/images/commons/scenario/left-cave-wall.png",
         rightWall = "assets/images/commons/scenario/right-cave-wall.png",
         stageNumber = 4
     },
     [5] = {
         color = {r = 0.415, g = 0.411, b= 0.486},
-        availableBallTypes = {"hydrogen", "water", "chlorideAcid"},
-        coolDownTime = {4000, 2000, 8000},
+        availableBallTypes = {"water", "hydrogen", "chlorideAcid"},
+        coolDownTime = {2000, 4000, 8000},
         leftWall = "assets/images/commons/scenario/autumn-trees.png",
         rightWall = "assets/images/commons/scenario/autumn-trees.png",
         stageNumber = 5

@@ -14,10 +14,12 @@ function M:initiateCommonListeners(commonsValues, effectsGroup, barrierGroup)
 
     local function collisionCar(event)
         if commons.paused == false and commons.timeIsUp == false then
-            print(event.other.myName)
-            print(event.other.orientation)
             if event.other.myName == "barrier" and event.other.isHittable == true then
-                commons.vehicle:takeDamage(20, commons.hpBar, effectsGroup)
+                local damage = 20
+                if event.other.element == "ferrum" then
+                    damage = 30
+                end
+                commons.vehicle:takeDamage(damage, commons.hpBar, effectsGroup)
                 event.other.isHittable = false
                 display.remove(event.other)
                 event.other = nil

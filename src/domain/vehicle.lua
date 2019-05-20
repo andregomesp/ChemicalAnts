@@ -91,7 +91,7 @@ function Vehicle:makeMovement(event)
 end
 
 function Vehicle:boost(event, backgroundObject, barrierGroup, effectsGroup)
-    if self.carVelocity <= 315 and self.boostStatus <= 7 then
+    if self.carVelocity < 280 and self.boostStatus < 5 then
         self.carVelocity = self.carVelocity + 35
         self.boostStatus = self.boostStatus + 1
         self.boostText.text = self.boostStatus

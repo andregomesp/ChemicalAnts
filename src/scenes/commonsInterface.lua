@@ -252,6 +252,8 @@ local function positionCheck(patterns, barrierFactory, countdownTimer)
             M.machine = display.newImage(barrierGroup, "assets/images/commons/machine.png")
             M.machine.x = display.viewableContentWidth / 2
             M.machine.y = -260
+            M.machine.width = 150
+            M.machine.height = 150
             M.machine.myName = "machine"
             physics.addBody(M.machine, "dynamic", {isSensor=true})
             M.machine:setLinearVelocity(0, M.vehicle.carVelocity)
@@ -268,7 +270,7 @@ local function initiateBarriers(stageNumber, countdownTimer)
     local patterns = patternList:getPatterns()
     local barrierFactory = require("src.domain.barrier")
     local positioningcheck = function() return positionCheck(patterns, barrierFactory, countdownTimer, eventFactory) end
-    local positionChecker = timer.performWithDelay(200, positioningcheck, 0)
+    local positionChecker = timer.performWithDelay(100, positioningcheck, 0)
     table.insert(M.timers, positionChecker)
 end
 
@@ -299,6 +301,12 @@ local function initiateGhosts()
         local ghostHandler = require("src.engine.ghostHandler")
         ghostHandler:initiateStageFiveGhosts(lightGroup, subLightGroup)
     end
+end
+
+local function initiateBarrierDestroyer()
+    local barrierDestroyerFactory = require("src.domain.barrierDestroyer")
+    local barrierDestroyer = barrierDestroyerFactory:new()
+    barrierDestroyer:initiateBarrierDestroyer(mainBackGroup)
 end
 
 local function fillGroupsIntoSceneGroup(sceneGroup)
@@ -343,6 +351,7 @@ function M.initiateCommons(sceneGroup, stageNumber, countdownTimer)
     initiateVehicle()
     initiateCannon()
     initiateBarriers(stageNumber, countdownTimer)
+    initiateBarrierDestroyer()
     initiateDeathChecker(countdownTimer, barrierGroup, effectsGroup)
     eventFactory:initiateCommonListeners(M, effectsGroup, barrierGroup)
 end

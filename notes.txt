@@ -1,2 +1,2 @@
-60 = 8400 meters
+60 = 8400 meters at base speed
 140 * 9 =  1260 meters
