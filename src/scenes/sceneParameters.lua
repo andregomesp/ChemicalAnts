@@ -32,7 +32,7 @@ local parameters = {
         -- color = {r = 0.317, g = 0.141, b= 0.023},
         color = {r = 0.117, g = 0.141, b= 0.223},
         availableBallTypes = {"hydrogen", "chlorideAcid"},
-        coolDownTime = {1000, 6000},
+        coolDownTime = {1500, 6500},
         leftWall = "assets/images/commons/scenario/left-cave-wall.png",
         rightWall = "assets/images/commons/scenario/right-cave-wall.png",
         stageNumber = 4

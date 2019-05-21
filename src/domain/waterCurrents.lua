@@ -6,12 +6,15 @@ function WaterCurrent:new(o)
     self.__index = self
     self.bubbleEmitter = nil
     self.bubbleHitBox = nil
+    self.noLongerHitBoxLeft = nil
+    self.noLongerHitBoxRight = nil
     self.isEnabled = false
     return o
 end
 -- Orientation is either 1 (downward) or -1 (upward)
-function WaterCurrent:createCurrent(currentsGroup, orientation, xPos)
+function WaterCurrent:createCurrent(currentsGroup, orientation, xPos, vehicleImage)
     if currentsGroup ~= nil then
+        local vehicleWidth = vehicleImage.width
         self.isEnabled = true
         local yPos
         local yBubbleEmitterPos
@@ -28,17 +31,34 @@ function WaterCurrent:createCurrent(currentsGroup, orientation, xPos)
             yPos = display.viewableContentHeight
             transitionHeight = display.viewableContentHeight
         end
-        self.bubbleHitBox = display.newRect(currentsGroup, xPos, yPos, 50, 0)
+        self.bubbleHitBox = display.newRect(currentsGroup, xPos, yPos, 50, 1)
+        self.noLongerHitBoxLeft = display.newRect(currentsGroup,
+            xPos - (self.bubbleHitBox.width / 2) - vehicleWidth - 0.1, yPos, 1, 1)
+            print(yPos)
+            print(anchorY)
+            print(transitionHeight)
+        self.noLongerHitBoxRight = display.newRect(currentsGroup,
+            xPos + (self.bubbleHitBox.width / 2) + vehicleWidth + 0.1, yPos, 1, 1)
+            self.noLongerHitBoxLeft:setFillColor(1, 0, 0)
+            self.noLongerHitBoxRight:setFillColor(0.3, 0.7, 0.6)
         physics.addBody(self.bubbleHitBox, "dynamic", {isSensor=true})
+        physics.addBody(self.noLongerHitBoxLeft, "dynamic", {isSensor=true})
+        physics.addBody(self.noLongerHitBoxRight, "dynamic", {isSensor=true})
         self.bubbleHitBox.myName = "bubbleHitBox"
         self.bubbleHitBox.orientation = orientation
         self.bubbleHitBox.anchorY = anchorY
-        self.bubbleHitBox.alpha = 0.05
-        if orientation == 1 then
-            transition.to(self.bubbleHitBox, {height=transitionHeight, time=2400})
-        else
-            transition.to(self.bubbleHitBox, {height=transitionHeight, time=2400})
-        end
+        self.bubbleHitBox.alpha = 1
+        self.noLongerHitBoxLeft.myName = "noLongerBubbleHit"
+        self.noLongerHitBoxRight.myName = "noLonggerBubbleHit"
+        self.noLongerHitBoxLeft.anchorY = anchorY
+        self.noLongerHitBoxRight.anchorY = anchorY
+        self.noLongerHitBoxLeft.orientation = orientation
+        self.noLongerHitBoxRight.orientation = orientation
+        self.noLongerHitBoxLeft.alpha = 1
+        self.noLongerHitBoxRight.alpha = 1
+        transition.to(self.bubbleHitBox, {height=transitionHeight, time=2400})
+        transition.to(self.noLongerHitBoxLeft, {height=transitionHeight, time=2400})
+        transition.to(self.noLongerHitBoxRight, {height=transitionHeight, time=2400})
 
         self.bubbleEmitter = display.newEmitter({
             -- Emitter / General
@@ -85,6 +105,8 @@ end
 function WaterCurrent:destroyHitBoxAndEmitter()
     if self.bubbleHitBox ~= nil and self.bubbleEmitter ~= nil then
         self.bubbleHitBox = nil
+        self.noLongerHitBoxLeft = nil
+        self.noLongerHitBoxRight = nil
         self.bubbleEmitter = nil
     end
 end
@@ -93,7 +115,11 @@ function WaterCurrent:destroyHitBox()
     if self.bubbleHitBox ~= nil then
         print("destruindo hit box")
         display.remove(self.bubbleHitBox)
+        display.remove(self.noLongerHitBoxLeft)
+        display.remove(self.noLongerHitBoxRight)
         self.bubbleHitBox = nil
+        self.noLongerHitBoxLeft = nil
+        self.noLongerHitBoxRight = nil
     end
 end
 
@@ -112,6 +138,8 @@ function WaterCurrent:imediateDestroy()
     if self.isEnabled == true and self.bubbleEmitter ~= nil and self.bubbleHitBox ~= nil then
         self.bubbleEmitter:stop()
         display.remove(self.bubbleHitBox)
+        display.remove(self.noLongerHitBoxLeft)
+        display.remove(self.noLongerHitBoxRight)
         self:destroyHitBoxAndEmitter()
     end
 end

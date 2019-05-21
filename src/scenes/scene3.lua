@@ -37,7 +37,7 @@ end
 function scene:destroy(event)
     audio.fadeOut({channel=1, time=500})
     local disposeAudio = function () return audio.dispose(backgroundSong) end
-    timer.performWithDelay(600, disposeAudio)
+    timer.performWithDelay(2600, disposeAudio)
     commons.destroyCommons()
     package.loaded[commonsInterfaceName] = nil
     commons = nil

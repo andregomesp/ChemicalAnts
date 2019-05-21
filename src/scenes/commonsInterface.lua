@@ -290,7 +290,8 @@ end
 local function initiateCurrents()
     if M.stageNumber == 4 then
         local currentHandler = require("src.engine.currentHandler")
-        local shuffling = function() return currentHandler:shuffleCurrents(M.countdownTimer, currentGroup, currentsTable) end
+        local shuffling = function() return currentHandler:shuffleCurrents(M.countdownTimer,
+            currentGroup, currentsTable, M.vehicle.image) end
         local runShuffle = timer.performWithDelay(2000, shuffling, -1)
         table.insert(M.timers, runShuffle)
     end
