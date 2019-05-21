@@ -5,7 +5,8 @@ local textGroup = display.newGroup()
 local isShowing = false
 
 local function drawGameOverScene()
-    local congrats = display.newText({parent = textGroup, text="Congratulations!"})
+    local congrats = display.newText({parent = textGroup, text="Congratulations!", 
+    x=display.contentCenterX, y=display.contentCenterY})
 end
 
 local function drawCredits()
@@ -20,6 +21,7 @@ function scene:show(event)
     if isShowing == false then
         isShowing = true
         drawGameOverScene()
+        drawCredits()
     end
 end
 function scene:hide(event)
