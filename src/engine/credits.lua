@@ -18,7 +18,6 @@ end
 function M:getCredits()
     local file = system.pathForFile("thanks.txt")
     local lines = lines_from(file)
-      -- print all line numbers and their contents
     return lines
 end
 
