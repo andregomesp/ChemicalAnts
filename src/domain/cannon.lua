@@ -32,7 +32,6 @@ function Cannon:fire(event, commons, sounds, cooldownGroup)
         local firedBall = ballFactory:new(nil, event.target.id.element, ballImage)
         physics.addBody(firedBall.image, "dynamic", { isSensor=true })
         firedBall.image.canColide = true
-        firedBall.image.isBullet = true
         firedBall.image.myName = "shootBall"
         firedBall.image.element = firedBall.element
         firedBall.image.x = self.associatedVehicle.image.x

@@ -155,7 +155,7 @@ local function timeIsUp()
     if M.timeIsUp == false and M.machineReached == false then
         M.stopped = true
         M.timeIsUp = true
-        local stopVehicle = function () return M.vehicle:desaccelerateObjects(M.stopped) end
+        local stopVehicle = function () return M.vehicle:desaccelerateObjects() end
         local stopVehicleTimer = timer.performWithDelay(500, stopVehicle, 10)
         table.insert(M.timers, stopVehicleTimer)
         local miscMenus = require("src.engine.MiscMenus")
@@ -235,7 +235,7 @@ local function initiateUiElements(countdownTimer)
      backCircle:setFillColor(0, 0, 0, 0.3)
     local countdownText = display.newText({parent = uiGroup, text = M.countdownTimer, x = display.contentCenterX + 5, y = 15,
     font = "DejaVuSansMono", width = 70})
-    local updateMeasures = function() return updateMeasures(event, countdownText) end
+    local updateMeasures = function(event) return updateMeasures(event, countdownText) end
     local measurerTimer = timer.performWithDelay(200, updateMeasures, M.totalTime * 5)
     table.insert(M.timers, measurerTimer)
     M.goalMarker:initiateGoalMarker(uiGroup, M.miniStatusBar, M.stageNumber)
@@ -259,7 +259,7 @@ local function positionCheck(patterns, barrierFactory, countdownTimer)
             M.machine:setLinearVelocity(0, M.vehicle.carVelocity)
         else
             local barrier = barrierFactory:new()
-            barrier:drawBarrier(barrierGroup, pattern, M.vehicle.carVelocity, barrier, patternIndex)
+            barrier:drawBarrier(barrierGroup, pattern, M.vehicle.carVelocity, barrier)
         end
     end
 end
@@ -269,7 +269,7 @@ local function initiateBarriers(stageNumber, countdownTimer)
     local patternList = require(patternFilePath)
     local patterns = patternList:getPatterns()
     local barrierFactory = require("src.domain.barrier")
-    local positioningcheck = function() return positionCheck(patterns, barrierFactory, countdownTimer, eventFactory) end
+    local positioningcheck = function() return positionCheck(patterns, barrierFactory, countdownTimer) end
     local positionChecker = timer.performWithDelay(100, positioningcheck, 0)
     table.insert(M.timers, positionChecker)
 end
@@ -353,7 +353,7 @@ function M.initiateCommons(sceneGroup, stageNumber, countdownTimer)
     initiateCannon()
     initiateBarriers(stageNumber, countdownTimer)
     initiateBarrierDestroyer()
-    initiateDeathChecker(countdownTimer, barrierGroup, effectsGroup)
+    initiateDeathChecker(countdownTimer)
     eventFactory:initiateCommonListeners(M, effectsGroup, barrierGroup)
 end
 

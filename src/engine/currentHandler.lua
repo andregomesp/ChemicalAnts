@@ -39,17 +39,17 @@ function M:shuffleCurrents(currentTime, currentsGroup, currentsTable, vehicleIma
     elseif currentPattern == 1 then
         if patternStage == 0 and currentTime <= 35 then
             createCurrentInPattern(currentsGroup, -1, 60, currentsTable, vehicleImage)
-            createCurrentInPattern(currentsGroup, -1, 60 + (vehicleImage) + 2, currentsTable, vehicleImage)
+            createCurrentInPattern(currentsGroup, -1, 60 + (vehicleImage.width * 3) + 2, currentsTable, vehicleImage)
             patternStage = patternStage + 1
         elseif patternStage == 1 and currentTime <= 30 then
             createCurrentInPattern(currentsGroup, 1, 110, currentsTable, vehicleImage)
-            createCurrentInPattern(currentsGroup, 1, 110 + (vehicleImage * 2) + 2, currentsTable, vehicleImage)
+            createCurrentInPattern(currentsGroup, 1, 110 + (vehicleImage.width * 3) + 2, currentsTable, vehicleImage)
             currentPattern = currentPattern + 1
             patternStage = 0
         end
     elseif currentPattern == 2 and currentTime <= 15 then
         createCurrentInPattern(currentsGroup, 1, 95, currentsTable, vehicleImage)
-        createCurrentInPattern(currentsGroup, -1, 95 + (vehicleImage * 1.3) + 2, currentsTable, vehicleImage)
+        createCurrentInPattern(currentsGroup, -1, 95 + (vehicleImage.width * 3.5) + 2, currentsTable, vehicleImage)
         currentPattern = currentPattern + 1
         patternStage = 0
     end

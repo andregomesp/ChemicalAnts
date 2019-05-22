@@ -383,18 +383,26 @@ function Vehicle:initiateDestroyedAnimation()
 end
 
 function Vehicle:isPushedByWaterCurrent(orientation)
-    -- if self.commons.stopped == false then
-    --     for i=1, self.barrierGroup.numChildren do
-    --         if self.barrierGroup[i] ~= nil then
-    --             self.barrierGroup[i]:setLinearVelocity(0, self.carVelocity)
-    --         end
-    --     end
-    --     for i=1, self.effectsGroup.numChildren do
-    --         if self.effectsGroup[i] ~= nil and self.effectsGroup[i].isBodyActive ~= nil then
-    --             self.effectsGroup[i]:setLinearVelocity(0, self.carVelocity)
-    --         end
-    --     end
-    -- end
+    if self.commons.stopped == false and self.commons.paused == false then
+        print(orientation)
+        if orientation == 1 then
+            self.carVelocity = 80
+        else
+            self.carVelocity = 310
+        end
+        self.backgroundObject.objectBackGroup:setLinearVelocity(0, self.carVelocity)
+        self.backgroundObject.objectSecondaryBackGroup:setLinearVelocity(0, self.carVelocity)
+        for i=1, self.barrierGroup.numChildren do
+            if self.barrierGroup[i] ~= nil then
+                self.barrierGroup[i]:setLinearVelocity(0, self.carVelocity)
+            end
+        end
+        for i=1, self.effectsGroup.numChildren do
+            if self.effectsGroup[i] ~= nil and self.effectsGroup[i].isBodyActive ~= nil then
+                self.effectsGroup[i]:setLinearVelocity(0, self.carVelocity)
+            end
+        end
+    end
 end
 
 return Vehicle

@@ -167,7 +167,6 @@ local function explosion(event, effectsGroup, carVelocity, sounds)
 end
 
 local function doNothing(event, sounds)
-    print(event.other.element)
     if event.other.element == "ferrum" then
         sounds:playASound("metal_is_hit.mp3")
     end
@@ -176,7 +175,6 @@ local function doNothing(event, sounds)
 end
 
 function M.initiateReaction(event, effectsGroup, carVelocity, sounds)
-    print("initiating reaction")
     local reaction = analyseReaction(event.target.element, event.other.element)
     if reaction ~= nil then
         if reaction == "explosion" then

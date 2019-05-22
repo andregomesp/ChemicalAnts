@@ -12,27 +12,49 @@ function M:initiateCommonListeners(commonsValues, effectsGroup, barrierGroup)
     end
     controlTheVehicle = controlVehicleMovement
 
+    local function testNormalCollision(event)
+        if event.other.myName == "barrier" and event.other.isHittable == true then
+            local damage = 20
+            if event.other.element == "ferrum" then
+                damage = 30
+            end
+            commons.vehicle:takeDamage(damage, commons.hpBar, effectsGroup)
+            event.other.isHittable = false
+            display.remove(event.other)
+            event.other = nil
+            return true
+        elseif event.other.myName == "explosion" then
+            commons.vehicle:takeDamage(25, commons.hpBar, effectsGroup)
+            return true
+        end
+        return false
+    end
+
     local function collisionCar(event)
         if commons.paused == false and commons.timeIsUp == false then
-            if event.other.myName == "barrier" and event.other.isHittable == true then
-                local damage = 20
-                if event.other.element == "ferrum" then
-                    damage = 30
-                end
-                commons.vehicle:takeDamage(damage, commons.hpBar, effectsGroup)
-                event.other.isHittable = false
-                display.remove(event.other)
-                event.other = nil
-            elseif event.other.myName == "explosion" then
-                commons.vehicle:takeDamage(25, commons.hpBar, effectsGroup)
-            elseif event.other.myName == "bubbleHitBox" then
-                commons.vehicle:isPushedByWaterCurrent(orientation)
-            end
-        end 
+            testNormalCollision(event)
+        end
         return true
     end
 
-    collisionTheCar = collisionCar
+    local function collisionCar4thStage(event)
+        if commons.paused == false and commons.timeIsUp == false then
+            local normalCollision = testNormalCollision(event)
+            if normalCollision == false then
+                if event.other.myName == "bubbleHitBox" then
+                    print("oi")
+                    commons.vehicle:isPushedByWaterCurrent(event.other.orientation)
+                end
+            end
+        end
+        return true
+    end
+
+    if commons.stageNumber == 4 then
+        collisionTheCar = collisionCar4thStage
+    else
+        collisionTheCar = collisionCar
+    end
 
     local function doNothing(event)
         return true
@@ -63,7 +85,7 @@ function M:initiateCommonListeners(commonsValues, effectsGroup, barrierGroup)
     commons.background.objectSecondaryBackGroup:addEventListener("touch", moveVehicle)
     commons.background.objectBackGroup:addEventListener("touch", moveVehicle)
     commons.background.image:addEventListener("touch", moveVehicle)
-    commons.vehicle.image:addEventListener("collision", collisionCar)
+    commons.vehicle.image:addEventListener("collision", collisionTheCar)
     Runtime:addEventListener( "enterFrame", controlVehicleMovement )
     Runtime:addEventListener( "enterFrame", handleBackground)
 end

@@ -12,6 +12,7 @@ function WaterCurrent:new(o)
     self.isEnabled = false
     return o
 end
+
 -- Orientation is either 1 (downward) or -1 (upward)
 function WaterCurrent:createCurrent(currentsGroup, orientation, xPos, vehicleImage)
     if currentsGroup ~= nil then
@@ -20,31 +21,38 @@ function WaterCurrent:createCurrent(currentsGroup, orientation, xPos, vehicleIma
         local yPos
         local yBubbleEmitterPos
         local anchorY
-        local transitionHeight
+        local southY
+        local southDestiny
+        local southAnchorY
+        local boxDestiny
+        local transitionHeight = display.viewableContentHeight
         if orientation == 1 then
-            anchorY = 0
+            anchorY = 1
+            southAnchorY = 0
             yPos = 0
             yBubbleEmitterPos = - 40
-            transitionHeight = display.viewableContentHeight
+            southY = display.contentCenterY * 0.5
+            southDestiny = display.viewableContentHeight
         else
-            anchorY = 1
+            anchorY = 0
+            southAnchorY = 1
             yBubbleEmitterPos = display.viewableContentHeight + 40
             yPos = display.viewableContentHeight
-            transitionHeight = display.viewableContentHeight
+            southY = display.viewableContentHeight
+            southDestiny = 0
         end
-        self.bubbleHitBox = display.newRect(currentsGroup, xPos, yPos, 50, 1)
+        self.bubbleHitBox = display.newRect(currentsGroup, xPos, yPos, 50, display.viewableContentHeight)
         self.noLongerHitBoxLeft = display.newRect(currentsGroup,
-            xPos - (self.bubbleHitBox.width / 2) - vehicleWidth - 0.1, yPos, 1, 1)
+            xPos - (self.bubbleHitBox.width / 2) - vehicleWidth - 0.1, yPos, 2, display.viewableContentHeight)
         self.noLongerHitBoxRight = display.newRect(currentsGroup,
-            xPos + (self.bubbleHitBox.width / 2) + vehicleWidth + 0.1, yPos, 1, 1)
+            xPos + (self.bubbleHitBox.width / 2) + vehicleWidth + 0.1, yPos, 2, display.viewableContentHeight)
         self.noLongerHitBoxSouth = display.newRect(currentsGroup,
-            xPos, self.bubbleHitBox.y, 60, 60)
-        print(self.noLongerHitBoxSouth.y)
-        print(self.noLongerHitBoxSouth.height)
+            0, southY, display.viewableContentWidth, 1)
+        self.noLongerHitBoxSouth.anchorX = 0
         self.noLongerHitBoxLeft:setFillColor(1, 0, 0)
         self.noLongerHitBoxRight:setFillColor(0.3, 0.7, 0.6)
         self.noLongerHitBoxSouth:setFillColor(0.4, 0.9, 0.1)
-        physics.addBody(self.bubbleHitBox, "dynamic", {isSensor=true})
+        physics.addBody(self.bubbleHitBox, "dynamic", {isSensor=true, isBullet=true})
         physics.addBody(self.noLongerHitBoxLeft, "dynamic", {isSensor=true})
         physics.addBody(self.noLongerHitBoxRight, "dynamic", {isSensor=true})
         physics.addBody(self.noLongerHitBoxSouth, "dynamic", {isSensor=true})
@@ -57,17 +65,18 @@ function WaterCurrent:createCurrent(currentsGroup, orientation, xPos, vehicleIma
         self.noLongerHitBoxSouth.myName = "noLongerBubbleHit"
         self.noLongerHitBoxLeft.anchorY = anchorY
         self.noLongerHitBoxRight.anchorY = anchorY
-        self.noLongerHitBoxSouth.anchorY = anchorY
+        self.noLongerHitBoxSouth.anchorY = southAnchorY
         self.noLongerHitBoxLeft.orientation = orientation
         self.noLongerHitBoxRight.orientation = orientation
         self.noLongerHitBoxSouth.orientation = orientation
         self.noLongerHitBoxLeft.alpha = 1
         self.noLongerHitBoxRight.alpha = 1
         self.noLongerHitBoxSouth.alpha = 1
-        transition.to(self.bubbleHitBox, {height=transitionHeight, time=2400})
-        transition.to(self.noLongerHitBoxLeft, {height=transitionHeight, time=2400})
-        transition.to(self.noLongerHitBoxRight, {height=transitionHeight, time=2400})
-        transition.to(self.noLongerHitBoxSouth, {y=transitionHeight, time=2400})
+        transition.to(self.bubbleHitBox, {y=southDestiny, time=2400})
+        transition.to(self.noLongerHitBoxLeft, {y=southDestiny, time=2400})
+        transition.to(self.noLongerHitBoxRight, {y=southDestiny, time=2400})
+        local moveSouthBox = function() return transition.to(self.noLongerHitBoxSouth, {y=southDestiny, time=2400}) end
+        timer.performWithDelay(4600, moveSouthBox)
 
         self.bubbleEmitter = display.newEmitter({
             -- Emitter / General
@@ -122,7 +131,6 @@ end
 
 function WaterCurrent:destroyHitBox()
     if self.bubbleHitBox ~= nil then
-        print("destruindo hit box")
         display.remove(self.bubbleHitBox)
         display.remove(self.noLongerHitBoxLeft)
         display.remove(self.noLongerHitBoxRight)

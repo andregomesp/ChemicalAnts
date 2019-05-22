@@ -14,7 +14,7 @@ function M:initiateGoalMarker(uiGroup, miniStatusBar, stageNumber)
         parent=uiGroup, text="0%", x = miniStatusBar.x + miniStatusBar.width / 1.8,
         y = miniStatusBar.y + miniStatusBar.height / 2, font = "DejaVuSansMono"
     })
-    goalText = display.newText({
+    local goalText = display.newText({
         parent=uiGroup, text="Goal", x = miniStatusBar.x + miniStatusBar.width / 2.4,
         y = miniStatusBar.y + miniStatusBar.height / 2, font = "DejaVuSansMono"
     })

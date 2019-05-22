@@ -59,7 +59,7 @@ end
 function scene:show(event)
     if isShowing == false then
         isShowing = true
-        drawBlackScreen(sceneGroup)
+        drawBlackScreen()
         local newScene = selectScene(event.params)
         local sceneChanger = require("src.scenes.sceneChanger")
         timer.performWithDelay(2000, function() return sceneChanger:removePreviousScene() end)
