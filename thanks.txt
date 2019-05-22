@@ -4,7 +4,10 @@ Art - Opengameart
 Julien Jorge
 Viktor Vahn
 Dan Norder
-Casper Nilsson, Daniel Eddeland, Johann CHARLOT, Skyler Robert
+Casper Nilsson 
+Daniel Eddeland 
+Johann Charlot 
+Skyler Robert
 sinestesiastudio
 erxer1
 KnoblePersona
@@ -17,7 +20,8 @@ gameartforge
 
 sounds
 Alan McKinney
-Sound effects obtained from https://www.zapsplat.com
+Sound effects obtained from 
+https://www.zapsplat.com
 
 music
 Kevin MacLeod - Incompetech
