@@ -20,64 +20,22 @@ function WaterCurrent:createCurrent(currentsGroup, orientation, xPos, vehicleIma
         self.isEnabled = true
         local yPos
         local yBubbleEmitterPos
-        local anchorY
-        local southY
-        local southDestiny
-        local southAnchorY
-        local boxDestiny
-        local transitionHeight = display.viewableContentHeight
+        local destiny
         if orientation == 1 then
-            anchorY = 1
-            southAnchorY = 0
-            yPos = 0
+            yPos = vehicleImage.y - 100
             yBubbleEmitterPos = - 40
-            southY = display.contentCenterY * 0.5
-            southDestiny = display.viewableContentHeight
+            destiny = vehicleImage.y + 100
         else
-            anchorY = 0
-            southAnchorY = 1
             yBubbleEmitterPos = display.viewableContentHeight + 40
-            yPos = display.viewableContentHeight
-            southY = display.viewableContentHeight
-            southDestiny = 0
+            yPos = vehicleImage.y + 100
+            destiny = vehicleImage.y - 100
         end
-        self.bubbleHitBox = display.newRect(currentsGroup, xPos, yPos, 50, display.viewableContentHeight)
-        self.noLongerHitBoxLeft = display.newRect(currentsGroup,
-            xPos - (self.bubbleHitBox.width / 2) - vehicleWidth - 0.1, yPos, 2, display.viewableContentHeight)
-        self.noLongerHitBoxRight = display.newRect(currentsGroup,
-            xPos + (self.bubbleHitBox.width / 2) + vehicleWidth + 0.1, yPos, 2, display.viewableContentHeight)
-        self.noLongerHitBoxSouth = display.newRect(currentsGroup,
-            0, southY, display.viewableContentWidth, 1)
-        self.noLongerHitBoxSouth.anchorX = 0
-        self.noLongerHitBoxLeft:setFillColor(1, 0, 0)
-        self.noLongerHitBoxRight:setFillColor(0.3, 0.7, 0.6)
-        self.noLongerHitBoxSouth:setFillColor(0.4, 0.9, 0.1)
+        self.bubbleHitBox = display.newRect(currentsGroup, xPos, yPos, 50, 50)
         physics.addBody(self.bubbleHitBox, "dynamic", {isSensor=true, isBullet=true})
-        physics.addBody(self.noLongerHitBoxLeft, "dynamic", {isSensor=true})
-        physics.addBody(self.noLongerHitBoxRight, "dynamic", {isSensor=true})
-        physics.addBody(self.noLongerHitBoxSouth, "dynamic", {isSensor=true})
         self.bubbleHitBox.myName = "bubbleHitBox"
         self.bubbleHitBox.orientation = orientation
-        self.bubbleHitBox.anchorY = anchorY
-        self.bubbleHitBox.alpha = 1
-        self.noLongerHitBoxLeft.myName = "noLongerBubbleHit"
-        self.noLongerHitBoxRight.myName = "noLongerBubbleHit"
-        self.noLongerHitBoxSouth.myName = "noLongerBubbleHit"
-        self.noLongerHitBoxLeft.anchorY = anchorY
-        self.noLongerHitBoxRight.anchorY = anchorY
-        self.noLongerHitBoxSouth.anchorY = southAnchorY
-        self.noLongerHitBoxLeft.orientation = orientation
-        self.noLongerHitBoxRight.orientation = orientation
-        self.noLongerHitBoxSouth.orientation = orientation
-        self.noLongerHitBoxLeft.alpha = 1
-        self.noLongerHitBoxRight.alpha = 1
-        self.noLongerHitBoxSouth.alpha = 1
-        transition.to(self.bubbleHitBox, {y=southDestiny, time=2400})
-        transition.to(self.noLongerHitBoxLeft, {y=southDestiny, time=2400})
-        transition.to(self.noLongerHitBoxRight, {y=southDestiny, time=2400})
-        local moveSouthBox = function() return transition.to(self.noLongerHitBoxSouth, {y=southDestiny, time=2400}) end
-        timer.performWithDelay(4600, moveSouthBox)
-
+        self.bubbleHitBox.alpha = 0
+        transition.to(self.bubbleHitBox, {y=destiny, time=6500})
         self.bubbleEmitter = display.newEmitter({
             -- Emitter / General
             textureFileName="assets/images/commons/bubble.png",

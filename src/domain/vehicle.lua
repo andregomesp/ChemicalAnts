@@ -405,4 +405,22 @@ function Vehicle:isPushedByWaterCurrent(orientation)
     end
 end
 
+function Vehicle:cancelPushedByWaterCurrent()
+    if self.commons.stopped == false and self.commons.paused == false then
+        self.carVelocity = 140
+        self.backgroundObject.objectBackGroup:setLinearVelocity(0, self.carVelocity)
+        self.backgroundObject.objectSecondaryBackGroup:setLinearVelocity(0, self.carVelocity)
+        for i=1, self.barrierGroup.numChildren do
+            if self.barrierGroup[i] ~= nil then
+                self.barrierGroup[i]:setLinearVelocity(0, self.carVelocity)
+            end
+        end
+        for i=1, self.effectsGroup.numChildren do
+            if self.effectsGroup[i] ~= nil and self.effectsGroup[i].isBodyActive ~= nil then
+                self.effectsGroup[i]:setLinearVelocity(0, self.carVelocity)
+            end
+        end
+    end
+end
+
 return Vehicle

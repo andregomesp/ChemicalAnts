@@ -42,9 +42,15 @@ function M:initiateCommonListeners(commonsValues, effectsGroup, barrierGroup)
             local normalCollision = testNormalCollision(event)
             if normalCollision == false then
                 if event.other.myName == "bubbleHitBox" then
-                    print("oi")
-                    commons.vehicle:isPushedByWaterCurrent(event.other.orientation)
+                    if (event.phase == "ended") then
+                        commons.vehicle:cancelPushedByWaterCurrent()
+                    else
+                        commons.vehicle:isPushedByWaterCurrent(event.other.orientation)
+                    end
                 end
+                -- elseif event.other.myName == "noLongerBubbleHit" then 
+                --     commons.vehicle:cancelPushedByWaterCurrent()
+                -- end
             end
         end
         return true
