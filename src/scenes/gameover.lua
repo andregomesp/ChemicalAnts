@@ -21,7 +21,7 @@ local function drawCredits()
     for k, v in ipairs(credits) do
         local line = display.newText({parent=textGroup, text=v,
             font="ELDERWEISS-Regular", x=display.contentCenterX,
-            y=display.viewableContentWidth * 2 + (50 * counter), fontSize = 20,
+            y=display.viewableContentWidth * 2.2 + (50 * counter), fontSize = 20,
             height = 0, align="center"})
             line.anchorX = 0.5
         line:setFillColor(0.13, 0, 0.1)
@@ -32,7 +32,7 @@ end
 
 local function animateCredits()
     for k, v in ipairs(lines) do
-        transition.to(v, {y=v.y - display.viewableContentWidth * 6.2, time=24200})
+        transition.to(v, {y=v.y - display.viewableContentWidth * 6.4, time=25200})
     end
 end
 
