@@ -12,7 +12,7 @@ function M:drawTimeIsUpBox(exitButtonGroup, stageNumber)
     local widget = require("widget")
     local sceneChanger = require("src.scenes.sceneChanger")
     local restartGame = function() return sceneChanger:gotoSceneTransition(stageNumber, "sameStage") end
-    local exitGame = function() return sceneChanger:gotoSceneTransition(stageNumber, "gameover") end
+    local exitGame = function() return sceneChanger:gotoSceneTransition(stageNumber, "mainMenu") end
     local buttonRetry = widget.newButton(
         {
             left = questionBox.x + 30,
