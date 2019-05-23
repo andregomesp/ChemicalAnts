@@ -24,8 +24,8 @@ local function selectScene(params)
         sceneName = "src.scenes.scene" .. tostring(stage)
     elseif params.goTo == "gameover" then
         sceneName = "src.scenes.gameover"
-    elseif params.goTo == "end" then
-        sceneName = "src.scenes.end"
+    elseif params.goTo == "mainMenu" then
+        sceneName = "src.scenes.mainMenu"
     end
     return sceneName
 end

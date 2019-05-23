@@ -175,7 +175,11 @@ local function machineChecking()
             M.machine:setLinearVelocity(0, 0)
             eventFactory:removeVehicleHitListener()
             local sceneChanger = require("src.scenes.sceneChanger")
-            sceneChanger:gotoSceneTransition(M.stageNumber, "stageBetween")
+            local scene = "stageBetween"
+            if M.stageNumber == 5 then
+                scene = "gameover"
+            end
+            sceneChanger:gotoSceneTransition(M.stageNumber, scene)
         end
     end
 end

@@ -63,6 +63,7 @@ settings =
 	{
 		-- Exclude unnecessary files for each platform
 		ios = { "Icon.png", "Icon-*dpi.png", },
-		android = { "Icon.png", "Icon-??.png", "Icon-???.png", "LaunchScreen.storyboardc", },
+		android = { "Icon.png", "Icon-??.png", "Icon-???.png", "LaunchScreen.storyboardc", ".vscode", "README.md",
+		".gitignore", ".git"},
 	},
 }
