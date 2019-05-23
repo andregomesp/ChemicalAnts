@@ -17,8 +17,8 @@ physicsStarter:startPhysics()
 
 -- Open game
 -- composer.gotoScene( "src.scenes.scene1")
-composer.gotoScene( "src.scenes.scene4")
--- composer.gotoScene("src.scenes.gameover")
 -- composer.gotoScene( "src.scenes.scene5")
--- composer.gotoScene("src.scenes.mainMenu")
+-- composer.gotoScene("src.scenes.gameover")
+-- composer.gotoScene( "src.scenes.scene2")
+composer.gotoScene("src.scenes.mainMenu")
 -- composer.gotoScene("src.scenes.stageBetween", {params={screenStatus="pos", stageNumber="0"}})
