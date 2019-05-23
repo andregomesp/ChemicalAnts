@@ -384,7 +384,6 @@ end
 
 function Vehicle:isPushedByWaterCurrent(orientation)
     if self.commons.stopped == false and self.commons.paused == false then
-        print(orientation)
         if orientation == 1 then
             self.carVelocity = 80
         else

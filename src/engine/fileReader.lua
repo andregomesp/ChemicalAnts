@@ -15,8 +15,8 @@ local function lines_from(file)
     return lines
 end
 
-function M:getCredits()
-    local file = system.pathForFile("thanks.txt")
+function M:read_text_file(path)
+    local file = system.pathForFile(path)
     local lines = lines_from(file)
     return lines
 end

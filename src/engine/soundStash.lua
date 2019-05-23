@@ -3,11 +3,10 @@ local fileSoundsNames = {}
 local fileSounds = {}
 
 local function getFileSoundsNames()
-    local path = system.pathForFile("assets/audio/sf/commonsSf")
-    for file in lfs.dir(path) do
-        if #file > 3 then
-            table.insert(fileSoundsNames, file)
-        end
+    local soundFileFactory = require("src.engine.fileReader")
+    local soundFileNames = soundFileFactory:read_text_file("audioFileList.txt")
+    for k, v in ipairs(soundFileNames) do
+        table.insert(fileSoundsNames, v)
     end
 end
 

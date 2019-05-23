@@ -14,8 +14,8 @@ local background = nil
 local handleBackground = nil
 
 local function drawCredits()
-    local creditsFactory = require("src.engine.credits")
-    local credits = creditsFactory:getCredits()
+    local creditsFactory = require("src.engine.fileReader")
+    local credits = creditsFactory:read_text_file("thanks.txt")
     local counter = 0
     for k, v in ipairs(credits) do
         local line = display.newText({parent=textGroup, text=v,
@@ -45,7 +45,6 @@ local function drawClickAnimation()
 end
 
 local function animateCredits()
-    local onComplete = function() return nil end
     for i = 1, #lines - 1 do
         local line = lines[i]
         -- transition.to(v, {y=v.y - display.viewableContentWidth * 7.4, time=28900, onComplete=drawClickAnimation})
