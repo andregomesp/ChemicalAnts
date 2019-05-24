@@ -67,7 +67,7 @@ local function drawNextPhase()
         x = display.viewableContentWidth / 3, y = display.viewableContentHeight / 5,
         fontSize = 35})
     nextPhaseText.anchorX = 0
-    local nextPhaseImage = display.newImage(nextPhaseGroup, "/assets/images/commons/stage_pics/stage" .. stageNumber + 1 .. ".png",
+    local nextPhaseImage = display.newImage(nextPhaseGroup, "/assets/images/commons/stagepics/stage" .. stageNumber + 1 .. ".png",
         display.viewableContentWidth / 5, display.viewableContentHeight / 2)
     nextPhaseImage.anchorX = 0
     nextPhaseImage.width = 200

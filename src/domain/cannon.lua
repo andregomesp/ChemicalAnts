@@ -64,7 +64,7 @@ function Cannon:loadFiringButtons(elementsAvailable, ballGroup, fireButtonGroup,
         local button = widget.newButton(
             {
                 left = 20 + (100 * counter),
-                top = 470,
+                top = display.viewableContentHeight * 0.825,
                 height = 80,
                 width = 80,
                 id = {buttonId= counter, element= value, coolDown = commons['params']['coolDownTime'][counter + 1]},
@@ -95,7 +95,7 @@ function Cannon:drawUselessButton(fireButtonGroup, ballGroup, counter, widget)
     local button = widget.newButton(
         {
             left = 20 + (100 * counter),
-            top = 470,
+            top = display.viewableContentHeight * 0.825,
             height = 80,
             width = 80,
             shape = "roundedRect",

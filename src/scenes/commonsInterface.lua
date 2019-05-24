@@ -58,20 +58,19 @@ end
 local function drawCannonUI()
     local height = 110
     local miniHeight = 30
-    local yPos = display.viewableContentHeight - height
+    local yPos = display.viewableContentHeight * 0.8
     local miniYPos = display.viewableContentHeight - height - miniHeight
     local cannonUI = display.newImageRect(backgroundUiGroup, "assets/images/commons/ui/cannon_ui_texture.png",
      display.viewableContentWidth,
-        height)
+        display.viewableContentHeight - yPos)
     cannonUI.x = 0
     cannonUI.y = yPos
     cannonUI.myName = "cannon"
     cannonUI.anchorX = 0
     cannonUI.anchorY = 0
     cannonUI:setFillColor(0.458, 0.686, 0.717)
-    local miniStatusBar = display.newRect(backgroundUiGroup, 0, yPos, display.viewableContentWidth,
+    local miniStatusBar = display.newRect(backgroundUiGroup, 0, cannonUI.y * 0.94, display.viewableContentWidth,
      miniHeight)
-     miniStatusBar.y = miniYPos
     miniStatusBar.anchorX = 0
     miniStatusBar.anchorY = 0
     local miniStatusGradient = {
@@ -106,8 +105,8 @@ end
 
 local function initiateVehicle()
     local vehicleImage = display.newImageRect(vehicleGroup, "assets/images/commons/tanktemporary.png", 45, 45)
-    vehicleImage.x = 160
-    vehicleImage.y = 370
+    vehicleImage.x = display.contentCenterX
+    vehicleImage.y = display.viewableContentHeight / 1.5
     vehicleImage.myName = "vehicle"
     physics.addBody(vehicleImage, "dynamic", {isSensor = true})
     vehicleImage:toFront()
