@@ -85,8 +85,10 @@ local function drawCannonUI()
 end
 
 local function initiateBackground()
-    local backgroundImage = display.newRect(mainBackGroup, display.contentCenterX,
-        display.contentCenterY, display.viewableContentWidth, display.viewableContentHeight)
+    local backgroundImage = display.newRect(mainBackGroup, 0,
+        0, display.viewableContentWidth, display.viewableContentHeight)
+    backgroundImage.anchorX = 0
+    backgroundImage.anchorY = 0
     backgroundImage:setFillColor(M.params.color.r, M.params.color.g, M.params.color.b)
     physics.addBody(backgroundImage, "dynamic", { isSensor=true })
     M.background = backgroundFactory:new(nil, backgroundImage, objectBackGroup, objectSecondaryBackGroup, mainBackGroup)
