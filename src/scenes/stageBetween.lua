@@ -4,6 +4,7 @@ local blackScreenGroup = display.newGroup()
 local preGroup = display.newGroup()
 preGroup:toFront()
 local nextPhaseGroup = display.newGroup()
+local imgGroup = display.newGroup()
 local stageBetweenName = "src.scenes.stageBetween"
 local isShowing = false
 local sceneGroup = nil
@@ -67,7 +68,7 @@ local function drawNextPhase()
         x = display.viewableContentWidth / 3, y = display.viewableContentHeight / 5,
         fontSize = 35})
     nextPhaseText.anchorX = 0
-    local nextPhaseImage = display.newImage(nextPhaseGroup, "/assets/images/commons/stagepics/stage" .. stageNumber + 1 .. ".png",
+    local nextPhaseImage = display.newImage(nextPhaseGroup, "assets/images/commons/stagepics/stage" .. stageNumber + 1 .. ".png",
         display.viewableContentWidth / 5, display.viewableContentHeight / 2)
     nextPhaseImage.anchorX = 0
     nextPhaseImage.width = 200
@@ -95,7 +96,6 @@ end
 
 local function goToNextPhase()
     local sceneChanger = require("src.scenes.sceneChanger")
-    timer.performWithDelay(100, function() return sceneChanger:removePreviousScene() end)
     blackScreen:removeEventListener("touch", blackScreenListener)
     timer.performWithDelay(200, function() return nextPhaseTransitioning() end)
 end
@@ -133,6 +133,7 @@ function scene:create( event )
     sceneGroup:insert(blackScreenGroup)
     sceneGroup:insert(preGroup)
     sceneGroup:insert(nextPhaseGroup)
+    sceneGroup:insert(imgGroup)
     backgroundSong = audio.loadStream("assets/audio/songs/Overworld.mp3")
 end
 
@@ -140,7 +141,7 @@ function scene:show(event)
     if isShowing == false then
         isShowing = true
         backgroundSongPlay = audio.play(backgroundSong, {channel = 1, loops = -1})
-        audio.setVolume(1.0, {channel=1})
+        audio.setVolume(0.85, {channel=1})
         stageNumber = event.params.stageNumber
         screenStatus = event.params.screenStatus
         drawBlackScreen()
@@ -152,7 +153,9 @@ function scene:show(event)
     end
 end
 function scene:hide(event)
-    
+    if event.phase == "did" then
+        composer.removeScene("src.scenes.stageBetween")
+    end
 end
 function scene:destroy(event)
     audio.fadeOut({channel=1, time=500})

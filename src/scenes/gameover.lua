@@ -51,7 +51,7 @@ local function animateCredits()
         transition.to(line, {y=line.y - display.viewableContentWidth * 7.4, time=28900})
     end
     local lastLine = lines[#lines]
-    transition.to(lastLine, {y=lastLine.y - display.viewableContentWidth * 7.4, time=900, onComplete=drawClickAnimation})
+    transition.to(lastLine, {y=lastLine.y - display.viewableContentWidth * 7.4, time=28900, onComplete=drawClickAnimation})
 end
 
 local function drawBackground()
@@ -81,7 +81,9 @@ function scene:show(event)
     end
 end
 function scene:hide(event)
-    
+    if event.phase == "did" then
+        composer.removeScene("src.scenes.gameover")
+    end
 end
 function scene:destroy(event)
     Runtime:removeEventListener("enterFrame", handleBackground)

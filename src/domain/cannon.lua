@@ -17,7 +17,7 @@ function Cannon:closeCoolDown(event, bulletId)
 end
 
 function Cannon:drawCoolDownSquare(buttonId, coolDownTime, cooldownGroup)
-    local coolDownSquare = display.newRoundedRect(cooldownGroup, 20 + (100 * buttonId), 550, 80, 80, 6)
+    local coolDownSquare = display.newRoundedRect(cooldownGroup, 20 + (100 * buttonId), display.viewableContentHeight * 0.975, 80, 80, 6)
     coolDownSquare.anchorX, coolDownSquare.anchorY = 0, 1
     coolDownSquare:setFillColor(0.1,0.1,0.1,0.7)
     transition.to(coolDownSquare, {time=coolDownTime, height = 0})
@@ -57,9 +57,7 @@ function Cannon:loadFiringButtons(elementsAvailable, ballGroup, fireButtonGroup,
     for key, value in pairs(elementsAvailable) do
         local ballColor = self.ballParametersList.getImage(value)
         local elementIcon = display.newImageRect(ballGroup, "assets/images/commons/balls/" .. ballColor, 30, 30)
-        local elementText = display.newText({parent=ballGroup, text=value, x=60 + (100 * counter), y=480})
         elementIcon.x = 60 + (100 * counter)
-        elementIcon.y = 510
         local fireTheBall = function(event) return self:fire(event, commons, sounds, cooldownGroup) end
         local button = widget.newButton(
             {
@@ -75,9 +73,20 @@ function Cannon:loadFiringButtons(elementsAvailable, ballGroup, fireButtonGroup,
                 strokeWidth = 2,
                 onRelease = fireTheBall
             }
-        )
+        ) 
+        elementIcon.y = button.y
+        local text = nil
+        if value == "water" then
+            text = "Water"
+        elseif value == "hydrogen" then
+            text = "Hydrogen"
+        elseif value == "chlorideAcid" then
+            text = "Chloride Acid"
+        end
+        local elementText = display.newText({parent=ballGroup, text=text, x=60 + (100 * counter), y=button.y * 0.95, width=button.width * 0.9, height=0, align="center"})
         fireButtonGroup:insert(button)
         elementIcon:toFront()
+        elementText:toFront()
         table.insert(fireButtonGroup, button)
         table.insert(self.firingButtons, button)
         counter = counter + 1
@@ -91,7 +100,7 @@ end
 function Cannon:drawUselessButton(fireButtonGroup, ballGroup, counter, widget)
     local XIcon = display.newImageRect(ballGroup, "assets/images/commons/ui/forbidden.png", 80, 80)
     XIcon.x = 60 + (100 * counter)
-    XIcon.y = 510
+
     local button = widget.newButton(
         {
             left = 20 + (100 * counter),
@@ -105,6 +114,7 @@ function Cannon:drawUselessButton(fireButtonGroup, ballGroup, counter, widget)
             strokeWidth = 2
         }
     )
+    XIcon.y = button.y
     fireButtonGroup:insert(button)
     XIcon:toFront()
     table.insert(fireButtonGroup, button)

@@ -9,7 +9,7 @@ end
 local function lines_from(file)
     if not file_exists(file) then return {} end
     local lines = {}
-    for line in io.lines(file) do 
+    for line in io.lines(file, "l") do
       lines[#lines + 1] = line
     end
     return lines

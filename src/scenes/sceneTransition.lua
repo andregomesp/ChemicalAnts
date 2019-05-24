@@ -62,13 +62,14 @@ function scene:show(event)
         drawBlackScreen()
         local newScene = selectScene(event.params)
         local sceneChanger = require("src.scenes.sceneChanger")
-        timer.performWithDelay(2000, function() return sceneChanger:removePreviousScene() end)
         local openNewScene = function() return goToStage(newScene, event.params.stage) end
         timer.performWithDelay(3000, openNewScene)
     end
 end
 function scene:hide(event)
-    
+    if event.phase == "did" then
+        composer.removeScene("src.scenes.sceneTransition")
+    end
 end
 function scene:destroy(event)
     package.loaded[sceneTransitionName] = nil

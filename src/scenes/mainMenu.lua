@@ -192,13 +192,15 @@ function scene:create( event )
 end
 
 function scene:show(event)
-    if isShowing == false then
-        isShowing = true
+    if (event.phase == "did") then
         initiateLogo()
     end
 end
 
 function scene:hide(event)
+    if event.phase == "did" then
+        composer.removeScene("src.scenes.mainMenu")
+    end
     
 end
 function scene:destroy(event)

@@ -11,7 +11,6 @@ physics.setGravity(0, 0)
 function scene:create( event )
     sceneGroup = self.view -- add display objects to this group
     local sceneChanger = require("src.scenes.sceneChanger")
-    timer.performWithDelay(2500, function() return sceneChanger:removePreviousScene() end)
     backgroundSong = audio.loadStream("assets/audio/songs/Not As It Seems.mp3")
 end
 
@@ -31,7 +30,9 @@ function scene:show(event)
     end
 end
 function scene:hide(event)
-    
+    if event.phase == "did" then
+        composer.removeScene("src.scenes.scene4")
+    end  
 end
 function scene:destroy(event)
     audio.fadeOut({channel=1, time=500})

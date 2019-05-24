@@ -3,8 +3,8 @@ local fileSoundsNames = {}
 local fileSounds = {}
 
 local function getFileSoundsNames()
-    local soundFileFactory = require("src.engine.fileReader")
-    local soundFileNames = soundFileFactory:read_text_file("audioFileList.txt")
+    local soundFileFactory = require("src.engine.audioFileList")
+    local soundFileNames = soundFileFactory:getList()
     for k, v in ipairs(soundFileNames) do
         table.insert(fileSoundsNames, v)
     end
@@ -20,8 +20,8 @@ function M:loadAllCommonSounds()
     end
     if #fileSounds == 0 then
         for k, v in ipairs(fileSoundsNames) do
-
-            fileSounds[v] = audio.loadSound("assets/audio/sf/commonsSf/" .. v)
+            print(v)
+            fileSounds[v] = audio.loadSound("assets/audio/sf/commonssf/" .. v)
         end
     end
 end

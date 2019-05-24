@@ -8,6 +8,7 @@ function Vehicle:new(o, vehicleImage, barrierGroup, effectsGroup, antsGroup, uiG
     self.xDest = nil
     self.image = nil
     self.xMoveDirection = nil
+    self.isBeingPushed = false
     self.image = vehicleImage
     self.carVelocity = commons.carVelocity
     self.boostStatus = 1
@@ -91,7 +92,7 @@ function Vehicle:makeMovement(event)
 end
 
 function Vehicle:boost(event, backgroundObject, barrierGroup, effectsGroup)
-    if self.carVelocity < 280 and self.boostStatus < 5 then
+    if self.carVelocity < 280 and self.boostStatus < 5 and self.isBeingPushed == false then
         self.carVelocity = self.carVelocity + 35
         self.boostStatus = self.boostStatus + 1
         self.boostText.text = self.boostStatus
@@ -384,11 +385,15 @@ end
 
 function Vehicle:isPushedByWaterCurrent(orientation)
     if self.commons.stopped == false and self.commons.paused == false then
+        self.isBeingPushed = true
         if orientation == 1 then
             self.carVelocity = 80
+
         else
             self.carVelocity = 310
         end
+        self.boostCount = 1
+        self.boostText.text = "1"
         self.backgroundObject.objectBackGroup:setLinearVelocity(0, self.carVelocity)
         self.backgroundObject.objectSecondaryBackGroup:setLinearVelocity(0, self.carVelocity)
         for i=1, self.barrierGroup.numChildren do
@@ -406,6 +411,7 @@ end
 
 function Vehicle:cancelPushedByWaterCurrent()
     if self.commons.stopped == false and self.commons.paused == false then
+        self.isBeingPushed = false
         self.carVelocity = 140
         self.backgroundObject.objectBackGroup:setLinearVelocity(0, self.carVelocity)
         self.backgroundObject.objectSecondaryBackGroup:setLinearVelocity(0, self.carVelocity)
