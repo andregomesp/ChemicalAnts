@@ -384,7 +384,7 @@ function Vehicle:initiateDestroyedAnimation()
 end
 
 function Vehicle:isPushedByWaterCurrent(orientation)
-    if self.commons.stopped == false and self.commons.paused == false then
+    if self.commons.stopped == false and self.commons.paused == false and self.isBeingPushed == false then
         self.isBeingPushed = true
         if orientation == 1 then
             self.carVelocity = 80
@@ -410,7 +410,7 @@ function Vehicle:isPushedByWaterCurrent(orientation)
 end
 
 function Vehicle:cancelPushedByWaterCurrent()
-    if self.commons.stopped == false and self.commons.paused == false then
+    if self.commons.stopped == false and self.commons.paused == false and self.isBeingPushed == true then
         self.isBeingPushed = false
         self.carVelocity = 140
         self.backgroundObject.objectBackGroup:setLinearVelocity(0, self.carVelocity)
