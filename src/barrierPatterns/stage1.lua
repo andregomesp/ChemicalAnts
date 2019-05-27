@@ -14,11 +14,11 @@ local patterns = {
     [5] = {type = "sodium", time = 1700, xAnchor = 120, pattern = {form = "line", dimensions = 1, numberOfPieces = 3}},
     [6] = {type = "sodium", time = 2000, xAnchor = 90, pattern = {form = "rectangle", dimensions = 2, numberOfPieces = {x= 3, y= 2}}},
     [7] = {type = "sodium", time = 2500, xAnchor = 80, pattern = {form = "line", dimensions = 1, numberOfPieces = 4}},
-    [8] = {type = "sodium", time = 2900, xAnchor = 85, pattern = {form = "rectangle", dimensions = 2, numberOfPieces = {x= 5, y= 2}}},
+    [8] = {type = "sodium", time = 2900, xAnchor = 125, pattern = {form = "rectangle", dimensions = 2, numberOfPieces = {x= 5, y= 4}}},
     [9] = {type = "sodium", time = 3400, xAnchor = 65, pattern = {form = "line", dimensions = 1, numberOfPieces = 7}},
     [10] = {type = "sodium", time = 3800, xAnchor = 65, pattern = {form = "line", dimensions = 1, numberOfPieces = 4}},
     [11] = {type = "sodium", time = 3800, xAnchor = 165, pattern = {form = "line", dimensions = 1, numberOfPieces = 3}},
-    [12] = {type = "sodium", time = 4700, xAnchor = 65, pattern = {form = "line", dimensions = 1, numberOfPieces = 3}},
+    [12] = {type = "sodium", time = 4700, xAnchor = 125, pattern = {form = "line", dimensions = 1, numberOfPieces = 4}},
     [13] = {type = "sodium", time = 5000, xAnchor = 140, pattern = {form = "rectangle", dimensions = 2, numberOfPieces = {x = 3, y = 2}}},
     [14] = {type = "machine", time = 5700}
 }

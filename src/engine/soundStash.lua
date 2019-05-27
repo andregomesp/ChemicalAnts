@@ -20,7 +20,6 @@ function M:loadAllCommonSounds()
     end
     if #fileSounds == 0 then
         for k, v in ipairs(fileSoundsNames) do
-            print(v)
             fileSounds[v] = audio.loadSound("assets/audio/sf/commonssf/" .. v)
         end
     end

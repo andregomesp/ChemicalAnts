@@ -122,9 +122,8 @@ end
 local function drawPreScene()
     local textStageCompleted = "  Stage " .. stageNumber .. "\ncompleted!"
     local sceneCompletedText = display.newText({parent=preGroup, text=textStageCompleted,
-        x = display.viewableContentWidth / 4, y = display.viewableContentHeight / 5,
-        fontSize = 35})
-    sceneCompletedText.anchorX = 0
+        x = display.contentCenterX, y = display.viewableContentHeight / 5,
+        fontSize = 35, align="center"})
     drawTouchInfo(preGroup)
 end
 
